@@ -3,9 +3,8 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\Models\User;
 
-class CreateUsersTable extends Migration
+class CreateDtbAuthorizationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,13 +13,11 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('dtb_user', function (Blueprint $table) {
+        Schema::create('dtb_authorization', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('user_name')->unique();
-            $table->string('password');
-            $table->smallInteger('type')->default(User::TYPE_NORMAL_USER);
-            $table->rememberToken();
-            $table->softDeletes();
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('dtb_user')->onDelete('cascade');
+            $table->tinyInteger('category')->limit(2);
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('dtb_authorization');
     }
 }

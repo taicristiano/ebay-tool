@@ -1,0 +1,17 @@
+.box {
+	padding-top: 10;
+}
+
+.table-auth thead td {
+	background: #408EBA;
+	color: #FFF;
+}
+
+.table-align-center td, .table-align-center th {
+	text-align: center;
+	justify-content: center;
+}
+
+.td-action {
+	width: 85px;
+}

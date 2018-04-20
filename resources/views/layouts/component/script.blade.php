@@ -8,6 +8,7 @@
     window.Laravel = {!! json_encode([
         'csrfToken' => csrf_token(),
     ]) !!};
+    window.currentRoute = '{{ $currentRoute }}'
 </script>
 <!-- Bootstrap 3.3.7 -->
 <script src="{{asset('adminlte/bootstrap/js/bootstrap.min.js')}}"></script>
@@ -23,3 +24,5 @@
 <!-- daterangepicker -->
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script> --}}
 {{-- <script src="{{asset('adminlte/plugins/daterangepicker/daterangepicker.js')}}"></script> --}}
+<script src="{{ asset('adminlte/plugins/iCheck/icheck.min.js') }}"></script>
+<script src="{{ asset('js/common.js') }}"></script>

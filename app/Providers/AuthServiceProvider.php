@@ -25,6 +25,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        // define gates
+        Gate::define('user_manager', 'App\Policies\UserPolicy@userManager');
+        Gate::define('yahoo_auction_info', 'App\Policies\UserPolicy@yahooAuctionInfo');
+        Gate::define('amazone_info', 'App\Policies\UserPolicy@amazoneInfo');
+        Gate::define('product_manager', 'App\Policies\UserPolicy@productManager');
+        Gate::define('monitoring_product', 'App\Policies\UserPolicy@monitoringProduct');
+        Gate::define('setting', 'App\Policies\UserPolicy@setting');
     }
 }

@@ -5,6 +5,7 @@
        -moz-box-sizing: border-box;
             box-sizing: border-box;
     outline: none;
+    font: 16px/2em Lato, serif;
 }
 body {
     // background: url(../images/bg.jpg) no-repeat center center fixed;
@@ -15,11 +16,18 @@ body {
 }
 
 .login-form {
-    font: 16px/2em Lato, serif;
-    margin: 100px auto;
-    max-width: 400px;
+    padding: 20px;
 }
-
+.login-box, .register-box {
+    width: 500px !important;
+}
+.login-box-body {
+    padding: 10px 0 0 0;
+}
+.login-footer {
+    padding: 10px;
+    border-top: 1px solid #CCC;
+}
 form[role=login] {
     color: #5d5d5d;
     background: #f2f2f2;

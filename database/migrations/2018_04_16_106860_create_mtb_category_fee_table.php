@@ -33,6 +33,6 @@ class CreateMtbCategoryFeeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('mtb_category_fee');
     }
 }

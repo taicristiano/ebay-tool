@@ -15,7 +15,13 @@ class CreateTableSetting extends Migration
     {
         Schema::create('dtb_setting', function (Blueprint $table) {
             $table->increments('id');
-            $table->double('paypal_fee', 10, 2)->nullable();
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('dtb_user')->onDelete('cascade');
+            $table->unsignedInteger('store_id');
+            $table->foreign('store_id')->references('id')->on('mtb_store')->onDelete('cascade');
+            $table->float('paypal_fee_rate', 4, 2);
+            $table->float('paypal_fixed_fee', 4, 2);
+            $table->float('ex_rate_diff', 4, 2);
             $table->boolean('del_flg')->default(false);
             $table->timestamps();
         });

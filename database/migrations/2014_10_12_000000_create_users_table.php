@@ -16,9 +16,16 @@ class CreateUsersTable extends Migration
     {
         Schema::create('dtb_user', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('user_name')->unique();
-            $table->string('password');
             $table->smallInteger('type')->default(User::TYPE_NORMAL_USER);
+            $table->integer('introducer_id')->nullable();
+            $table->string('user_name')->unique();
+            $table->string('email', 50);
+            $table->string('name_kana', 50);
+            $table->string('ebay_account', 50);
+            $table->string('tel', 15);
+            $table->string('password');
+            $table->text('memo')->nullable();
+            $table->dateTime('start_date')->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

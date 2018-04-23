@@ -1,66 +1,41 @@
 @extends('auth.layouts.default')
-@section('title')
-Ebay Tool
-@endsection
-@section('class-body')
-login-page
-@endsection
+@section('title', 'Ebay Tool')
+@section('class-body', 'login-page')
 @section('head')
-<link rel="stylesheet" href="{{asset('css/auth/login.css')}}">
+<link href="{{asset('css/auth/login.css')}}" rel="stylesheet">
 @endsection
 @section('content')
 <div class="login-box">
-  <div class="login-logo">
-    <a href=""><b>Ebay</b>Tool</a>
-  </div>
-  <!-- /.login-logo -->
-  <div class="login-box-body">
-    <p class="login-box-msg">Sign in to manager</p>
-
-    <form role="login" method="POST" action="{{ route('login') }}">
-        {{ csrf_field() }}
-        @if(session()->has('error'))
-        <div class="alert alert-danger alert-dismissible alert-margin">
-            {{ session()->get('error') }}
-        </div>
-        @endif
-        @if(session()->has('message'))
-        <div class="alert alert-success alert-dismissible alert-margin">
-            {{ session()->get('message') }}
-        </div>
-        @endif
-      <div class="form-group has-feedback">
-        <input type="text" name="user_name" class="form-control{{ $errors->has('user_name') ? ' has-error' : '' }}" placeholder="{{ __('login.Email') }}">
-        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-        @if ($errors->has('user_name'))
-            <span class="help-block error">
-                <strong>{{ $errors->first('user_name') }}</strong>
-            </span>
-        @endif
-        @if(session()->has('message'))
-            <span class="help-block error">
-                <strong>{{ session()->get('message') }}</strong>
-            </span>
-        @endif
-      </div>
-      <div class="form-group has-feedback">
-        <input type="password" name="password" class="form-control{{ $errors->has('password') ? ' has-error' : '' }}" placeholder="{{ __('login.Password') }}">
-        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-        @if ($errors->has('password'))
-            <span class="help-block error">
-                <strong>{{ $errors->first('password') }}</strong>
-            </span>
-        @endif
-      </div>
-      <div class="row">
-        <!-- /.col -->
-        <div class="text-center">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">{{ __('login.Login') }}</button>
-        </div>
-        <!-- /.col -->
-      </div>
-    </form>
-  </div>
-  <!-- /.login-box-body -->
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+        <h3 class="text-center">{{ __('login.title') }}</h3>
+        <form action="{{ route('login') }}" method="POST" role="form">
+            @csrf
+            <div class="form-horizontal login-form">
+                <div class="form-group">
+                    <label class="col-sm-3">{{ __('login.login_id') }}</label>
+                    <div class="col-sm-9">
+                        <input type="email" class="form-control" name="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3">{{ __('login.Password') }}</label>
+                    <div class="col-sm-9">
+                        <input type="password" class="form-control" name="password">
+                    </div>
+                </div>
+                @if ($errors->has('email'))
+                    <span class="help-block error">
+                        <strong>{{ $errors->first('email') }}</strong>
+                    </span>
+                @endif
+            </div>
+            <div class="login-footer">
+                <button type="submit" class="btn btn-primary">{{ __('login.Login') }}</button>
+                <span>{!! __('login.note') !!}</span>
+            </div>
+        </form>
+    </div>
+    <!-- /.login-box-body -->
 </div>
 @endsection

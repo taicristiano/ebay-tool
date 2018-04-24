@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('email', 50);
             $table->string('name_kana', 50);
             $table->string('ebay_account', 50);
-            $table->string('tel', 15);
+            $table->string('tel', 15)->nullable();
             $table->string('password');
             $table->text('memo')->nullable();
             $table->dateTime('start_date')->nullable();

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMtbExchangeRateTable extends Migration
+class CreateTableSettingShipping extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreateMtbExchangeRateTable extends Migration
      */
     public function up()
     {
-        Schema::create('mtb_exchange_rate', function (Blueprint $table) {
+        Schema::create('dtb_setting_shipping', function (Blueprint $table) {
             $table->increments('id');
-            $table->float('rate', 6, 2);
-            $table->dateTime('exchange_date');
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('dtb_user')->onDelete('cascade');
+            $table->string('shipping_name', 100);
+            $table->smallInteger('max_size');
+            $table->smallInteger('side_max_size');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -29,6 +32,6 @@ class CreateMtbExchangeRateTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mtb_exchange_rate');
+        Schema::dropIfExists('dtb_setting_shipping');
     }
 }

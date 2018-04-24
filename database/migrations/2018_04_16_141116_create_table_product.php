@@ -24,7 +24,7 @@ class CreateTableProduct extends Migration
             $table->smallInteger('status')->default(0);
             $table->dateTime('day_of_sale')->nullable();
             $table->double('ship_fee', 10, 2)->nullable();
-            $table->boolean('del_flg')->default(false);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

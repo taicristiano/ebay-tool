@@ -36,5 +36,8 @@ Route::group([
         Route::get('/update/{id}', 'UserController@create')->name('update');
         Route::post('/update/{id}', 'UserController@create')->name('update');
         Route::delete('/delete/{id}', 'UserController@delete')->name('delete');
+        Route::get('/upload', 'UserController@upload')->name('upload');
+        Route::post('/upload', 'UserController@upload')->name('upload');
+        Route::any('/fetch', 'UserController@fetch')->name('fetch');
     });
 });

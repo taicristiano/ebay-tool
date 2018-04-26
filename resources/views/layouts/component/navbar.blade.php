@@ -2,9 +2,9 @@
     <!-- Logo -->
     <a href="{{url('')}}" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini" style="font-size:9px">Ebay Tool</span>
+        <span class="logo-mini" style="font-size:9px">{{ __('side_bar.app_title') }}</span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg">Ebay Tool</span>
+        <span class="logo-lg">{{ __('side_bar.app_title') }}</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -16,7 +16,7 @@
             <ul class="nav navbar-nav">
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <span class="hidden-xs">{{ Auth::user()->user_name }} <span class="caret"></span>
+                    <span class="hidden-xs">{{ $userLoggedIn->user_name }} <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li class="user-footer">

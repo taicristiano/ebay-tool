@@ -37,6 +37,11 @@ class CommonService
         return Carbon::parse($date)->format($format);
     }
 
+    /**
+     * get status flag
+     * @param  integer $value
+     * @return string
+     */
     public function getStatusFlag($value)
     {
         return $value ? Lang::get('view.on') : Lang::get('view.off');

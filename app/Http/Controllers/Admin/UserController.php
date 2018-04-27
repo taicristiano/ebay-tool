@@ -121,8 +121,12 @@ class UserController extends AbstractController
         try {
             $file = $request->file('file_csv');
             $results = $this->csvService->uploadCsv($file);
+            if ($results) {
+                return redirect()->back()
+                    ->with('message', Lang::get('message.upload_csv_success'));
+            }
             return redirect()->back()
-                ->with('message', Lang::get('message.upload_csv_success'));
+                ->with('error', Lang::get('message.error_while_upload'));
         } catch(Exception $exception) {
             return redirect()->back()
                 ->with('error', Lang::get('message.error_while_upload'));

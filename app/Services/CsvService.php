@@ -38,6 +38,11 @@ class CsvService extends CommonService
         $this->settingShipping = $settingShipping;
     }
 
+    /**
+     * format data exprot csv
+     * @param  array $data
+     * @return array
+     */
     public function formatDataExprotCsv($data)
     {
         return $data;
@@ -83,6 +88,12 @@ class CsvService extends CommonService
         );
     }
 
+    /**
+     * generate data exprot csv
+     * @param  string $type
+     * @param  arrray $data
+     * @return array
+     */
     public function generateDataExportCsv($type, $data)
     {
         if ($type == 'full') {
@@ -132,6 +143,12 @@ class CsvService extends CommonService
         return $results;
     }
 
+    /**
+     * export csv
+     * @param  string $type
+     * @param  array $data
+     * @return file
+     */
     public function exportCsv($type, $data)
     {
         $fileName = 'List user' . date('Y-m-d H:i');
@@ -143,6 +160,11 @@ class CsvService extends CommonService
         })->download('csv');
     }
 
+    /**
+     * upload csv
+     * @param  file $file
+     * @return boolean
+     */
     public function uploadCsv($file)
     {
         try {
@@ -150,10 +172,6 @@ class CsvService extends CommonService
             Excel::load($file, function($reader) {
                 $results = $reader->toArray();
                 foreach ($results as $key => $item) {
-                    $error = self::validateInputCsv($item);
-                    if ($error) {
-                        throw new Exception();
-                    }
                     if (self::checkExistEmail($item['email'])) {
                         throw new Exception();
                     }
@@ -186,22 +204,28 @@ class CsvService extends CommonService
                 }
             });
             DB::commit();
+            return true;
         } catch (Exception $ex) {
             DB::rollback();
-            throw new Exception();
+            return false;
         }
     }
 
-    public function validateInputCsv($input)
-    {
-        return false;
-    }
-
+    /**
+     * check exits email
+     * @param  string $email
+     * @return boolean
+     */
     public function checkExistEmail($email)
     {
         return $this->user->findByEmail($email) ? true : false;
     }
 
+    /**
+     * format data csv insert
+     * @param  array $item
+     * @return array
+     */
     public function formatDataCsvInsert($item)
     {
         $fieldAuth = ['yahoo_info', 'amazon_info', 'monitoring', 'regist_limit', 'post_limit'];

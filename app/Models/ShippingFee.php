@@ -11,6 +11,12 @@ class ShippingFee extends AbstractModel
      */
     protected $table = 'dtb_shipping_fee';
 
+    /**
+     * get data master
+     * @param  integer  $settingShippingId
+     * @param  boolean $isEMS
+     * @return array
+     */
     public function getDataMaster($settingShippingId, $isEMS = false)
     {
         if ($isEMS) {

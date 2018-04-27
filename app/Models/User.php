@@ -162,6 +162,11 @@ class User extends Authenticatable
         return $result->paginate()->appends($filter);
     }
 
+    /**
+     * get data exprot csv
+     * @param  array $data
+     * @return array object
+     */
     public function getDataExportCsv($data)
     {
         if ($data['type_csv'] == 'full') {
@@ -202,6 +207,11 @@ class User extends Authenticatable
         return $condition->get()->toArray();
     }
 
+    /**
+     * find user by email
+     * @param  string $email
+     * @return object
+     */
     public function findByEmail($email)
     {
         return $this->where('email', $email)

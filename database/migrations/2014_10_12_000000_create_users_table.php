@@ -18,8 +18,9 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->smallInteger('type')->default(User::TYPE_NORMAL_USER);
             $table->integer('introducer_id')->nullable();
-            $table->string('user_name')->unique();
-            $table->string('email', 50);
+            $table->string('user_name');
+            $table->string('user_code', 7)->nullable();
+            $table->string('email', 50)->unique();
             $table->string('name_kana', 50);
             $table->string('ebay_account', 50);
             $table->string('tel', 15)->nullable();

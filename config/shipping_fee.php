@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\Shipping;
+use App\Models\SettingShipping;
 
 return [
-    Shipping::SHIPPING_NAME     => [
+    SettingShipping::SHIPPING_NAME => [
         [
             'weight'   => 100,
             'ship_fee' => 550,
@@ -61,7 +61,7 @@ return [
             'ship_fee' => 2400,
         ],
     ],
-    Shipping::SHIPPING_NAME_EMS => [
+    SettingShipping::SHIPPING_NAME_EMS => [
         [
             'weight'   => 500,
             'ship_fee' => 2000,

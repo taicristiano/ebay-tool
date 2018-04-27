@@ -188,6 +188,8 @@ class CsvService extends CommonService
 
                     // insert setting user
                     $dataSetting['user_id'] = $userId;
+                    $dataSetting['created_at'] = date('Y-m-d H:i:s');
+                    $dataSetting['updated_at'] = date('Y-m-d H:i:s');
                     $this->setting->insert($dataSetting);
 
                     // insert setting shipping and setting fee
@@ -231,10 +233,14 @@ class CsvService extends CommonService
         $fieldAuth = ['yahoo_info', 'amazon_info', 'monitoring', 'regist_limit', 'post_limit'];
         $item['start_date'] = str_replace('/', '-', $item['start_date']) . ' 00:00:00';
         $item['password'] = Hash::make($item['password']);
+        $item['created_at'] = date('Y-m-d H:i:s');
+        $item['updated_at'] = date('Y-m-d H:i:s');
         foreach ($fieldAuth as $field) {
             $dataAuth[$field] = $item[$field];
             unset($item[$field]);
         }
+        $dataAuth['created_at'] = date('Y-m-d H:i:s');
+        $dataAuth['updated_at'] = date('Y-m-d H:i:s');
         return [
             'data_user' => $item,
             'data_auth' => $dataAuth,

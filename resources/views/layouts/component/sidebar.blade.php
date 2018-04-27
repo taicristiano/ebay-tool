@@ -21,22 +21,8 @@
                     </span>
                 </a>
                 <ul class="treeview-menu" style="padding-left: 20px">
-                    <li><a href="{{ route('admin.user.index') }}"><i class="fa fa-list-ul"></i>{{ __('view.list') }}</a></li>
-                    <li class="treeview">
-                        <a href="#"><i class="fa fa-plus-square"></i> {{ __('view.new_user') }}
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu" style="display: none;">
-                            <li><a href="{{ route('admin.user.create') }}"><i class="fa fa-plus-square"></i>{{ __('view.create') }}</a></li>
-                            <li><a href="{{ route('admin.user.show-page-upload-csv') }}"><i class="fa fa-plus-square"></i>{{ __('view.upload_csv') }}</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <ul class="treeview-menu">
                     <li><a href="{{ route('admin.user.index') }}"><i class="fa fa-list-ul"></i>{{ __('side_bar.list_user') }}</a></li>
-                    <li><a href="{{ route('admin.user.upload') }}"><i class="fa fa-plus-square"></i>{{ __('side_bar.create_user') }}</a></li>
+                    <li><a href="{{ route('admin.user.show-page-upload-csv') }}"><i class="fa fa-plus-square"></i>{{ __('side_bar.create_user') }}</a></li>
                 </ul>
             </li>
             @endcan

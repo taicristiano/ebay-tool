@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\UserRequest;
 use App\Models\Authorization;
 use App\Models\Setting;
-use App\Models\Shipping;
+use App\Models\SettingShipping;
 use App\Models\ShippingFee;
 use App\Models\User;
 use DB;
@@ -26,7 +26,7 @@ class UserController extends AbstractController
     protected $shipping;
     protected $shippingFee;
 
-    public function __construct(User $user, Authorization $authorization, CsvService $csvService, Setting $setting, Shipping $shipping, ShippingFee $shippingFee)
+    public function __construct(User $user, Authorization $authorization, CsvService $csvService, Setting $setting, SettingShipping $shipping, ShippingFee $shippingFee)
     {
         $this->user          = $user;
         $this->authorization = $authorization;
@@ -95,15 +95,6 @@ class UserController extends AbstractController
                 'message' => __('message.server_error'),
             ]);
         }
-    }
-
-    /**
-     * upload user from csv
-     * @return view|redirect
-     */
-    public function upload()
-    {
-        return $this->render();
     }
 
     /**

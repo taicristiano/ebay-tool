@@ -100,6 +100,15 @@ class User extends Authenticatable
     }
 
     /**
+     * get guest admin type
+     * @return integer
+     */
+    public function getTypeGuestAdmin()
+    {
+        return static::TYPE_GUEST_ADMIN;
+    }
+
+    /**
      * check is user type
      * @return boolean
      */
@@ -186,8 +195,7 @@ class User extends Authenticatable
      */
     public function getList($filter = [])
     {
-        $result = $this
-            ->selectRaw('
+        $result = $this->selectRaw('
             id,
             user_code,
             user_name,
@@ -204,6 +212,62 @@ class User extends Authenticatable
             $result = $result->where('user_name', 'LIKE', '%' . $filter['user_name'] . '%');
         }
         return $result->paginate()->appends($filter);
+    }
+
+    /**
+     * get data exprot csv
+     * @param  array $data
+     * @return array object
+     */
+    public function getDataExportCsv($data)
+    {
+        if ($data['type_csv'] == 'full') {
+            $fieldSelect = [
+                'start_date',
+                'user_name',
+                'user_code',
+                'name_kana',
+                'email',
+                'tel',
+                'ebay_account',
+                'type',
+                'introducer_id',
+                'memo',
+                'dtb_authorization.yahoo_info',
+                'dtb_authorization.amazon_info',
+                'dtb_authorization.monitoring',
+                'dtb_authorization.regist_limit',
+                'dtb_authorization.post_limit',
+            ];
+            $condition = $this->select($fieldSelect)
+                ->leftJoin('dtb_authorization', 'dtb_user.id', '=', 'dtb_authorization.user_id');
+        } else {
+            $fieldSelect = [
+                'tel',
+                'user_code',
+                'email',
+                'memo'
+            ];
+            $condition = $this->select($fieldSelect);
+        }
+        if (!empty($data['type_user'])) {
+            $condition = $condition->where('type', $data['type_user']);
+        }
+        if (!empty($data['user_name'])) {
+            $condition = $condition->where('user_name', 'LIKE', '%' . $filter['user_name'] . '%');
+        }
+        return $condition->get()->toArray();
+    }
+
+    /**
+     * find user by email
+     * @param  string $email
+     * @return object
+     */
+    public function findByEmail($email)
+    {
+        return $this->where('email', $email)
+            ->first();
     }
 
     /**

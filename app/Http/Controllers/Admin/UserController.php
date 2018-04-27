@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\UserRequest;
 use App\Models\Authorization;
 use App\Models\Setting;
-use App\Models\Shipping;
+use App\Models\SettingShipping;
 use App\Models\ShippingFee;
 use App\Models\User;
 use DB;
@@ -13,13 +13,24 @@ use Exception;
 use Hash;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use App\Services\CsvService;
+use App\Http\Requests\UploadCsvRequest;
+use Lang;
 
 class UserController extends AbstractController
 {
-    public function __construct(User $user, Authorization $authorization, Setting $setting, Shipping $shipping, ShippingFee $shippingFee)
+    protected $user;
+    protected $authorization;
+    protected $csvService;
+    protected $setting;
+    protected $shipping;
+    protected $shippingFee;
+
+    public function __construct(User $user, Authorization $authorization, CsvService $csvService, Setting $setting, SettingShipping $shipping, ShippingFee $shippingFee)
     {
         $this->user          = $user;
         $this->authorization = $authorization;
+        $this->csvService    = $csvService;
         $this->setting       = $setting;
         $this->shipping      = $shipping;
         $this->shippingFee   = $shippingFee;
@@ -87,15 +98,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * upload user from csv
-     * @return view|redirect
-     */
-    public function upload()
-    {
-        return $this->render();
-    }
-
-    /**
      * delete user action
      * @param  integer $userId
      * @return redirect
@@ -104,6 +106,50 @@ class UserController extends AbstractController
     {
         $this->user->findOrFail($userId)->delete();
         return redirect()->back()->with(['message' => __('message.deleted_user_success')]);
+    }
+
+    /**
+     * export csv
+     * @param  Request $request
+     * @return file
+     */
+    public function exportCsv(Request $request)
+    {
+        $data = $request->all();
+        $data = $this->csvService->formatDataExprotCsv($data);
+        $listUser = $this->user->getDataExportCsv($data);
+        return $this->csvService->exportCsv($data['type_csv'], $listUser);
+    }
+
+    /**
+     * show page upload csv
+     * @return view
+     */
+    public function showPageuploadCsv()
+    {
+        return view('admin.user.upload-csv');
+    }
+
+    /**
+     * upload csv
+     * @param  UploadCsvRequest $request
+     * @return view
+     */
+    public function uploadCsv(UploadCsvRequest $request)
+    {
+        try {
+            $file = $request->file('file_csv');
+            $results = $this->csvService->uploadCsv($file);
+            if ($results) {
+                return redirect()->back()
+                    ->with('message', Lang::get('message.upload_csv_success'));
+            }
+            return redirect()->back()
+                ->with('error', Lang::get('message.error_while_upload'));
+        } catch(Exception $exception) {
+            return redirect()->back()
+                ->with('error', Lang::get('message.error_while_upload'));
+        }
     }
 
     /**

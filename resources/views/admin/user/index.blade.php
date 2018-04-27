@@ -28,12 +28,23 @@
                 <!-- <h3 class="box-title">{{ __('view.list') }}</h3> -->
             </div><!-- /.box-header -->
             <div class="box-body">
-                <form class="form-inline" id="filter-post" role="form" method="GET">
-                    {!! Form::select("type", $typeOptions, old('type'), ['class' => 'form-control', 'id' => 'select-type']) !!}
-                    {!! Form::text('user_name', old('user_name'), ['class' => 'form-control', 'placeholder' => __('view.user.placeholder_user_name')]) !!}
-                    <button class="btn btn-primary"><i class="fa fa-search"></i> {{ __('view.filter') }}</button>
-                    <a href="{{ route('admin.user.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i>{{ __('view.create') }}</a>
-                </form>
+                <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12">
+                    <form class="form-inline" id="filter-post" role="form" method="GET">
+                        {!! Form::select("type", $typeOptions, old('type'), ['class' => 'form-control', 'id' => 'select-type']) !!}
+                        {!! Form::text('user_name', old('user_name'), ['class' => 'form-control', 'placeholder' => __('view.user.placeholder_user_name')]) !!}
+                        <button class="btn btn-primary"><i class="fa fa-search"></i> {{ __('view.filter') }}</button>
+                        <a href="{{ route('admin.user.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i>{{ __('view.create') }}</a>
+                    </form>
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+                    <form class="form-inline pull-right" id="export-csv" role="form" method="GET" action="{{ route('admin.user.export-csv') }}">
+                        <input type="hidden" name="type_csv" id="type_csv">
+                        <input type="hidden" name="type_user" id="type_user">
+                        <input type="hidden" name="user_name" id="user_name">
+                        <button class="btn btn-primary" id="btn-csv-full"><i class="fa fa-download"></i> {{ __('view.csv_full') }}</button>
+                        <button class="btn btn-primary" id="btn-csv-simple"><i class="fa fa-download"></i> {{ __('view.csv') }}</button>
+                    </form>
+                </div>
             </div>
             <div class="box-body">
                 <table class="table table-bordered table-striped table-align-center">
@@ -82,4 +93,11 @@
     </section>
     <!-- /.content -->
 </div>
+@endsection
+
+@section('script')
+<script>
+    var urlDownloadCsv = "{{ route('admin.user.export-csv') }}";
+</script>
+<script src="{{ asset('js/export-csv.js') }}"></script>
 @endsection

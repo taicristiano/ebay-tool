@@ -18,8 +18,8 @@ class CreateTableSettingShipping extends Migration
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('dtb_user')->onDelete('cascade');
             $table->string('shipping_name', 100);
-            $table->smallInteger('max_size');
-            $table->smallInteger('side_max_size');
+            $table->smallInteger('max_size')->nullable();
+            $table->smallInteger('side_max_size')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

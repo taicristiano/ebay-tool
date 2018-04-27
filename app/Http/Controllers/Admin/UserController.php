@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\UserRequest;
 use App\Models\Authorization;
+use App\Models\Setting;
+use App\Models\Shipping;
+use App\Models\ShippingFee;
 use App\Models\User;
 use DB;
+use Exception;
+use Hash;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Services\CsvService;
 use App\Http\Requests\UploadCsvRequest;
-use Exception;
 use Lang;
 
 class UserController extends AbstractController
@@ -16,12 +22,18 @@ class UserController extends AbstractController
     protected $user;
     protected $authorization;
     protected $csvService;
+    protected $setting;
+    protected $shipping;
+    protected $shippingFee;
 
-    public function __construct(User $user, Authorization $authorization, CsvService $csvService)
+    public function __construct(User $user, Authorization $authorization, CsvService $csvService, Setting $setting, Shipping $shipping, ShippingFee $shippingFee)
     {
         $this->user          = $user;
         $this->authorization = $authorization;
         $this->csvService    = $csvService;
+        $this->setting       = $setting;
+        $this->shipping      = $shipping;
+        $this->shippingFee   = $shippingFee;
     }
 
     /**
@@ -39,43 +51,59 @@ class UserController extends AbstractController
 
     /**
      * user create action
-     * @param  Request $req
+     * @param  UserRequest $req
      * @param  integer|null  $userId
      * @return view|redirect
      */
-    public function create(Request $req, $userId = null)
+    public function create(UserRequest $req, $userId = null)
     {
         $typeOptions     = $this->user->getTypeOptions();
         $categoryOptions = $this->authorization->getCategoryOptions();
         if ($req->isMethod('GET')) {
             $typeGuestAdmin = User::TYPE_GUEST_ADMIN;
             if ($userId) {
-                $user = $this->user->findOrFail($userId);
+                $user = $this->user->getByIdWithAuthorization($userId);
+                if ($user->introducer_id) {
+                    session()->flash('introducer', User::getIntroducerOption($user->introducer_id));
+                }
             }
             return $this->render(compact('user', 'typeOptions', 'categoryOptions', 'typeGuestAdmin'));
         }
-        $req->validate([
-            'user_name'  => 'required|max:255|regex:/^\w+$/|unique:' . $this->user->getTable() . ($userId ? ',id,' . $userId : ''),
-            'type'       => 'required|in:' . implode(',', array_keys($typeOptions)),
-            'password'   => $userId ? 'nullable' : 'required' . '|confirmed|digits_between:6,10',
-            'category.*' => 'in:' . implode(',', array_keys($categoryOptions)),
-        ]);
-        $data = array_filter($req->only($this->user->getFieldList()));
+        $data             = array_filter($req->only($this->user->getFieldList()));
+        $data['password'] = Hash::make(isset($data['password']) ? $data['password'] : User::DEFAULT_PASSWORD);
+        if (!$userId) {
+            $data['user_code'] = User::generateUserCode();
+        }
         try {
             DB::beginTransaction();
-            if ($user = $this->user->updateOrCreate(['id' => $userId], $data)) {
-                $this->authorization->createByUserId($user->id, $req->category);
+            $user = $this->user->updateOrCreate(['id' => $userId], $data);
+            if ($data['type'] == User::TYPE_GUEST_ADMIN) {
+                $this->authorization->updateOrCreateCategoryByUserId($user->id, $req->only(['regist_limit', 'post_limit', 'category']));
+            }
+            if (!$userId) {
+                $this->setting->updateOrCreateByUserId($user->id);
+                $this->shipping->createDefaultShipping($user->id);
             }
             DB::commit();
+            session()->forget('introducer');
             return redirect()->back()->with([
                 'message' => __('message.' . ($userId ? 'update' : 'create') . '_user_success'),
             ]);
-        } catch (Exception $e) {
+        } catch (Exception | QueryException $e) {
             DB::rollback();
-            return redirect()->back()->withErrors([
+            return redirect()->back()->withInput()->withErrors([
                 'message' => __('message.server_error'),
             ]);
         }
+    }
+
+    /**
+     * upload user from csv
+     * @return view|redirect
+     */
+    public function upload()
+    {
+        return $this->render();
     }
 
     /**
@@ -131,5 +159,16 @@ class UserController extends AbstractController
             return redirect()->back()
                 ->with('error', Lang::get('message.error_while_upload'));
         }
+    }
+
+    /**
+     * fetch user
+     * @param  Request $req
+     * @return JSON
+     */
+    public function fetch(Request $req)
+    {
+        $results = $this->user->fetch($req);
+        return response()->json($this->user->fetch($req));
     }
 }

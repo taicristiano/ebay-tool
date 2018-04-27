@@ -4,10 +4,10 @@
     <section class="sidebar">
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
-            <li class="header">MAIN NAVIGATION</li>
+            <li class="header">{{ __('side_bar.main') }}</li>
             <li>
                 <a href="">
-                <i class="fa fa-dashboard active"></i> <span>Dashboard</span>
+                <i class="fa fa-dashboard active"></i> <span>{{ __('side_bar.top') }}</span>
                 </span>
                 </a>
             </li>
@@ -33,6 +33,10 @@
                             <li><a href="{{ route('admin.user.show-page-upload-csv') }}"><i class="fa fa-plus-square"></i>{{ __('view.upload_csv') }}</a></li>
                         </ul>
                     </li>
+                </ul>
+                <ul class="treeview-menu">
+                    <li><a href="{{ route('admin.user.index') }}"><i class="fa fa-list-ul"></i>{{ __('side_bar.list_user') }}</a></li>
+                    <li><a href="{{ route('admin.user.upload') }}"><i class="fa fa-plus-square"></i>{{ __('side_bar.create_user') }}</a></li>
                 </ul>
             </li>
             @endcan

@@ -17,6 +17,7 @@ class User extends Authenticatable
     const TYPE_SUPER_ADMIN      = 2;
     const TYPE_GUEST_ADMIN      = 3;
     const TYPE_CANCELATION_USER = 4;
+    const DEFAULT_PASSWORD      = '12345678';
 
     /**
      * The database table used by the model.
@@ -31,7 +32,17 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'user_name', 'password', 'type',
+        'user_code',
+        'user_name',
+        'password',
+        'type',
+        'introducer_id',
+        'email',
+        'name_kana',
+        'ebay_account',
+        'tel',
+        'memo',
+        'start_date',
     ];
 
     /**
@@ -143,7 +154,39 @@ class User extends Authenticatable
      */
     public function getAuthorizationAttribute()
     {
-        return $this->hasMany('App\Models\Authorization')->get()->pluck('category')->toArray();
+        $result = [];
+        if ($authorizations = $this
+            ->hasMany('App\Models\Authorization')
+            ->selectRaw('yahoo_info, amazon_info, monitoring')
+            ->first()) {
+            $authorizations->yahoo_info ? $result[]  = Authorization::YAHOO_AUCTION_INFO : '';
+            $authorizations->amazon_info ? $result[] = Authorization::AMAZONE_INFO : '';
+            $authorizations->monitoring ? $result[]  = Authorization::MONITORING_PRODUCT : '';
+        }
+        return $result;
+    }
+
+    /**
+     * get by id with authorization
+     * @param  integer $userId
+     * @return Collection
+     */
+    public function getByIdWithAuthorization($userId)
+    {
+        $authorizationTable = (new Authorization)->getTable();
+        $userTable          = $this->getTable();
+        if ($user = $this
+            ->selectRaw("
+                $userTable.*,
+                $authorizationTable.regist_limit,
+                $authorizationTable.post_limit
+            ")
+            ->leftJoin($authorizationTable, "$userTable.id", "$authorizationTable.user_id")
+            ->where("$userTable.id", $userId)
+            ->first()) {
+            return $user;
+        }
+        abort(404);
     }
 
     /**
@@ -152,7 +195,16 @@ class User extends Authenticatable
      */
     public function getList($filter = [])
     {
-        $result = $this->selectRaw('id, user_name, type');
+        $result = $this->selectRaw('
+            id,
+            user_code,
+            user_name,
+            name_kana,
+            email,
+            tel,
+            type,
+            memo
+        ');
         if (isset($filter['type'])) {
             $result = $result->where('type', $filter['type']);
         }
@@ -216,5 +268,50 @@ class User extends Authenticatable
     {
         return $this->where('email', $email)
             ->first();
+    }
+
+    /**
+     * fetch user
+     * @param  Object $req
+     * @return Collections
+     */
+    public function fetch($req)
+    {
+        $page   = $req->page ? $req->page : 1;
+        $limit  = $req->skip;
+        $result = $this
+            ->select('id', 'user_name as text')
+            ->where('id', 'LIKE', "%$req->search%")
+            ->orWhere('user_name', 'LIKE', '%' . $req->search . '%')
+            ->orWhere('name_kana', 'LIKE', '%' . $req->search . '%')
+            ->skip(($req->page - 1) * $req->limit)
+            ->limit($req->limit);
+        return [
+            'results'        => $result->get()->toArray(),
+            'count_filtered' => $result->count(),
+        ];
+    }
+
+    /**
+     * get introducer option
+     * @param  integer $userId
+     * @return array
+     */
+    public static function getIntroducerOption($userId)
+    {
+        return static::select('id', 'user_name')->where('id', $userId)->get()->pluck('user_name', 'id')->toArray();
+    }
+
+    /**
+     * set user_code
+     */
+    public static function generateUserCode()
+    {
+        $yearMonth = date('ym');
+        if ($lastUser = static::select('user_code')->orderBy('id', 'desc')->first()) {
+            $lastIndex = ((Int) preg_replace('/^[0-9]{4}/', '', $lastUser->user_code) + 1);
+            return $yearMonth . str_repeat('0', (3 - strlen($lastIndex))) . $lastIndex;
+        }
+        return $yearMonth . '001';
     }
 }

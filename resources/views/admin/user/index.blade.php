@@ -25,14 +25,14 @@
         <!-- Default box -->
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title">{{ __('view.list') }}</h3>
+                <!-- <h3 class="box-title">{{ __('view.list') }}</h3> -->
             </div><!-- /.box-header -->
             <div class="box-body">
                 <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12">
                     <form class="form-inline" id="filter-post" role="form" method="GET">
                         {!! Form::select("type", $typeOptions, old('type'), ['class' => 'form-control', 'id' => 'select-type']) !!}
-                        {!! Form::text('user_name', old('user_name'), ['class' => 'form-control', 'placeholder' => __('view.placeholder_user_name'), 'id' => 'user-name']) !!}
-                        <button class="btn btn-primary"><i class="fa fa-search"></i> {{ __('view.filt') }}</button>
+                        {!! Form::text('user_name', old('user_name'), ['class' => 'form-control', 'placeholder' => __('view.user.placeholder_user_name')]) !!}
+                        <button class="btn btn-primary"><i class="fa fa-search"></i> {{ __('view.filter') }}</button>
                         <a href="{{ route('admin.user.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i>{{ __('view.create') }}</a>
                     </form>
                 </div>
@@ -50,23 +50,31 @@
                 <table class="table table-bordered table-striped table-align-center">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>{{ __('view.user_name') }}</th>
-                            <th>{{ __('view.type') }}</th>
-                            <th>{{ __('view.action') }}</th>
+                            <th>{{ __('view.user.user_code') }}</th>
+                            <th>{{ __('view.user.user_name') }}</th>
+                            <th>{{ __('view.user.name_kana') }}</th>
+                            <th>{{ __('view.user.email') }}</th>
+                            <th>{{ __('view.user.tel') }}</th>
+                            <th>{{ __('view.user.type') }}</th>
+                            <th>{{ __('view.user.memo') }}</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @if(!isset($users) || !count($users))
                         <tr>
-                            <td colspan="5" align="center">{{ __('message.no_data') }}</td>
+                            <td colspan="8" align="center">{{ __('message.no_data') }}</td>
                         </tr>
                         @else
                         @foreach($users as $user)
                         <tr>
-                            <td>{{ $user->id }}</td>
+                            <td>{{ $user->user_code }}</td>
                             <td>{{ $user->user_name }}</td>
+                            <td>{{ $user->name_kana }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->tel }}</td>
                             <td>{{ $user->renderTypeAsString() }}</td>
+                            <td>{{ $user->memo }}</td>
                             <td class="td-action">
                                 <div class="btn-group btn-group-sm" role="group" aria-label="...">
                                     <a href="{{ route('admin.user.update', $user->id) }}" class="btn btn-warning"><i class="fa fa-edit"></i></a>

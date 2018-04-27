@@ -20,8 +20,8 @@ class CreateDtbAuthorizationTable extends Migration
             $table->boolean('yahoo_info')->default(false);
             $table->boolean('amazon_info')->default(false);
             $table->boolean('monitoring')->default(false);
-            $table->integer('regist_limit');
-            $table->integer('post_limit');
+            $table->integer('regist_limit')->default(0);
+            $table->integer('post_limit')->default(0);
             $table->timestamps();
         });
     }

@@ -36,7 +36,6 @@ class UploadCsvRequest extends Request
     public function messages()
     {
         return [
-            // 'file_csv.required'                 => Lang::get('validation.The file_csv field is required.'),
         ];
     }
 }

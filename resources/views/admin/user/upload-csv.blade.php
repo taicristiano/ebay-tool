@@ -8,13 +8,13 @@
             <div class="col-xs-12 col-md-8 col-md-offset-2">
                 <div class="box box-success">
                     <div class="box-header text-center">
-                      <h2 class="box-title"> 一括登録</h2>
+                      <h2 class="box-title">{{ __('view.create_many') }}</h2>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
                         <form class="form-inline" enctype="multipart/form-data" role="form" method="POST" action="{{ route('admin.user.upload-csv') }}">
                             @csrf
-                            <p class="col-xs-12 col-md-8 col-md-offset-1">&#60;&#60;CSV一括登録&#62;&#62;</p>
+                            <p class="col-xs-12 col-md-8 col-md-offset-1">&#60;&#60;{{ __('view.csv_create_many') }}&#62;&#62;</p>
                             <div class="input-group image-preview col-xs-12 col-md-8 col-md-offset-1" data-original-title="" title="">
                                 <input type="text" class="form-control" id="file_name_csv" disabled="disabled">
                                 <span class="input-group-btn">
@@ -24,7 +24,7 @@
                                     </div>
                                 </span>
                             </div>
-                            <button class="btn btn-primary" type="submit"><i class="fa fa-upload"></i> CSVアップロード</button>
+                            <button class="btn btn-primary" type="submit"><i class="fa fa-upload"></i> {{ __('view.csv_upload') }}</button>
                             <div class="col-xs-12 col-md-8 col-md-offset-1 error">{{ $errors->first('file_csv') }}</div>
                         <!-- /.box -->
                         </form>

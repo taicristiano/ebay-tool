@@ -17,7 +17,6 @@ class CreateDtbAuthorizationTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('dtb_user')->onDelete('cascade');
-            $table->string('user_code', 7);
             $table->boolean('yahoo_info')->default(false);
             $table->boolean('amazon_info')->default(false);
             $table->boolean('monitoring')->default(false);

@@ -9,4 +9,5 @@ return [
     'created_user_success' => 'Created user successfully.',
     'updated_user_success' => 'Updated user successfully.',
     'server_error'         => 'Server error.',
+    'upload_csv_success'   => 'Upload csv successfully'
 ];

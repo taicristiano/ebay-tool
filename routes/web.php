@@ -36,8 +36,9 @@ Route::group([
         Route::get('/update/{id}', 'UserController@create')->name('update');
         Route::post('/update/{id}', 'UserController@create')->name('update');
         Route::delete('/delete/{id}', 'UserController@delete')->name('delete');
-        Route::get('/upload', 'UserController@upload')->name('upload');
-        Route::post('/upload', 'UserController@upload')->name('upload');
+        Route::get('/export/csv', 'UserController@exportCsv')->name('export-csv');
+        Route::get('/upload/csv', 'UserController@showPageuploadCsv')->name('show-page-upload-csv');
+        Route::post('/upload/csv', 'UserController@uploadCsv')->name('upload-csv');
         Route::any('/fetch', 'UserController@fetch')->name('fetch');
     });
 });

@@ -2,16 +2,22 @@
 
 namespace App\Models;
 
-class Shipping extends AbstractModel
+class SettingShipping extends AbstractModel
 {
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
     protected $table = 'dtb_setting_shipping';
 
-    const SHIPPING_NAME         = 'eパケットライト';
+    const SHIPPING_NAME         = 'パケットライト';
     const SHIPPING_NAME_EMS     = 'EMS';
     const DEFAULT_MAX_SIZE      = 90;
     const DEFAULT_SIDE_MAX_SIZE = 60;
 
     /**
+     * The attributes that are mass assignable.
      * The attributes that are mass assignable.
      *
      * @var array
@@ -58,5 +64,33 @@ class Shipping extends AbstractModel
             }
             ShippingFee::insert($shippingFeeData);
         }
+    }
+
+    /**
+     * get data master
+     * @param  integer $userId
+     * @return array
+     */
+    public function getDataMaster($userId)
+    {
+        $now = date('Y-m-d H:i:s');
+        return [
+            [
+                'user_id'       => $userId,
+                'shipping_name' => static::SHIPPING_NAME,
+                'max_size'      => static::DEFAULT_MAX_SIZE,
+                'side_max_size' => static::DEFAULT_SIDE_MAX_SIZE,
+                'created_at'    => $now,
+                'updated_at'    => $now
+            ],
+            [
+                'user_id'       => $userId,
+                'shipping_name' => static::SHIPPING_NAME_EMS,
+                'max_size'      => 0,
+                'side_max_size' => 0,
+                'created_at'    => $now,
+                'updated_at'    => $now
+            ]
+        ];
     }
 }

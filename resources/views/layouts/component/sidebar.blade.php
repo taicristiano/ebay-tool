@@ -14,15 +14,15 @@
             @can('user_manager')
             <li class="treeview" id="admin.user">
                 <a href="#">
-                <i class="fa fa-users"></i>
-                <span>{{ __('side_bar.user_manager') }}</span>
-                <span class="pull-right-container">
-                <!-- <span class="label label-primary pull-right">0</span> -->
-                </span>
+                    <i class="fa fa-users"></i>
+                    <span>{{ __('side_bar.user_manager') }}</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
-                <ul class="treeview-menu">
+                <ul class="treeview-menu" style="padding-left: 20px">
                     <li><a href="{{ route('admin.user.index') }}"><i class="fa fa-list-ul"></i>{{ __('side_bar.list_user') }}</a></li>
-                    <li><a href="{{ route('admin.user.upload') }}"><i class="fa fa-plus-square"></i>{{ __('side_bar.create_user') }}</a></li>
+                    <li><a href="{{ route('admin.user.show-page-upload-csv') }}"><i class="fa fa-plus-square"></i>{{ __('side_bar.create_user') }}</a></li>
                 </ul>
             </li>
             @endcan

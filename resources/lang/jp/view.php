@@ -1,11 +1,13 @@
 <?php
 
 return [
-    'display_all' => '会員検索',
-    'filter'      => '検索',
-    'create'      => '新規会員登録',
-    'submit'      => 'Submit',
-    'user'        => [
+    'display_all'              => '会員検索',
+    'filter'                   => '検索',
+    'create'                   => '新規会員登録',
+    'submit'                   => 'Submit',
+    'send_password_reset_link' => 'パスワード再発行',
+    'reset_password'           => '登録',
+    'user'                     => [
         'create_title'          => '新規作成',
         'user_name'             => '民名',
         'name_kana'             => 'フリガナ',

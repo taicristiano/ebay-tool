@@ -11,7 +11,7 @@ return [
     | the validator class. Some of these rules have multiple versions such
     | as the size rules. Feel free to tweak each of these messages here.
     |
-    */
+     */
 
     'accepted'             => 'The :attribute must be accepted.',
     'active_url'           => 'The :attribute is not a valid URL.',
@@ -98,11 +98,23 @@ return [
     | convention "attribute.rule" to name the lines. This makes it quick to
     | specify a specific custom language line for a given attribute rule.
     |
-    */
+     */
 
-    'custom' => [
-        'attribute-name' => [
+    'custom'               => [
+        'attribute-name'        => [
             'rule-name' => 'custom-message',
+        ],
+        'user_name.required'    => '民名を入力してください。',
+        'name_kana.required'    => 'フリガナを入力してください。',
+        'ebay_account.required' => 'ebayアカウントを入力してください。',
+        'email'                 => [
+            'required' => 'メールアドレスを入力ください。',
+            'email'    => 'メールアドレスが正しく入力してください。',
+        ],
+        'password'              => [
+            'required'  => 'パスワードを入力してください。',
+            'confirmed' => 'パスワードは統一しません。',
+            'min'       => 'パスワードは:min英数字で入力してください。',
         ],
     ],
 
@@ -115,8 +127,8 @@ return [
     | with something more reader friendly such as E-Mail Address instead
     | of "email". This simply helps us make messages a little cleaner.
     |
-    */
+     */
 
-    'attributes' => [],
+    'attributes'           => [],
 
 ];

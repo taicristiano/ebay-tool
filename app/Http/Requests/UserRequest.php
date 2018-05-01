@@ -46,24 +46,6 @@ class UserRequest extends FormRequest
     }
 
     /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'user_name.required'    => '民名を入力してください。',
-            'name_kana.required'    => 'フリガナを入力してください。',
-            'name_kana.required'    => 'フリガナを入力してください。',
-            'email.required'        => 'メールアドレスを入力ください。',
-            'email.email'           => 'メールアドレスが正しく入力してください。',
-            'ebay_account.required' => 'ebayアカウントを入力してください。',
-            'password.required'     => 'パスワードを入力してください。',
-        ];
-    }
-
-    /**
      * Configure the validator instance.
      *
      * @param  \Illuminate\Validation\Validator  $validator

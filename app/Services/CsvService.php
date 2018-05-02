@@ -235,6 +235,7 @@ class CsvService extends CommonService
         $item['password'] = Hash::make($item['password']);
         $item['created_at'] = date('Y-m-d H:i:s');
         $item['updated_at'] = date('Y-m-d H:i:s');
+        $item['user_code'] = User::generateUserCode();
         foreach ($fieldAuth as $field) {
             $dataAuth[$field] = $item[$field];
             unset($item[$field]);

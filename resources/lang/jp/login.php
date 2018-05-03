@@ -6,5 +6,5 @@ return [
     'Password' => 'パスワード',
     'login_id' => 'ログインID',
     'title'    => 'ebay出品管理ツールログイン',
-    'note'     => '※ログインID・PWを忘れた場合は<a href="#">こちら</a>',
+    'note'     => '※ログインID・PWを忘れた場合は<a href="' . route('password.reset', '') . '">こちら</a>',
 ];

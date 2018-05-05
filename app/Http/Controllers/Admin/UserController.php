@@ -14,8 +14,12 @@ use Hash;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Services\CsvService;
+use App\Services\SettingService;
 use App\Http\Requests\UploadCsvRequest;
+use App\Http\Requests\NormalSettingRequest ;
 use Lang;
+use App\Models\MtbStore;
+use Auth;
 
 class UserController extends AbstractController
 {
@@ -25,15 +29,27 @@ class UserController extends AbstractController
     protected $setting;
     protected $shipping;
     protected $shippingFee;
+    protected $store;
 
-    public function __construct(User $user, Authorization $authorization, CsvService $csvService, Setting $setting, SettingShipping $shipping, ShippingFee $shippingFee)
+    public function __construct(
+        User $user,
+        Authorization $authorization,
+        CsvService $csvService,
+        Setting $setting,
+        SettingShipping $shipping,
+        ShippingFee $shippingFee,
+        MtbStore $store,
+        SettingService $settingService
+    )
     {
-        $this->user          = $user;
-        $this->authorization = $authorization;
-        $this->csvService    = $csvService;
-        $this->setting       = $setting;
-        $this->shipping      = $shipping;
-        $this->shippingFee   = $shippingFee;
+        $this->user           = $user;
+        $this->authorization  = $authorization;
+        $this->csvService     = $csvService;
+        $this->setting        = $setting;
+        $this->shipping       = $shipping;
+        $this->shippingFee    = $shippingFee;
+        $this->store          = $store;
+        $this->settingService = $settingService;
     }
 
     /**
@@ -161,5 +177,37 @@ class UserController extends AbstractController
     {
         $results = $this->user->fetch($req);
         return response()->json($this->user->fetch($req));
+    }
+
+    /**
+     * show view normal setting
+     * @return view
+     */
+    public function normalSetting()
+    {
+        $userId = Auth::user()->id;
+        $setting = $this->setting->getSettingOfUser($userId);
+        $stores = $this->store->getAllStore();
+        $storeOption = $this->settingService->getOptionStores($stores);
+        return view('admin.setting.normal', compact('storeOption', 'setting'));
+    }
+
+    public function normalSettingUpdate(NormalSettingRequest $request)
+    {
+        try {
+            $data = $request->all();
+            $id = $data['id'];
+            $dataSetting = $this->settingService->formatDataSetting($data);
+            $result = $this->setting->updateSetting($id, $dataSetting);
+            if ($result) {
+                return redirect()->back()
+                    ->with('message', Lang::get('message.update_setting_success'));
+            }
+            return redirect()->back()
+                ->with('error', Lang::get('message.update_setting_error'));
+        } catch (Exception $ex) {
+            return redirect()->back()
+                ->with('error', Lang::get('message.update_setting_error'));
+        }
     }
 }

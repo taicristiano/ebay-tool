@@ -109,6 +109,16 @@ class User extends Authenticatable
     }
 
     /**
+     * check type setting by type
+     * @param  integer  $type
+     * @return boolean
+     */
+    public function isSetting($type)
+    {
+        return in_array($type, [static::TYPE_SUPER_ADMIN, static::TYPE_GUEST_ADMIN]);
+    }
+
+    /**
      * check is user type
      * @return boolean
      */

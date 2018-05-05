@@ -41,4 +41,12 @@ Route::group([
         Route::post('/upload/csv', 'UserController@uploadCsv')->name('upload-csv');
         Route::any('/fetch', 'UserController@fetch')->name('fetch');
     });
+    Route::group([
+        'prefix' => 'user',
+        'as'     => 'user.',
+        'middleware' => 'can:setting'
+    ], function () {
+        Route::get('normal-setting', 'UserController@normalSetting')->name('normal_setting');
+        Route::post('normal-setting', 'UserController@normalSettingUpdate')->name('normal_setting_post');
+    });
 });

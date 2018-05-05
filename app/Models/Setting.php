@@ -59,4 +59,27 @@ class Setting extends AbstractModel
         }
         return $this->updateOrCreate(['user_id' => $userId], $data);
     }
+
+    /**
+     * get setting of user
+     * @param  integer $userId
+     * @return object
+     */
+    public function getSettingOfUser($userId)
+    {
+        return $this->where('user_id', $userId)
+            ->first();
+    }
+
+    /**
+     * update setting
+     * @param  integer $id
+     * @param  array $data
+     * @return boolean
+     */
+    public function updateSetting($id, $data)
+    {
+        return $this->where('id', $id)
+            ->update($data);
+    }
 }

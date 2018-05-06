@@ -18,6 +18,7 @@
                         </div>
                         </form>
                         @else
+                            <p>Ebayアクセストークン取得</p>
                             <button class="btn btn-primary" type="button"> 連携済み</button>
                         @endif
                     </div>
@@ -56,7 +57,7 @@
                         {!! $errors->first('gift_discount') ? '<p class="text-danger">'. $errors->first('gift_discount') .'</p>' : ''!!}
                         <label for="duration">販売期間 <span class="text-danger">(*)</span></label>
                         <div class="form-group input-group">
-                            {!! Form::text('duration', old('duration', isset($setting->duration) ? $setting->duration : ''), ['class' => 'form-control']) !!}
+                            {!! Form::select("duration", $durationOption, old('duration', isset($setting->duration) ? $setting->duration : ''), ['class' => 'form-control', 'id' => 'duration']) !!}
                             <span class="input-group-addon">日</span>
                         </div>
                         {!! $errors->first('duration') ? '<p class="text-danger">'. $errors->first('duration') .'</p>' : ''!!}

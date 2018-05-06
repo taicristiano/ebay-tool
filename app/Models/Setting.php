@@ -22,8 +22,31 @@ class Setting extends AbstractModel
     const DEFAULT_DURATION         = 30;
     const DEFAULT_QUANTITY         = 1;
 
+    /**
+     * define duration
+     */
+    const DURATION_THREE_DAY       = 3;
+    const DURATION_FIVE_DAY        = 5;
+    const DURATION_SEVENT_DAY      = 7;
+    const DURATION_TEN_DAY         = 10;
+    const DURATION_THIRTY_DAY      = 30;
+
     protected $guarded = [];
 
+    /**
+     *  get duration option
+     * @return array
+     */
+    public function getDurationOption()
+    {
+        return [
+            static::DURATION_THREE_DAY  => static::DURATION_THREE_DAY,
+            static::DURATION_FIVE_DAY   => static::DURATION_FIVE_DAY,
+            static::DURATION_SEVENT_DAY => static::DURATION_SEVENT_DAY,
+            static::DURATION_TEN_DAY    => static::DURATION_TEN_DAY,
+            static::DURATION_THIRTY_DAY => static::DURATION_THIRTY_DAY,
+        ];
+    }
     /**
      * update or create by user_id
      * @param  integer $userId

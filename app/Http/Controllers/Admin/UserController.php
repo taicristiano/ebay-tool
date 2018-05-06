@@ -199,7 +199,8 @@ class UserController extends AbstractController
         $setting = $this->setting->getSettingOfUser($userId);
         $stores = $this->store->getAllStore();
         $storeOption = $this->settingService->getOptionStores($stores);
-        return view('admin.setting.normal', compact('storeOption', 'setting', 'isShowButtonGetToken'));
+        $durationOption =$this->setting->getDurationOption();
+        return view('admin.setting.normal', compact('storeOption', 'setting', 'isShowButtonGetToken', 'durationOption'));
     }
 
     /**
@@ -213,14 +214,11 @@ class UserController extends AbstractController
             $data = $request->all();
             $id = $data['id'];
             $dataSetting = $this->settingService->formatDataSetting($data);
-            $result = $this->setting->updateSetting($id, $dataSetting);
-            if ($result) {
-                return redirect()->back()
-                    ->with('message', Lang::get('message.update_setting_success'));
-            }
+            $this->setting->updateSetting($id, $dataSetting);
             return redirect()->back()
-                ->with('error', Lang::get('message.update_setting_error'));
+                ->with('message', Lang::get('message.update_setting_success'));
         } catch (Exception $ex) {
+            dd($ex);
             return redirect()->back()
                 ->with('error', Lang::get('message.update_setting_error'));
         }
@@ -232,8 +230,13 @@ class UserController extends AbstractController
      */
     public function apiGetSessionId()
     {
-        $sessionId = $this->settingService->apiGetSessionId();
-        return redirect(config('api_info.url_redirect_get_session_id') . $sessionId);
+        try {
+            $sessionId = $this->settingService->apiGetSessionId();
+            return redirect(config('api_info.url_redirect_get_session_id') . $sessionId);
+        } catch (Exception $ex) {
+            return redirect()->back()
+                ->with('error', Lang::get('message.Get session error'));
+        }
     }
 
     /**

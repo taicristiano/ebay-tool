@@ -32,6 +32,6 @@ class CreateTableSettingPolicies extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dtb_setting_shipping');
+        Schema::dropIfExists('dtb_setting_policies');
     }
 }

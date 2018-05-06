@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SettingPolicy extends AbstractModel
 {
     use SoftDeletes;
-	/**
+    /**
      * The database table used by the model.
      *
      * @var string

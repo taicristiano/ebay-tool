@@ -25,8 +25,8 @@ class NormalSettingRequest extends Request
     public function rules()
     {
         return [
-            'paypal_fee_rate' => 'required|min:0',
-            'paypal_fixed_fee' => 'required|integer|min:0',
+            'paypal_fee_rate' => 'required|percent',
+            'paypal_fixed_fee' => 'required|integer|greate_than_or_equal_zero',
             'ex_rate_diff' => 'required|integer',
             'gift_discount' => 'required|integer|min:1|max:100',
             'duration' => 'required',

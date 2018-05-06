@@ -22,21 +22,7 @@ class Setting extends AbstractModel
     const DEFAULT_DURATION         = 30;
     const DEFAULT_QUANTITY         = 1;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'user_id',
-        'store_id',
-        'paypal_fee_rate',
-        'paypal_fixed_fee',
-        'ex_rate_diff',
-        'gift_discount',
-        'duration',
-        'quantity',
-    ];
+    protected $guarded = [];
 
     /**
      * update or create by user_id

@@ -26,24 +26,7 @@ class User extends Authenticatable
      */
     protected $table = 'dtb_user';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'user_code',
-        'user_name',
-        'password',
-        'type',
-        'introducer_id',
-        'email',
-        'name_kana',
-        'ebay_account',
-        'tel',
-        'memo',
-        'start_date',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for arrays.

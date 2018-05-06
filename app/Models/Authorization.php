@@ -16,19 +16,7 @@ class Authorization extends AbstractModel
 
     protected $table = 'dtb_authorization';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'user_id',
-        'regist_limit',
-        'post_limit',
-        'yahoo_info',
-        'amazon_info',
-        'monitoring',
-    ];
+    protected $guarded = [];
 
     /**
      * get category

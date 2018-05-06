@@ -48,5 +48,7 @@ Route::group([
     ], function () {
         Route::get('normal-setting', 'UserController@normalSetting')->name('normal_setting');
         Route::post('normal-setting', 'UserController@normalSettingUpdate')->name('normal_setting_post');
+        Route::post('api-get-session-id', 'UserController@apiGetSessionId')->name('api-get-session-id');
+        Route::post('api-get-policy', 'UserController@apiGetPolicy')->name('api-get-policy');
     });
 });

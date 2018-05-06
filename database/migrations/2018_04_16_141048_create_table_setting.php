@@ -25,9 +25,6 @@ class CreateTableSetting extends Migration
             $table->smallInteger('gift_discount')->default(100);
             $table->smallInteger('duration')->default(30);
             $table->smallInteger('quantity')->default(1);
-            $table->text('shipping_policy')->nullable();
-            $table->text('payment_policy')->nullable();
-            $table->text('return_policy')->nullable();
             $table->boolean('del_flg')->default(false);
             $table->timestamps();
         });

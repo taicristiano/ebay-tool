@@ -19,6 +19,7 @@ use App\Http\Requests\UploadCsvRequest;
 use App\Http\Requests\NormalSettingRequest ;
 use Lang;
 use App\Models\MtbStore;
+use App\Models\SettingPolicy;
 use Auth;
 
 class UserController extends AbstractController
@@ -30,6 +31,7 @@ class UserController extends AbstractController
     protected $shipping;
     protected $shippingFee;
     protected $store;
+    protected $settingPolicy;
 
     public function __construct(
         User $user,
@@ -39,7 +41,8 @@ class UserController extends AbstractController
         SettingShipping $shipping,
         ShippingFee $shippingFee,
         MtbStore $store,
-        SettingService $settingService
+        SettingService $settingService,
+        SettingPolicy $settingPolicy
     )
     {
         $this->user           = $user;
@@ -50,6 +53,7 @@ class UserController extends AbstractController
         $this->shippingFee    = $shippingFee;
         $this->store          = $store;
         $this->settingService = $settingService;
+        $this->settingPolicy  = $settingPolicy;
     }
 
     /**
@@ -183,15 +187,26 @@ class UserController extends AbstractController
      * show view normal setting
      * @return view
      */
-    public function normalSetting()
+    public function normalSetting(Request $request)
     {
         $userId = Auth::user()->id;
+        if ($request->has('username')) {
+            $result = $this->settingService->apiFetchToken();
+            $this->user->updateOrCreate(['id' => $userId], $result);
+            return redirect()->route('admin.user.normal_setting')->with('message', 'Get token success');
+        }
+        $isShowButtonGetToken = $this->settingService->checkDisplayButtonGetToken();
         $setting = $this->setting->getSettingOfUser($userId);
         $stores = $this->store->getAllStore();
         $storeOption = $this->settingService->getOptionStores($stores);
-        return view('admin.setting.normal', compact('storeOption', 'setting'));
+        return view('admin.setting.normal', compact('storeOption', 'setting', 'isShowButtonGetToken'));
     }
 
+    /**
+     * normal setting update
+     * @param  NormalSettingRequest $request
+     * @return redirect
+     */
     public function normalSettingUpdate(NormalSettingRequest $request)
     {
         try {
@@ -208,6 +223,42 @@ class UserController extends AbstractController
         } catch (Exception $ex) {
             return redirect()->back()
                 ->with('error', Lang::get('message.update_setting_error'));
+        }
+    }
+
+    /**
+     * api get session id
+     * @return redirect
+     */
+    public function apiGetSessionId()
+    {
+        $sessionId = $this->settingService->apiGetSessionId();
+        return redirect(config('api_info.url_redirect_get_session_id') . $sessionId);
+    }
+
+    /**
+     * api get policy
+     * @return redirect
+     */
+    public function apiGetPolicy()
+    {
+        try {
+            DB::beginTransaction();
+            $userId = Auth::user()->id;
+            $dataPolicy = $this->settingService->apiGetPolicy();
+            foreach ($dataPolicy as &$item) {
+                $item['user_id'] = $userId;
+                $item['policy_type'] = $this->settingPolicy->getTypeByStringName($item['policy_type']);
+                $item['created_at'] = date('Y-m-d H:i:s');
+                $item['updated_at'] = date('Y-m-d H:i:s');
+            }
+            $this->settingPolicy->deleteByUserId($userId);
+            $this->settingPolicy->insert($dataPolicy);
+            DB::commit();
+            return redirect()->route('admin.user.normal_setting')->with('message', 'Get policy success');
+        } catch (Exception $ex) {
+            DB::rollback();
+            return redirect()->route('admin.user.normal_setting')->with('error', 'Get policy error');
         }
     }
 }

@@ -186,22 +186,24 @@ class CsvService extends CommonService
                         $this->authorization->insert($dataInsert['data_auth']);
                     }
 
-                    // insert setting user
-                    $dataSetting['user_id'] = $userId;
-                    $dataSetting['created_at'] = date('Y-m-d H:i:s');
-                    $dataSetting['updated_at'] = date('Y-m-d H:i:s');
-                    $this->setting->insert($dataSetting);
+                    if ($this->user->isSetting($item['type'])) {
+                        // insert setting user
+                        $dataSetting['user_id'] = $userId;
+                        $dataSetting['created_at'] = date('Y-m-d H:i:s');
+                        $dataSetting['updated_at'] = date('Y-m-d H:i:s');
+                        $this->setting->insert($dataSetting);
 
-                    // insert setting shipping and setting fee
-                    $dataShipping = $this->settingShipping->getDataMaster($userId);
-                    foreach ($dataShipping as $key => $shipping) {
-                        $settingShippingId = $this->settingShipping->insertGetId($shipping);
-                        if ($shipping['shipping_name'] == 'EMS') {
-                            $dataShippingFee = $this->shippingFee->getDataMaster($settingShippingId, true);
-                        } else {
-                            $dataShippingFee = $this->shippingFee->getDataMaster($settingShippingId);
+                        // insert setting shipping and setting fee
+                        $dataShipping = $this->settingShipping->getDataMaster($userId);
+                        foreach ($dataShipping as $key => $shipping) {
+                            $settingShippingId = $this->settingShipping->insertGetId($shipping);
+                            if ($shipping['shipping_name'] == 'EMS') {
+                                $dataShippingFee = $this->shippingFee->getDataMaster($settingShippingId, true);
+                            } else {
+                                $dataShippingFee = $this->shippingFee->getDataMaster($settingShippingId);
+                            }
+                            $this->shippingFee->insert($dataShippingFee);
                         }
-                        $this->shippingFee->insert($dataShippingFee);
                     }
                 }
             });

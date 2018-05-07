@@ -27,6 +27,8 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->text('memo')->nullable();
             $table->dateTime('start_date')->nullable();
+            $table->string('ebay_access_token', 1024)->nullable();
+            $table->dateTime('expire_date')->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

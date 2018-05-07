@@ -58,6 +58,9 @@
                     <i class="fa fa-gears"></i>
                     <span>{{ __('side_bar.setting') }}</span>
                 </a>
+                <ul class="treeview-menu" style="padding-left: 20px">
+                    <li><a href="{{ route('admin.user.normal_setting') }}"><i class="fa fa-list-ul"></i>{{ __('side_bar.normal_setting') }}</a></li>
+                </ul>
             </li>
             @endcan
         </ul>

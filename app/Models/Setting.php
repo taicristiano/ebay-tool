@@ -23,21 +23,30 @@ class Setting extends AbstractModel
     const DEFAULT_QUANTITY         = 1;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
+     * define duration
      */
-    protected $fillable = [
-        'user_id',
-        'store_id',
-        'paypal_fee_rate',
-        'paypal_fixed_fee',
-        'ex_rate_diff',
-        'gift_discount',
-        'duration',
-        'quantity',
-    ];
+    const DURATION_THREE_DAY       = 3;
+    const DURATION_FIVE_DAY        = 5;
+    const DURATION_SEVENT_DAY      = 7;
+    const DURATION_TEN_DAY         = 10;
+    const DURATION_THIRTY_DAY      = 30;
 
+    protected $guarded = [];
+
+    /**
+     *  get duration option
+     * @return array
+     */
+    public function getDurationOption()
+    {
+        return [
+            static::DURATION_THREE_DAY  => static::DURATION_THREE_DAY,
+            static::DURATION_FIVE_DAY   => static::DURATION_FIVE_DAY,
+            static::DURATION_SEVENT_DAY => static::DURATION_SEVENT_DAY,
+            static::DURATION_TEN_DAY    => static::DURATION_TEN_DAY,
+            static::DURATION_THIRTY_DAY => static::DURATION_THIRTY_DAY,
+        ];
+    }
     /**
      * update or create by user_id
      * @param  integer $userId
@@ -58,5 +67,28 @@ class Setting extends AbstractModel
             ];
         }
         return $this->updateOrCreate(['user_id' => $userId], $data);
+    }
+
+    /**
+     * get setting of user
+     * @param  integer $userId
+     * @return object
+     */
+    public function getSettingOfUser($userId)
+    {
+        return $this->where('user_id', $userId)
+            ->first();
+    }
+
+    /**
+     * update setting
+     * @param  integer $id
+     * @param  array $data
+     * @return boolean
+     */
+    public function updateSetting($id, $data)
+    {
+        return $this->where('id', $id)
+            ->update($data);
     }
 }

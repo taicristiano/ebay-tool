@@ -114,10 +114,10 @@ class SettingService extends CommonService
         $user = Auth::user();
         if ($user->ebay_access_token &&
             $user->expire_date &&
-            time() > strtotime($user->expire_date)) {
-            return true;
+            time() < strtotime($user->expire_date)) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     /**

@@ -193,7 +193,7 @@ class UserController extends AbstractController
         if ($request->has('username')) {
             $result = $this->settingService->apiFetchToken();
             $this->user->updateOrCreate(['id' => $userId], $result);
-            return redirect()->route('admin.user.normal_setting')->with('message', 'Get token success');
+            return redirect()->route('admin.user.normal_setting')->with('message', Lang::get('message.get_token_success'));
         }
         $isShowButtonGetToken = $this->settingService->checkDisplayButtonGetToken();
         $setting = $this->setting->getSettingOfUser($userId);
@@ -218,7 +218,6 @@ class UserController extends AbstractController
             return redirect()->back()
                 ->with('message', Lang::get('message.update_setting_success'));
         } catch (Exception $ex) {
-            dd($ex);
             return redirect()->back()
                 ->with('error', Lang::get('message.update_setting_error'));
         }
@@ -235,7 +234,7 @@ class UserController extends AbstractController
             return redirect(config('api_info.url_redirect_get_session_id') . $sessionId);
         } catch (Exception $ex) {
             return redirect()->back()
-                ->with('error', Lang::get('message.Get session error'));
+                ->with('error', Lang::get('message.get_session_error'));
         }
     }
 
@@ -258,10 +257,10 @@ class UserController extends AbstractController
             $this->settingPolicy->deleteByUserId($userId);
             $this->settingPolicy->insert($dataPolicy);
             DB::commit();
-            return redirect()->route('admin.user.normal_setting')->with('message', 'Get policy success');
+            return redirect()->route('admin.user.normal_setting')->with('message', Lang::get('message.get_policy_success'));
         } catch (Exception $ex) {
             DB::rollback();
-            return redirect()->route('admin.user.normal_setting')->with('error', 'Get policy error');
+            return redirect()->route('admin.user.normal_setting')->with('error', Lang::get('message.get_policy_error'));
         }
     }
 }

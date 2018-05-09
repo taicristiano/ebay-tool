@@ -16,7 +16,7 @@ class CreateMtbCategoryFeeTable extends Migration
         Schema::create('mtb_category_fee', function (Blueprint $table) {
             $table->increments('id');
             $table->string('category_id', 10);
-            $table->string('category_path', 100);
+            $table->string('category_path', 1024);
             $table->float('standard_fee_rate', 4, 2);
             $table->float('basic_fee_rate', 4, 2);
             $table->float('premium_fee_rate', 4, 2);

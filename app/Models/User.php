@@ -301,7 +301,7 @@ class User extends Authenticatable
     public static function generateUserCode()
     {
         $yearMonth = date('ym');
-        if ($lastUser = static::select('user_code')->orderBy('id', 'desc')->first()) {
+        if ($lastUser = static::select('user_code')->whereNotNull('user_code')->orderBy('id', 'desc')->first()) {
             $lastIndex = ((Int) preg_replace('/^[0-9]{4}/', '', $lastUser->user_code) + 1);
             return $yearMonth . str_repeat('0', (3 - strlen($lastIndex))) . $lastIndex;
         }

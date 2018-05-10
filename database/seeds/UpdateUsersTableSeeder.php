@@ -18,9 +18,6 @@ class UpdateUsersTableSeeder extends Seeder
     {
         $users = User::get();
         foreach($users as $user) {
-            // if ($user->id == 2) {
-            //     dd(User::get());
-            // }
             $user->user_code = User::generateUserCode();
             $user->save();
             if (in_array($user->type, [User::TYPE_SUPER_ADMIN, User::TYPE_GUEST_ADMIN])) {

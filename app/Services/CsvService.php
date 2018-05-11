@@ -144,11 +144,13 @@ class CsvService extends CommonService
      */
     public function exportCsv($type, $data)
     {
-        $fileName = 'List user ' . date('Y-m-d H:i');
         $data = $this->generateDataExportCsv($type, $data);
+        $dateNow = date('Ymd h:i:s');
         if ($type == 'full') {
+            $fileName = 'ユーザー一覧（詳細） _' . $dateNow;
             $columnTitle = $this->generateColumnExportCsvFull();
         } else {
+            $fileName = 'ユーザー一覧（コネクト用） _' . $dateNow;
             $columnTitle = $this->generateColumnExportCsvSimple();
         }
         return $this->exportCsvNew($fileName . ".csv", $columnTitle, $data);

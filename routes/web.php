@@ -51,4 +51,11 @@ Route::group([
         Route::post('api-get-session-id', 'UserController@apiGetSessionId')->name('api-get-session-id');
         Route::post('api-get-policy', 'UserController@apiGetPolicy')->name('api-get-policy');
     });
+    Route::group([
+        'prefix' => 'product',
+        'as'     => 'product.',
+        'middleware' => 'can:setting'
+    ], function () {
+        Route::get('post-product', 'ProductController@showPagePostProduct')->name('show-page-post-product');
+    });
 });

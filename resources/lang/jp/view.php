@@ -68,4 +68,9 @@ return [
     'quantity' => '個数',
     'acquire_business_policy' => 'ビジネスポリシー取得',
     'save' => '保存',
+    'eBay' => 'eBay',
+    'yahoo_auction' => 'ヤフオク！',
+    'amazon' => 'amazon.co.jp',
+    'itemID' => 'itemID',
+    'image_acquisition' => '画像取得'
 ];

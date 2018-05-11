@@ -54,23 +54,23 @@ class CsvService extends CommonService
      */
     public static function generateColumnExportCsvFull()
     {
-        return array(
-            'start_date'       => Lang::get('view.start_date'),
-            'user_code'        => Lang::get('view.user_code'),
-            'user_name'        => Lang::get('view.user_name'),
-            'name_kana'        => Lang::get('view.name_kana'),
-            'email'            => Lang::get('view.email'),
-            'tel'              => Lang::get('view.tel'),
-            'ebay_account'     => Lang::get('view.ebay_account'),
-            'type'             => Lang::get('view.type'),
-            'introducer_id'    => Lang::get('view.introducer_id'),
-            'yahoo_info'       => Lang::get('view.yahoo_info'),
-            'amazon_info'      => Lang::get('view.amazon_info'),
-            'monitoring'       => Lang::get('view.monitoring_price'),
-            'regist_limit'     => Lang::get('view.regist_limit'),
-            'post_limit'       => Lang::get('view.post_limit'),
-            'memo'             => Lang::get('view.memo'),
-        );
+        return [
+            Lang::get('view.start_date'),
+            Lang::get('view.user_code'),
+            Lang::get('view.user_name'),
+            Lang::get('view.name_kana'),
+            Lang::get('view.email'),
+            Lang::get('view.tel'),
+            Lang::get('view.ebay_account'),
+            Lang::get('view.type'),
+            Lang::get('view.introducer_id'),
+            Lang::get('view.yahoo_info'),
+            Lang::get('view.amazon_info'),
+            Lang::get('view.monitoring_price'),
+            Lang::get('view.regist_limit'),
+            Lang::get('view.post_limit'),
+            Lang::get('view.memo'),
+        ];
     }
 
     /**
@@ -79,13 +79,13 @@ class CsvService extends CommonService
      */
     public static function generateColumnExportCsvSimple()
     {
-        return array(
-            'tel'           => Lang::get('view.tel'),
-            'user_code'     => Lang::get('view.user_code'),
-            'email'         => Lang::get('view.email'),
-            'address'       => Lang::get('view.address'),
-            'memo'          => Lang::get('view.memo'),
-        );
+        return [
+            Lang::get('view.tel'),
+            Lang::get('view.user_code'),
+            Lang::get('view.email'),
+            Lang::get('view.address'),
+            Lang::get('view.memo'),
+        ];
     }
 
     /**
@@ -96,49 +96,42 @@ class CsvService extends CommonService
      */
     public function generateDataExportCsv($type, $data)
     {
-        if ($type == 'full') {
-            $columnTitle = $this->generateColumnExportCsvFull();
-        } else {
-            $columnTitle = $this->generateColumnExportCsvSimple();
-        }
-        $rowOrder = 0;
+        
+        $results = [];
         if (count($data)) {
             if ($type == 'full') {
                 foreach ($data as $key => $item) {
-                    $row                                = [];
-                    $row[$columnTitle['start_date']]    = self::formatDate('Y/m/d', $item['start_date']);
-                    $row[$columnTitle['user_code']]     = $item['user_code'];
-                    $row[$columnTitle['user_name']]     = $item['user_name'];
-                    $row[$columnTitle['name_kana']]     = $item['name_kana'];
-                    $row[$columnTitle['email']]         = $item['email'];
-                    $row[$columnTitle['tel']]           = $item['tel'];
-                    $row[$columnTitle['ebay_account']]  = $item['ebay_account'];
-                    $row[$columnTitle['type']]          = $this->user->getTypeOptions()[$item['type']];
-                    $row[$columnTitle['introducer_id']] = $item['introducer_id'];
-                    $row[$columnTitle['yahoo_info']]    = self::getStatusFlag($item['yahoo_info']);
-                    $row[$columnTitle['amazon_info']]   = self::getStatusFlag($item['amazon_info']);
-                    $row[$columnTitle['monitoring']]    = self::getStatusFlag($item['monitoring']);
-                    $row[$columnTitle['regist_limit']]  = $item['regist_limit'];
-                    $row[$columnTitle['post_limit']]    = $item['post_limit'];
-                    $row[$columnTitle['memo']]          = $item['memo'];
-                    $results[]                          = $row;
+                    $row = [
+                        self::formatDate('Y/m/d', $item['start_date']),
+                        $item['user_code'],
+                        $item['user_name'],
+                        $item['name_kana'],
+                        $item['email'],
+                        $item['tel'],
+                        $item['ebay_account'],
+                        $this->user->getTypeOptions()[$item['type']],
+                        $item['introducer_id'],
+                        self::getStatusFlag($item['yahoo_info']),
+                        self::getStatusFlag($item['amazon_info']),
+                        self::getStatusFlag($item['monitoring']),
+                        $item['regist_limit'] ? $item['regist_limit'] : '',
+                        $item['post_limit'] ? $item['post_limit'] : '',
+                        $item['memo'] ? $item['memo'] : '',
+                    ];
+                    $results[] = $row;
                 }
             } else {
                 foreach ($data as $key => $item) {
-                    $row                            = [];
-                    $row[$columnTitle['tel']]       = $item['tel'];
-                    $row[$columnTitle['user_code']] = $item['user_code'];
-                    $row[$columnTitle['email']]     = $item['email'];
-                    $row[$columnTitle['address']]   = '';
-                    $row[$columnTitle['memo']]      = $item['memo'];
-                    $results[]                      = $row;
+                    $row = [
+                        $item['tel'],
+                        $item['user_code'],
+                        $item['email'],
+                        '',
+                        $item['memo']
+                    ];
+                    $results[] = $row;
                 }
             }
-        } else {
-            foreach ($columnTitle as $key => $value) {
-                $row[$columnTitle[$key]] = null;
-            }
-            $results[] = $row;
         }
         return $results;
     }
@@ -151,13 +144,14 @@ class CsvService extends CommonService
      */
     public function exportCsv($type, $data)
     {
-        $fileName = 'List user' . date('Y-m-d H:i');
+        $fileName = 'List user ' . date('Y-m-d H:i');
         $data = $this->generateDataExportCsv($type, $data);
-        return Excel::create($fileName, function($excel) use ($data) {
-            $excel->sheet('List user', function($sheet) use ($data) {
-                $sheet->fromArray($data);
-            });
-        })->download('csv');
+        if ($type == 'full') {
+            $columnTitle = $this->generateColumnExportCsvFull();
+        } else {
+            $columnTitle = $this->generateColumnExportCsvSimple();
+        }
+        return $this->exportCsvNew($fileName . ".csv", $columnTitle, $data);
     }
 
     /**
@@ -248,5 +242,42 @@ class CsvService extends CommonService
             'data_user' => $item,
             'data_auth' => $dataAuth,
         ];
+    }
+    
+    /**
+     * excute export csv
+     * @param  string $fileName
+     * @param  array $columns 
+     * @param  array $rowList
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function exportCsvNew($fileName, $columns, $rowList)
+    {
+        try {
+            $headers = array(
+                'Content-type' => 'text/csv',
+                'Content-Disposition' => 'attachment; filename=' . $fileName,
+                'Pragma' => 'no-cache',
+                'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+                'Expires' => '0'
+            );
+
+            $callback = function () use ($columns, $rowList) {
+                $file = fopen('php://output', 'w');
+                fputs($file, "\xEF\xBB\xBF");
+                fputcsv($file, $columns);
+
+                foreach ($rowList as $row) {
+                    fputcsv($file, $row);
+                }
+
+                fclose($file);
+            };
+
+            return response()->stream($callback, 200, $headers);
+        } catch (Exception $e) {
+            logger(__METHOD__ . ': ' . $e->getMessage());
+            abort('500');
+        }
     }
 }

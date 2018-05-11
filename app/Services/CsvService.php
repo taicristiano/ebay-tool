@@ -154,17 +154,6 @@ class CsvService extends CommonService
         return $this->exportCsvNew($fileName . ".csv", $columnTitle, $data);
     }
 
-    function arr2csv($fields) {
-         $fp = fopen('php://temp', 'r+b');
-        foreach($fields as $field) {
-            fputcsv($fp, $field);
-        }
-        rewind($fp);
-        $tmp = str_replace(PHP_EOL, "\r\n", stream_get_contents($fp));
-        return mb_convert_encoding($tmp, "SJIS-win", "UTF-8");
-
-    }
-
     /**
      * upload csv
      * @param  file $file

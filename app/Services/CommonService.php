@@ -46,4 +46,27 @@ class CommonService
     {
         return $value ? Lang::get('view.on') : Lang::get('view.off');
     }
+
+    /**
+     * call api with header and body
+     * @param  array $header
+     * @param  string $body
+     * @param  string $url
+     * @param  string $type
+     * @return array
+     */
+    public function callApi($header, $body, $url, $type)
+    {
+        $client = new \GuzzleHttp\Client();
+        $result = $client->$type(
+            $url, [
+                'headers' => $header,
+                'body'    => $body,
+            ]
+        );
+        $result = $result ->getBody()->getContents();
+        $xml    = simplexml_load_string($result, "SimpleXMLElement", LIBXML_NOCDATA);
+        $json   = json_encode($xml);
+        return json_decode($json, TRUE);
+    }
 }

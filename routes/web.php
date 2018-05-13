@@ -57,5 +57,6 @@ Route::group([
         'middleware' => 'can:setting'
     ], function () {
         Route::get('post-product', 'ProductController@showPagePostProduct')->name('show-page-post-product');
+        Route::post('api-get-item-ebay-info', 'ProductController@apiGetItemEbayInfo')->name('api-get-item-ebay-info');
     });
 });

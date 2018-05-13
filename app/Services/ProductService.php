@@ -6,64 +6,24 @@ use App\Services\CommonService;
 use Illuminate\Support\Facades\Session;
 use Auth;
 
-class SettingService extends CommonService
+class ProductService extends CommonService
 {
-    /**
-     * get option stores
-     * @param  array object $stores
-     * @return array
-     */
-    public function getOptionStores($stores)
-    {
-        $results = [];
-        foreach ($stores as $store) {
-            $results[$store->id] = $store->name;
-        }
-        return $results;
-    }
-
-    /**
-     * format data setting
-     * @param  array $data
-     * @return array
-     */
-    public function formatDataSetting($data)
-    {
-        unset($data['_token']);
-        unset($data['id']);
-        return $data;
-    }
-
-    /**
-     * format expiration time
-     * @param  string $time
-     * @return string
-     */
-    public function formatExpirationTime($time)
-    {
-        if (!$time) {
-            return;
-        }
-        $time = date_create($time);
-        return date_format($time,"Y/m/d H:i:s");
-    }
 
     /**
      * api get session id
      * @return string
      */
-    public function apiGetSessionId()
+    public function apiGetItemEbayInfo($itemId)
     {
-        $headers     = config('api_info.header_api_fetch_get_session_id');
-        $bodyRequest = config('api_info.body_request_api_fetch_get_session_id');
-        $url         = config('api_info.api_common');
-        $result = $this->callApi($headers, $bodyRequest, $url, 'post');
-        $sessionId = $result['SessionID'];
-        if (session()->has('session_id')) {
-            session()->forget('session_id');
+        $url    = config('api_info.api_ebay_get_item') . $itemId;
+        $data = $this->callApi(null, null, $url, 'get');
+        $response['status'] = false;
+        if ($data['Ack'] == 'Failure') {
+            return response()->json($response);
         }
-        session(['session_id' => $sessionId]);
-        return $sessionId;
+        $response['status'] = true;
+        $response['data'] = view('admin.product.component.item_ebay_info', compact('data'))->render();
+        return response()->json($response);
     }
 
     /**

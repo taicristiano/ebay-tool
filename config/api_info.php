@@ -27,5 +27,6 @@ return [
 		'X-EBAY-SOA-SECURITY-TOKEN' => '',
 		'X-EBAY-SOA-GLOBAL-ID' => 'EBAY-US',
 	],
-	'url_redirect_get_session_id' => 'https://signin.sandbox.ebay.com/ws/eBayISAPI.dll?SignIn&runame=YOURS_COMPANY-YOURSCOM--SBX-8-kkgfpvrbz&SessID='
+	'url_redirect_get_session_id' => 'https://signin.sandbox.ebay.com/ws/eBayISAPI.dll?SignIn&runame=YOURS_COMPANY-YOURSCOM--SBX-8-kkgfpvrbz&SessID=',
+	'api_ebay_get_item' => 'http://open.api.ebay.com/shopping?callname=GetSingleItem&responseencoding=XML&appid=YOURSCOM--PRD-de039438e-536f99c0&siteid=0&version=967&IncludeSelector=Details,ItemSpecifics&ItemID='
 ];

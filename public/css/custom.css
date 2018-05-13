@@ -37,3 +37,7 @@
 .error {
 	color: red;
 }
+
+.display-none {
+	display: none;
+}

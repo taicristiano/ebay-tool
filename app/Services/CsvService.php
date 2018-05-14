@@ -29,8 +29,7 @@ class CsvService extends CommonService
         Setting $setting,
         ShippingFee $shippingFee,
         SettingShipping $settingShipping
-    )
-    {
+    ) {
         $this->user            = $user;
         $this->authorization   = $authorization;
         $this->setting         = $setting;

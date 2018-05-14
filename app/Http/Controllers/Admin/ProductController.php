@@ -45,7 +45,7 @@ class ProductController extends AbstractController
         //     dd(2222);
         //     Log::info('Exchange rate command error');
         // }
-        return view('admin.product.post');
+        return view('admin.product.post', compact('data'));
     }
 
     public function apiGetItemEbayInfo(Request $request)

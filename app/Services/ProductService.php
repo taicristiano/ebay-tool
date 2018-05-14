@@ -5,9 +5,21 @@ namespace App\Services;
 use App\Services\CommonService;
 use Illuminate\Support\Facades\Session;
 use Auth;
+use App\Models\Setting;
+use App\Models\SettingPolicy;
 
 class ProductService extends CommonService
 {
+    protected $setting;
+    protected $settingPolicy;
+
+    public function __construct(
+        Setting $setting,
+        SettingPolicy $settingPolicy
+    ) {
+        $this->setting = $setting;
+        $this->settingPolicy = $settingPolicy;
+    }
 
     /**
      * api get session id
@@ -15,94 +27,65 @@ class ProductService extends CommonService
      */
     public function apiGetItemEbayInfo($itemId)
     {
-        $url    = config('api_info.api_ebay_get_item') . $itemId;
-        $data = $this->callApi(null, null, $url, 'get');
+        $url = config('api_info.api_ebay_get_item') . $itemId;
+        $result = $this->callApi(null, null, $url, 'get');
         $response['status'] = false;
-        if ($data['Ack'] == 'Failure') {
+        if ($result['Ack'] == 'Failure') {
             return response()->json($response);
         }
+        $userId = Auth::user()->id;
+        $settingData = $this->setting->getSettingOfUser($userId);
+        $settingPolicyData = $this->settingPolicy->getSettingPolicyOfUser($userId);
+        $data = $this->formatDataEbayInfo($result, $settingData, $settingPolicyData);
         $response['status'] = true;
         $response['data'] = view('admin.product.component.item_ebay_info', compact('data'))->render();
         return response()->json($response);
     }
 
-    /**
-     * call api fetch token
-     * @return array
-     */
-    public function apiFetchToken()
+    public function formatDataEbayInfo($data, $settingItem, $settingPolicyData)
     {
-        $headers     = config('api_info.header_api_fetch_token');
-        $bodyRequest = str_replace('session_id', session('session_id'), config('api_info.body_request_api_fetch_token'));
-        $url         = config('api_info.api_common');
-        $result      = $this->callApi($headers, $bodyRequest, $url, 'post');
-        return [
-            'ebay_access_token' => $result['eBayAuthToken'],
-            'expire_date'       => $this->formatExpirationTime($result['HardExpirationTime'])
+        // data dtb_item
+        $result['dtb_item'] = [
+            'item_name' => $data['Item']['Title'],
+            'category_id' => $data['Item']['PrimaryCategoryID'],
+            'category_name' => $data['Item']['PrimaryCategoryName'],
+            'condition_id' => $data['Item']['ConditionID'],
+            'condition_name' => $data['Item']['ConditionDisplayName'],
+            'price' => $data['Item']['ConvertedCurrentPrice'],
         ];
-    }
 
-    /**
-     * check display button get token
-     * @return boolean
-     */
-    public function checkDisplayButtonGetToken()
-    {
-        $user = Auth::user();
-        if ($user->ebay_access_token &&
-            $user->expire_date &&
-            time() < strtotime($user->expire_date)) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * call api get policy
-     * @return array
-     */
-    public function apiGetPolicy()
-    {
-        $user    = Auth::user();
-        $headers = config('api_info.header_api_get_policy');
-        $headers['X-EBAY-SOA-SECURITY-TOKEN'] = $user->ebay_access_token;
-        $url     = config('api_info.api_get_policy');
-        $result  = $this->callApi($headers, null, $url, 'get');
-        return $this->formatDataPolicy($result);
-    }
-
-    /**
-     * format data policy
-     * @param array $data
-     * @return array
-     */
-    public function formatDataPolicy($data)
-    {
-        $result = [];
-        if (!empty($data['paymentProfileList'])) {
-            $payment                       = $data['paymentProfileList']['PaymentProfile'];
-            $dataPayment['policy_name']    = $payment['profileName'];
-            $dataPayment['policy_type']    = $payment['profileType'];
-            $dataPayment['policy_content'] = json_encode($payment);
-            $result[]                      = $dataPayment;
+        //data dtb_item_specifics
+        $result['dtb_item_specifics'] = [];
+        foreach ($data['Item']['ItemSpecifics']['NameValueList'] as $specific) {
+            $item['name'] = $specific['Name'];
+            $item['value'] = $specific['Value'];
+            $result['dtb_item_specifics'][] = $item;
         }
 
-        if (!empty($data['returnPolicyProfileList'])) {
-            $return                       = $data['returnPolicyProfileList']['ReturnPolicyProfile'];
-            $dataReturn['policy_name']    = $return['profileName'];
-            $dataReturn['policy_type']    = $return['profileType'];
-            $dataReturn['policy_content'] = json_encode($return);
-            $result[]                     = $dataReturn;
-        }
+        //data dtb_setting
+        $settingData['duration']  = $settingItem->duration;
+        $settingData['quantity']  = $settingItem->quantity;
+        $result['dtb_setting'] = $settingData;
 
-        if (!empty($data['shippingPolicyProfile'])) {
-            $shipping                       = $data['shippingPolicyProfile']['ShippingPolicyProfile'];
-            $dataShipping['policy_name']    = $shipping['profileName'];
-            $dataShipping['policy_type']    = $shipping['profileType'];
-            $dataShipping['policy_content'] = json_encode($shipping);
-            $result[]                       = $dataShipping;
+        //data dtb_setting_policies
+        $shippingType = [];
+        $paymentType = [];
+        $returnType = [];
+        foreach ($settingPolicyData as $key => $policy) {
+            if ($policy->policy_type == SettingPolicy::TYPE_SHIPPING) {
+                $shippingType[$policy->id] = $policy->policy_name;
+            } elseif ($policy->policy_type == SettingPolicy::TYPE_PAYMENT) {
+                $paymentType[$policy->id] = $policy->policy_name;
+            } else {
+                $returnType[$policy->id] = $policy->policy_name;
+            }
         }
-
+        $result['dtb_setting_policies'] = [
+            'shipping' => $shippingType,
+            'payment' => $paymentType,
+            'return' => $returnType
+        ];
+        
         return $result;
     }
 }

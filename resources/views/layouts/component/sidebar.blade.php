@@ -26,12 +26,14 @@
                 </ul>
             </li>
             @endcan
+            @can('post_product')
             <li class="treeview" id="admin.product.post">
                 <a href="#">
                     <i class="fa fa-upload"></i>
                     <span>{{ __('side_bar.post_product') }}</span>
                 </a>
             </li>
+            @endcan
             @can('product_manager')
             <li class="treeview" id="admin.product">
                 <a href="#">
@@ -40,18 +42,22 @@
                 </a>
             </li>
             @endcan
+            @can('order')
             <li class="treeview" id="admin.order">
                 <a href="#">
                     <i class="fa fa-cart-plus"></i>
                     <span>{{ __('side_bar.order_manager') }}</span>
                 </a>
             </li>
+            @endcan
+            @can('revenue')
             <li class="treeview" id="admin.revenue">
                 <a href="#">
                     <i class="fa fa-money"></i>
                     <span>{{ __('side_bar.revenue_manager') }}</span>
                 </a>
             </li>
+            @endcan
             @can('setting')
             <li class="treeview" id="admin.setting">
                 <a href="#">

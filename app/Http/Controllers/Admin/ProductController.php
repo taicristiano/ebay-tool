@@ -21,7 +21,38 @@ class ProductController extends AbstractController
      */
     public function showPagePostProduct()
     {
-        // try {
+        return view('admin.product.post', compact('data'));
+    }
+
+    public function apiGetItemEbayInfo(Request $request)
+    {
+        try {
+            return $this->productService->apiGetItemEbayInfo($request->item_id);
+        } catch (Exception $ex) {
+            Log::error($ex);
+            $response['status'] = false;
+            return response()->json($response);
+        }
+    }
+
+    public function postProduct(Request $request)
+    {
+        $data = $request->all();
+        dd($data);
+    }
+
+    public function apiGetItemYahooOrAmazonInfo(Request $request)
+    {
+        try {
+            return $this->productService->apiGetItemYahooOrAmazonInfo($request->item_id, $request->type);
+        } catch (Exception $ex) {
+            Log::error($ex);
+            $response['status'] = false;
+            return response()->json($response);
+        }
+    }
+
+    // try {
         //     // https://github.com/coopTilleuls/amazon-mws-products/tree/master/src/MarketplaceWebServiceProducts/Model
         //     // http://jumps-world.com/amazon-api-programing/amazonapi/amazonmwsapi%E3%82%92%E6%89%8B%E3%81%A3%E5%8F%96%E3%82%8A%E6%97%A9%E3%81%8F%E5%8B%95%E3%81%8B%E3%81%99%E6%96%B9%E6%B3%95-%E5%85%B6%E3%81%AE3/
         //     dd($this->productService->aptGet());
@@ -45,20 +76,5 @@ class ProductController extends AbstractController
         //     dd(2222);
         //     Log::info('Exchange rate command error');
         // }
-        return view('admin.product.post', compact('data'));
-    }
-
-    public function apiGetItemEbayInfo(Request $request)
-    {
-        try {
-            return $this->productService->apiGetItemEbayInfo($request->item_id);
-        } catch (Exception $ex) {
-            Log::error($ex);
-            $response['status'] = false;
-            return response()->json($response);
-        }
-        $response['status'] = false;
-        return view('admin.product.post', compact('data'));
-    }
 }
 

@@ -7,18 +7,23 @@ use Illuminate\Support\Facades\Session;
 use Auth;
 use App\Models\Setting;
 use App\Models\SettingPolicy;
+use App\Models\Item;
+use Goutte\Client;
 
 class ProductService extends CommonService
 {
     protected $setting;
     protected $settingPolicy;
+    protected $product;
 
     public function __construct(
         Setting $setting,
-        SettingPolicy $settingPolicy
+        SettingPolicy $settingPolicy,
+        Item $product
     ) {
         $this->setting = $setting;
         $this->settingPolicy = $settingPolicy;
+        $this->product = $product;
     }
 
     /**
@@ -85,7 +90,47 @@ class ProductService extends CommonService
             'payment' => $paymentType,
             'return' => $returnType
         ];
-        
+        $result['duration']['option'] = $this->product->getDurationOption();
+        $result['duration']['value'] = Item::VALUE_DURATION_30_DAY;
+
         return $result;
     }
+
+    public function apiGetItemYahooOrAmazonInfo($itemId, $type)
+    {
+        $response['status'] = false;
+        if ($type == 'yahoo_auction') {
+            $url = config('api_info.api_yahoo_action_info') . $itemId;
+            $client = new Client();
+            $crawler = $client->request('GET', $url);
+            $crawler = $crawler->filterXPath('//*[@id="l-sub"]/div[1]/ul/li[2]/div/dl/dd')->first();
+            $price = null;
+            if ($crawler->count()) {
+                $price = $crawler->text();
+            }
+
+            $crawler = $client->request('GET', $url);
+            $arrayImage = [];
+            $crawler->filterXPath('//*[@id="l-main"]/div/div[1]/div[1]/ul/li/div/img')->each(function ($node) use (&$arrayImage) {
+                $arrayImage[] = $node->attr('src');
+            });
+            dd($arrayImage, $price);
+
+            // $result = $this->callApi(null, null, $url, 'get');
+            // if ($result['Ack'] == 'Failure') {
+            //     return response()->json($response);
+            // }
+            // $userId = Auth::user()->id;
+            // $settingData = $this->setting->getSettingOfUser($userId);
+            // $settingPolicyData = $this->settingPolicy->getSettingPolicyOfUser($userId);
+            // $data = $this->formatDataEbayInfo($result, $settingData, $settingPolicyData);
+        } else {
+            // call api amazon
+        }
+        $response['status'] = true;
+        $response['data'] = view('admin.product.component.item_yahoo_or_amazon_info', compact('data'))->render();
+        return response()->json($response);
+
+    }
+
 }

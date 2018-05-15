@@ -54,4 +54,18 @@ return [
         'placeholder_user_name' => 'Enter user_name',
         'user_code'             => '会員番号',
     ],
+    'shipping'                 => [
+        'create'          => 'Create shipping',
+        'update'          => 'Update shipping',
+        'shipping_name'   => '発送方法',
+        'max_size'        => '全辺合計',
+        'side_max_size'   => '一辺最長',
+        'submit'          => 'Submit',
+        'submit_with_fee' => 'Submit and redirect to fee',
+        'list_fee'        => 'List Fee',
+        'create_fee'      => 'Create Fee',
+        'update_fee'      => 'Update Fee',
+        'weight'          => '重量',
+        'ship_fee'        => '送料',
+    ],
 ];

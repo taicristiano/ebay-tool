@@ -11,5 +11,6 @@ return [
     'product_manager' => '出品管理',
     'order_manager'   => '受注管理',
     'revenue_manager' => '売上管理',
-    'setting'         => '設定画面',
+    'setting'         => '設定管理',
+    'shipping'        => '発送パータン設定',
 ];

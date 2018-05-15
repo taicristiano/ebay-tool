@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class SettingShipping extends AbstractModel
 {
+    use SoftDeletes;
     /**
      * The database table used by the model.
      *
@@ -49,7 +52,7 @@ class SettingShipping extends AbstractModel
                 ];
             }
             $shippingData['user_id'] = $userId;
-            $shipping = new static;
+            $shipping                = new static;
             $shipping->fill($shippingData)->save();
             $shippingFeeData = [];
             foreach ($shippingFees as $fee) {
@@ -81,7 +84,7 @@ class SettingShipping extends AbstractModel
                 'max_size'      => static::DEFAULT_MAX_SIZE,
                 'side_max_size' => static::DEFAULT_SIDE_MAX_SIZE,
                 'created_at'    => $now,
-                'updated_at'    => $now
+                'updated_at'    => $now,
             ],
             [
                 'user_id'       => $userId,
@@ -89,8 +92,36 @@ class SettingShipping extends AbstractModel
                 'max_size'      => 0,
                 'side_max_size' => 0,
                 'created_at'    => $now,
-                'updated_at'    => $now
-            ]
+                'updated_at'    => $now,
+            ],
         ];
+    }
+
+    /**
+     * get shipping list
+     * @param  integer $userId
+     * @param  boolean $withUser
+     * @return Collections
+     */
+    public function getShippingList($userId = null, $withUser = false)
+    {
+        $whereRaw = "
+                {$this->getTable()}.id,
+                {$this->getTable()}.user_id,
+                {$this->getTable()}.shipping_name,
+                {$this->getTable()}.max_size,
+                {$this->getTable()}.side_max_size";
+        $shippings = $this
+            ->whereRaw($userId ? "({$this->getTable()}.user_id = $userId)" : '1');
+        if ($withUser) {
+            $userTable = (new User)->getTable();
+            $whereRaw .= ",{$userTable}.user_name";
+            $shippings = $shippings
+                ->join($userTable, "{$this->getTable()}.user_id", "{$userTable}.id")
+                ->selectRaw($whereRaw)
+                ->orderBy("{$userTable}.id", 'desc')
+                ->orderBy("{$this->getTable()}.id", 'desc');
+        }
+        return $shippings->paginate();
     }
 }

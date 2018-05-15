@@ -53,11 +53,14 @@
                 </a>
             </li>
             @can('setting')
-            <li class="treeview" id="admin.setting">
+            <li class="treeview" id="admin.setting|admin.shipping">
                 <a href="#">
                     <i class="fa fa-gears"></i>
                     <span>{{ __('side_bar.setting') }}</span>
                 </a>
+                <ul class="treeview-menu" style="padding-left: 20px">
+                    <li><a href="{{ route('admin.shipping.index') }}"><i class="fa fa-cog"></i>{{ __('side_bar.shipping') }}</a></li>
+                </ul>
             </li>
             @endcan
         </ul>

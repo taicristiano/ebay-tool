@@ -26,6 +26,9 @@ class RouteServiceProvider extends ServiceProvider
         //
 
         parent::boot();
+
+        // shipping model binding
+        Route::model('shippingId', \App\Models\SettingShipping::class);
     }
 
     /**

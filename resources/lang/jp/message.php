@@ -16,4 +16,6 @@ return [
 	'get_session_error'    => 'セッションを取得できません。',
 	'get_policy_success'   => 'ポリシーを取得できました。',
 	'get_policy_error'     => 'エラーでポリシーを取得できませんでした。再度試してください。',
+
+    'top_normal_user'      => 'お客様の契約は現在一時的にご利用を制限しております。',
 ];

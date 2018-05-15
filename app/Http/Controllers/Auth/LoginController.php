@@ -64,7 +64,9 @@ class LoginController extends Controller
     protected function attemptLogin(Request $request)
     {
         if ($user = $this->user->findByEmail($request->email)) {
-            if (Hash::check($request->password, $user->password) && $user->start_date <= date('Y-m-d H:i:s')) {
+            if (Hash::check($request->password, $user->password)
+                && $user->start_date <= date('Y-m-d H:i:s')
+                && !$user->isCancelationUser()) {
                 $this->guard()->login($user);
             }
         }

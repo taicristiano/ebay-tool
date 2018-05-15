@@ -32,5 +32,8 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('product_manager', 'App\Policies\UserPolicy@productManager');
         Gate::define('monitoring_product', 'App\Policies\UserPolicy@monitoringProduct');
         Gate::define('setting', 'App\Policies\UserPolicy@setting');
+        Gate::define('order', 'App\Policies\UserPolicy@order');
+        Gate::define('revenue', 'App\Policies\UserPolicy@revenue');
+        Gate::define('post_product', 'App\Policies\UserPolicy@postProduct');
     }
 }

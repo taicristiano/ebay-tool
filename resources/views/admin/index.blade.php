@@ -20,6 +20,7 @@ Ebay Tool
     <section class="content">
         <!-- Small boxes (Stat box) -->
         <div class="row">
+            @if($userLoggedIn->isSuperAdmin())
             <div class="col-lg-4 col-xs-6">
                 <!-- small box -->
                 <div class="small-box bg-aqua">
@@ -34,6 +35,13 @@ Ebay Tool
                 </div>
             </div>
             <!-- ./col -->
+            @endif
+
+            @if($userLoggedIn->isNormalUser())
+            <div class="col-lg-12">
+                {{ __('message.top_normal_user') }}
+            </div>
+            @endif
         </div>
         <!-- /.row -->
     </section>

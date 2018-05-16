@@ -22,6 +22,7 @@
     </section>
     <!-- Main content -->
     <section class="content">
+        @include('layouts.component.alert')
         <!-- Default box -->
         <div class="box">
             <div class="box-header">

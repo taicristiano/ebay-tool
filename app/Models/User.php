@@ -26,6 +26,24 @@ class User extends Authenticatable
      */
     protected $table = 'dtb_user';
 
+    /**
+     * field list
+     * @var array
+     */
+    protected $fillable = [
+        'type',
+        'user_code',
+        'user_name',
+        'name_kana',
+        'introducer_id',
+        'ebay_account',
+        'start_date',
+        'tel',
+        'email',
+        'password',
+        'memo',
+    ];
+
     protected $guarded = [];
 
     /**
@@ -239,7 +257,7 @@ class User extends Authenticatable
                 'tel',
                 'user_code',
                 'email',
-                'memo'
+                'memo',
             ];
             $condition = $this->select($fieldSelect);
         }

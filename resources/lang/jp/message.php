@@ -5,9 +5,9 @@ return [
     'delete_confirm'       => 'Do you want to delete?',
     'no_thing'             => '---',
 
-    'deleted_user_success' => 'Deleted user successfully.',
-    'created_user_success' => 'Created user successfully.',
-    'updated_user_success' => 'Updated user successfully.',
+    'deleted_user_success' => 'ユーザーが削除されました。',
+    'created_user_success' => 'ユーザーが登録されました。',
+    'updated_user_success' => 'ユーザーが更新されました。',
     'server_error'         => 'Server error.',
     'error_while_upload'   => 'Error while upload csv',
     'get_token_success'    => 'アクセストークンを取得しました。',

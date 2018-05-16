@@ -22,6 +22,7 @@
     </section>
     <!-- Main content -->
     <section class="content">
+        @include('layouts.component.alert')
         <!-- Default box -->
         <div class="row">
             <form action="{{ isset($user) ? route('admin.user.update', $user->id) : route('admin.user.create') }}" class="col-xs-12 col-md-8 col-md-offset-2" method="POST" role="form">

@@ -2,8 +2,8 @@
 @section('head')
 <link rel="stylesheet" href="{{asset('adminlte/plugins/iCheck/all.css')}}">
 <link rel="stylesheet" href="{{ asset('css/product/post.css') }}">
-<link href="{{asset('lib/jQueryFiler/css/jquery.filer.css')}}" type="text/css" rel="stylesheet"/>
-<link href="{{asset('lib/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css')}}" type="text/css" rel="stylesheet"/>
+<link href="{{asset('lib/jquery-upload/css/jquery.fileuploader-theme-thumbnails.css')}}" type="text/css" rel="stylesheet"/>
+<link href="{{asset('lib/jquery-upload/css/jquery.fileuploader.min.css')}}" type="text/css" rel="stylesheet"/>
 @endsection
 @section('content')
 <div class="content-wrapper">
@@ -31,25 +31,44 @@
                             <button class="btn btn-primary" type="button" id="btn-get-ebay-or-amazon"><i class="fa fa-info-circle"></i> {{ __('view.image_acquisition') }}</button>
                         </form>
                         <p class="text-danger display-none" id="item-ebay-invalid">Item not found</p>
+                        <form role="form" id="form-post" enctype="multipart/form-data" method="post" action="{{route('admin.product.post-product')}}">
+                            @csrf
+                            <div id="conten-ajax">
+                                <div class="ebay-info">
+                                    
+                                </div>
+                                <div class="yahoo-or-amazon-info">
+                                    
+                                </div>
+                                <div class="display-none margin-20" id="profit-calculation">
+                                    <button type="button" class="btn btn-primary" id="btn-calculator-profit"><i class="fa fa-calculator fa-fw"></i> 商品投稿</button>
+                                </div>
+                                <div class="calculator-info">
+                                    
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="box-footer display-none" id="post-product">
+                        <div class="text-center margin-20 text-center">
+                            <button type="button" class="btn btn-primary" id="save"><i class="fa fa-floppy-o fa-fw"></i> 利益計算</button>
+                        </div>
                     </div>
                 </div>
-                <form role="form" id="form-post">
-                    @csrf
-                    <div id="conten-ajax">
-                    </div>
-                </form>
             </div>
         </div>
     </section>
     @endsection
 </div>
 @section('script')
-<script src="{{asset('lib/jQueryFiler/js/jquery.filer.min.js')}}"></script>
+<script src="{{asset('lib/jquery-upload/js/jquery.fileuploader.js')}}"></script>
+<script src="{{asset('lib/jquery-upload/js/custom.js')}}"></script>
 <script src="{{asset('adminlte/plugins/iCheck/icheck.min.js')}}"></script>
 <script src="{{ asset('js/post-product.js') }}"></script>
 <script>
     var urlGetItemEbayInfo = "{{ route('admin.product.api-get-item-ebay-info') }}";
     var urlGetItemYahooOrAmazonInfo = "{{ route('admin.product.api-get-item-yahoo-or-amazon-info') }}";
+    var urlCalculatorProfit = "{{ route('admin.product.calculator-profit') }}";
     var urlPosProduct = "{{ route('admin.product.post-product') }}";
     $('input[type="radio"].minimal').iCheck({
         radioClass: 'iradio_minimal-blue'

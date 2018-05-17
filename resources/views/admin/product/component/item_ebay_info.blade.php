@@ -117,8 +117,5 @@
             <p class="text-danger">'. $errors->first("dtb_item[return_policy_id]") .'</p>
             ' : ''!!}
         </div>
-        <div class="text-center">
-            <button type="button" class="btn btn-info fa" id="save"><i class="fa fa-plus fa-fw"></i> Save</button>
-        </div>
     </div>
 </div>

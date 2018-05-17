@@ -9,6 +9,8 @@ use App\Models\Setting;
 use App\Models\SettingPolicy;
 use App\Models\Item;
 use Goutte\Client;
+use Exception;
+use Illuminate\Support\Facades\Storage;
 
 class ProductService extends CommonService
 {
@@ -112,25 +114,88 @@ class ProductService extends CommonService
             $crawler = $client->request('GET', $url);
             $arrayImage = [];
             $crawler->filterXPath('//*[@id="l-main"]/div/div[1]/div[1]/ul/li/div/img')->each(function ($node) use (&$arrayImage) {
-                $arrayImage[] = $node->attr('src');
+                $url = $node->attr('src');
+                $arrayItem = explode(".", $url);
+                $type = array_pop($arrayItem);
+                $item = [
+                    'name' => '',
+                    'type' => 'image/' . $type,
+                    'file' => $url,
+                ];
+                $arrayImage[] = $item;
             });
-            dd($arrayImage, $price);
-
-            // $result = $this->callApi(null, null, $url, 'get');
-            // if ($result['Ack'] == 'Failure') {
-            //     return response()->json($response);
-            // }
-            // $userId = Auth::user()->id;
-            // $settingData = $this->setting->getSettingOfUser($userId);
-            // $settingPolicyData = $this->settingPolicy->getSettingPolicyOfUser($userId);
-            // $data = $this->formatDataEbayInfo($result, $settingData, $settingPolicyData);
         } else {
             // call api amazon
         }
+        if (!count($arrayImage)) {
+            return response()->json($response);
+        }
         $response['status'] = true;
-        $response['data'] = view('admin.product.component.item_yahoo_or_amazon_info', compact('data'))->render();
+        $response['image'] = $arrayImage;
+        $response['data'] = view('admin.product.component.item_yahoo_or_amazon_info', compact('data', 'arrayImage', 'price'))->render();
         return response()->json($response);
 
     }
 
+    public static function uploadFile(
+            $file, 
+            $path, 
+            $allowType = [], 
+            $maxSize = null, 
+            $rename = true,
+            array $config = []
+    ) {
+        if ($file->isValid()) {
+            if ($allowType) {
+                $extension = $file->getClientMimeType();
+                if (! in_array($extension, $allowType)) {
+                    throw new Exception("Error Processing Request", 1);
+                }
+            }
+            if ($maxSize) {
+                $fileSize = $file->getClientSize();
+                if ($fileSize / 1000 > $maxSize) {
+                    throw new Exception("Error Processing Request", 1);
+                }
+            }
+            if ($rename) {
+                $extension = $file->getClientOriginalExtension();
+                if (is_string($rename)) {
+                    $fileName = $rename . '.' . $extension;
+                } else {
+                    $fileName = str_random(5) . '_' . time() . '.' . $extension;
+                }
+            } else {
+                $fileName = $file->getClientOriginalName();
+            }
+            $fullPathOrg = $file->getRealPath();
+            if ($config && isset($config['remove_exif']) && $config['remove_exif']) {
+                self::removeExifImage($fullPathOrg);
+            }
+            Storage::put(
+                $path . '/' . $fileName,
+                file_get_contents($fullPathOrg)
+            );
+            return $fileName;
+        }
+        return null;
+    }
+
+    public function calculatorProfit($type)
+    {
+        // $url = config('api_info.api_ebay_get_item') . $itemId;
+        // $result = $this->callApi(null, null, $url, 'get');
+        // $response['status'] = false;
+        // if ($result['Ack'] == 'Failure') {
+        //     return response()->json($response);
+        // }
+        // $userId = Auth::user()->id;
+        // $settingData = $this->setting->getSettingOfUser($userId);
+        // $settingPolicyData = $this->settingPolicy->getSettingPolicyOfUser($userId);
+        // $data = $this->formatDataEbayInfo($result, $settingData, $settingPolicyData);
+        $data = [];
+        $response['status'] = true;
+        $response['data'] = view('admin.product.component.calculator_info', compact('data'))->render();
+        return response()->json($response);
+    }
 }

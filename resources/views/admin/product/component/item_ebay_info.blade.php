@@ -9,7 +9,7 @@
             ' : ''!!}
         </div>
         <div class="form-group form-group-custom">
-            {!! Form::hidden("dtb_item[category_id]", isset($data['dtb_item']['category_id']) ? $data['dtb_item']['category_id'] : '') !!}
+            {!! Form::hidden("dtb_item[category_id]", isset($data['dtb_item']['category_id']) ? $data['dtb_item']['category_id'] : '', ['id' => 'category_id']) !!}
             <label for="dtb_item[category_name]">カテゴリー <span class="text-danger">(*)</span></label>
             {!! Form::text("dtb_item[category_name]", old("dtb_item['category_name']", isset($data['dtb_item']['category_name']) ? $data['dtb_item']['category_name'] : ''), ['class' => 'form-control', 'readonly' => true]) !!}
             {!! $errors->first("dtb_item[category_name]") ? '
@@ -74,7 +74,7 @@
         <hr>
         <div class="form-group form-group-custom">
             <label for="dtb_item[price]">販売価格 <span class="text-danger">(*)</span></label>
-            {!! Form::text("dtb_item[price]", old("dtb_item[price]", isset($data['dtb_item']['price']) ? $data['dtb_item']['price'] : ''), ['class' => 'form-control']) !!}
+            {!! Form::text("dtb_item[price]", old("dtb_item[price]", isset($data['dtb_item']['price']) ? $data['dtb_item']['price'] : ''), ['class' => 'form-control', 'id' => 'sell_price']) !!}
             {!! $errors->first("dtb_item[price]") ? '
             <p class="text-danger">'. $errors->first("dtb_item[price]") .'</p>
             ' : ''!!}

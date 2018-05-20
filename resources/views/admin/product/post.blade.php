@@ -16,19 +16,21 @@
                 <div class="box box-success">
                     <div class="box-header with-border">Post product</div>
                     <div class="box-body">
-                        <form class="form-inline" id="filter-post" role="form" method="GET">
+                        <form class="form-inline text-center" id="filter-post" role="form" method="GET">
                             {!! Form::text('item_id', 192375777401, ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'item_id']) !!}
                             <button class="btn btn-primary" type="button" id="btn-get-item-ebay-info"><i class="fa fa-info-circle"></i> {{ __('view.filter') }}</button>
+                            @foreach($originType as $key => $type)
                             &emsp;&emsp;&emsp;&emsp;<label>
-                                <input type="radio" name="type" class="minimal type" checked value="yahoo_auction">
-                                @lang('view.yahoo_auction')
+                                <input type="radio" name="type" class="minimal type" {{$key == 1 ? 'checked' :''}} value="{{$key}}">
+                                {{$type}}
                             </label>
-                            &emsp;&emsp;<label>
-                                <input type="radio" name="type" class="minimal type" value="amazon">
-                                @lang('view.amazon')
-                            </label>
-                            &emsp;&emsp;&emsp;&emsp;{!! Form::text('id_ebay_or_amazon', 'c642534441', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
-                            <button class="btn btn-primary" type="button" id="btn-get-ebay-or-amazon"><i class="fa fa-info-circle"></i> {{ __('view.image_acquisition') }}</button>
+                            @endforeach
+                            <!-- p607601748 -->
+                            <!-- c642534441 -->
+                            <!-- r245539002 -->
+                            <!-- u199058848 -->
+                            &emsp;&emsp;&emsp;&emsp;{!! Form::text('id_ebay_or_amazon', 'u199058848', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
+                            <button class="btn btn-primary" type="button" id="btn-get-yahoo-or-amazon"><i class="fa fa-info-circle"></i> {{ __('view.image_acquisition') }}</button>
                         </form>
                         <p class="text-danger display-none" id="item-ebay-invalid">Item not found</p>
                         <form role="form" id="form-post" enctype="multipart/form-data" method="post" action="{{route('admin.product.post-product')}}">
@@ -58,6 +60,7 @@
             </div>
         </div>
     </section>
+    <div class="modal modal-loading"></div>
     @endsection
 </div>
 @section('script')
@@ -70,6 +73,7 @@
     var urlGetItemYahooOrAmazonInfo = "{{ route('admin.product.api-get-item-yahoo-or-amazon-info') }}";
     var urlCalculatorProfit = "{{ route('admin.product.calculator-profit') }}";
     var urlPosProduct = "{{ route('admin.product.post-product') }}";
+    var updateProfit = "{{ route('admin.product.update-profit') }}";
     $('input[type="radio"].minimal').iCheck({
         radioClass: 'iradio_minimal-blue'
     });

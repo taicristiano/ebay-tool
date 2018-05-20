@@ -37,6 +37,39 @@ class Item extends AbstractModel
     const VALUE_DURATION_90_DAY = 'Days_90';
     const VALUE_DURATION_120_DAY = 'Days_120';
 
+    const ORIGIN_TYPE_YAHOO_AUCTION = 1;
+    const ORIGIN_TYPE_AMAZON = 2;
+
+    /**
+     * get origin type yahoo auction
+     * @return integer
+     */
+    public function getOriginTypeYahooAuction()
+    {
+        return self::ORIGIN_TYPE_YAHOO_AUCTION;
+    }
+
+    /**
+     * get origin type amazon
+     * @return integer
+     */
+    public function getOriginTypeAmazon()
+    {
+        return self::ORIGIN_TYPE_AMAZON;
+    }
+
+    /**
+     * get origin type
+     * @return array
+     */
+    public function getOriginType()
+    {
+        return [
+            $this->getOriginTypeYahooAuction() => trans('view.yahoo_auction'),
+            $this->getOriginTypeAmazon() => trans('view.amazon'),
+        ];
+    }
+
     /**
      * get duration option
      * @return array

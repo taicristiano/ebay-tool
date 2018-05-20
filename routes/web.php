@@ -57,9 +57,11 @@ Route::group([
         'middleware' => 'can:setting'
     ], function () {
         Route::get('post-product', 'ProductController@showPagePostProduct')->name('show-page-post-product');
+        Route::get('post-product-confirm/{id?}', 'ProductController@postProductConfirm')->name('post-product-confirm');
         Route::post('api-get-item-ebay-info', 'ProductController@apiGetItemEbayInfo')->name('api-get-item-ebay-info');
         Route::post('post-product', 'ProductController@postProduct')->name('post-product');
         Route::post('api-get-item-yahoo-or-amazon-info', 'ProductController@apiGetItemYahooOrAmazonInfo')->name('api-get-item-yahoo-or-amazon-info');
         Route::post('calculator-profit', 'ProductController@calculatorProfit')->name('calculator-profit');
+        Route::post('update-profit', 'ProductController@updateProfit')->name('update-profit');
     });
 });

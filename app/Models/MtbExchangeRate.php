@@ -12,4 +12,9 @@ class MtbExchangeRate extends AbstractModel
     protected $table = 'mtb_exchange_rate';
 
     protected $guarded = [];
+
+    public function getExchangeRateLatest()
+    {
+    	return $this->orderBy('created_at', 'desc')->first();
+    }
 }

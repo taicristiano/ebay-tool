@@ -5,14 +5,20 @@ use Log;
 use Goutte\Client;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
+use App\Models\Item;
+use App\Http\Requests\UpdateProfitRequest;
 
 class ProductController extends AbstractController
 {
+    protected $product;
+    protected $productService;
+
     public function __construct(
-        ProductService $productService
-    )
-    {
+        ProductService $productService,
+        Item $product
+    ) {
         $this->productService = $productService;
+        $this->product = $product;
     }
 
     /**
@@ -21,7 +27,8 @@ class ProductController extends AbstractController
      */
     public function showPagePostProduct()
     {
-        return view('admin.product.post', compact('data'));
+        $originType = $this->product->getOriginType();
+        return view('admin.product.post', compact('data', 'originType'));
     }
 
     public function apiGetItemEbayInfo(Request $request)
@@ -39,8 +46,8 @@ class ProductController extends AbstractController
     {
         // http://localhost/ebayTool/public/storage/test/rtRt2_1526574828.png
         $data = $request->all();
-        $this->productService->uploadFile($data['files_upload_4'], 'public/test');
-        dd($data['files_upload_4']);
+        dd($this->productService->postProduct($data));
+        // $this->productService->uploadFile($data['files_upload_4'], 'public/test');
     }
 
     public function apiGetItemYahooOrAmazonInfo(Request $request)
@@ -57,37 +64,34 @@ class ProductController extends AbstractController
     public function calculatorProfit(Request $request)
     {
         try {
-            return $this->productService->calculatorProfit($request->type);
+            return $this->productService->calculatorProfit($request->all());
         } catch (Exception $ex) {
             Log::error($ex);
             $response['status'] = false;
             return response()->json($response);
         }
     }
-    
-    // try {
-        //     // https://github.com/coopTilleuls/amazon-mws-products/tree/master/src/MarketplaceWebServiceProducts/Model
-        //     // http://jumps-world.com/amazon-api-programing/amazonapi/amazonmwsapi%E3%82%92%E6%89%8B%E3%81%A3%E5%8F%96%E3%82%8A%E6%97%A9%E3%81%8F%E5%8B%95%E3%81%8B%E3%81%99%E6%96%B9%E6%B3%95-%E5%85%B6%E3%81%AE3/
-        //     dd($this->productService->aptGet());
-        //     $url = 'https://page.auctions.yahoo.co.jp/jp/auction/c642534441';
-        //     $client = new Client();
-        //     $crawler = $client->request('GET', $url);
-        //     $crawler = $crawler->filterXPath('//*[@id="l-sub"]/div[1]/ul/li[2]/div/dl/dd')->first();
-        //     $price = null;
-        //     if ($crawler->count()) {
-        //         $price = $crawler->text();
-        //     }
 
-        //     $crawler = $client->request('GET', $url);
-        //     $arrayImage = [];
-        //     $crawler->filterXPath('//*[@id="l-main"]/div/div[1]/div[1]/ul/li/div/img')->each(function ($node) use (&$arrayImage) {
-        //         $arrayImage[] = $node->attr('src');
-        //     });
-        //     dd($arrayImage);
-        //     Log::info('Exchange rate command success');
-        // } catch (Exception $e) {
-        //     dd(2222);
-        //     Log::info('Exchange rate command error');
-        // }
+    public function postProductConfirm($id = null)
+    {
+        return view('admin.product.confirm');
+    }
+
+    public function updateProfit(Request $request)
+    {
+        $response['status'] = false;
+        try {
+            $data = $request->all();
+            $updateProfitValidate = UpdateProfitRequest::validateData($data);
+            if ($updateProfitValidate->fails()) {
+                $response['message_error'] = $updateProfitValidate->errors();
+                return response()->json($response);
+            }
+            return $this->productService->updateProfit($data);
+        } catch (Exception $ex) {
+            Log::error($ex);
+            return response()->json($response);
+        }
+    }
 }
 

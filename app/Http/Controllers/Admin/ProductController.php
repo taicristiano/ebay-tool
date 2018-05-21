@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Services\ProductService;
 use App\Models\Item;
 use App\Http\Requests\UpdateProfitRequest;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends AbstractController
 {
@@ -27,6 +29,10 @@ class ProductController extends AbstractController
      */
     public function showPagePostProduct()
     {
+        // Storage::move('/public/test/tainhot.png', '/public/test/tainhot1.png');
+
+        // dd(Session::get('product-info'));
+        // dd($this->productService->uploadTesst(Session::get('product-info')[0]['file_7']));
         $originType = $this->product->getOriginType();
         return view('admin.product.post', compact('data', 'originType'));
     }
@@ -42,12 +48,22 @@ class ProductController extends AbstractController
         }
     }
 
-    public function postProduct(Request $request)
+    public function postProductConfirm(Request $request)
     {
+        try {
+            $data = $request->all();
+            $data = $this->productService->formatDataInsertProduct($data);
+            Session::forget('product-info');
+            Session::push('product-info', $data);
+            $response['status'] = true;
+            $response['url'] = route('admin.product.show-confirm');
+            return response()->json($response);
+        } catch (Exception $ex) {
+            Log::error($ex);
+            $response['status'] = false;
+            return response()->json($response);
+        }
         // http://localhost/ebayTool/public/storage/test/rtRt2_1526574828.png
-        $data = $request->all();
-        dd($this->productService->postProduct($data));
-        // $this->productService->uploadFile($data['files_upload_4'], 'public/test');
     }
 
     public function apiGetItemYahooOrAmazonInfo(Request $request)
@@ -72,9 +88,14 @@ class ProductController extends AbstractController
         }
     }
 
-    public function postProductConfirm($id = null)
+    public function showConfirm(Request $request)
     {
-        return view('admin.product.confirm');
+        // $this->productService->uploadTesst(Session::get('product-info')[0]['file_7']);
+        $data = Session::get('product-info')[0];
+        if (!$data) {
+            return;
+        }
+        return view('admin.product.confirm', compact('data'));
     }
 
     public function updateProfit(Request $request)

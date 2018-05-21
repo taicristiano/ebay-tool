@@ -33,7 +33,7 @@
                             <button class="btn btn-primary" type="button" id="btn-get-yahoo-or-amazon"><i class="fa fa-info-circle"></i> {{ __('view.image_acquisition') }}</button>
                         </form>
                         <p class="text-danger display-none" id="item-ebay-invalid">Item not found</p>
-                        <form role="form" id="form-post" enctype="multipart/form-data" method="post" action="{{route('admin.product.post-product')}}">
+                        <form role="form" id="form-post" enctype="multipart/form-data" method="post" action="{{route('admin.product.post-product-confirm')}}">
                             @csrf
                             <div id="conten-ajax">
                                 <div class="ebay-info">
@@ -72,7 +72,7 @@
     var urlGetItemEbayInfo = "{{ route('admin.product.api-get-item-ebay-info') }}";
     var urlGetItemYahooOrAmazonInfo = "{{ route('admin.product.api-get-item-yahoo-or-amazon-info') }}";
     var urlCalculatorProfit = "{{ route('admin.product.calculator-profit') }}";
-    var urlPosProduct = "{{ route('admin.product.post-product') }}";
+    var urlPostProductConfirm = "{{ route('admin.product.post-product-confirm') }}";
     var updateProfit = "{{ route('admin.product.update-profit') }}";
     $('input[type="radio"].minimal').iCheck({
         radioClass: 'iradio_minimal-blue'

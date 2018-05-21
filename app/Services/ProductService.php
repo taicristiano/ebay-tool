@@ -16,9 +16,9 @@ use App\Models\ShippingFee;
 use App\Models\CategoryFee;
 use App\Models\MtbStore;
 use App\Models\MtbExchangeRate;
-use App\Models\Item;
 use App\Models\ItemSpecific;
 use App\Models\ItemImage;
+use Illuminate\Http\UploadedFile;
 
 class ProductService extends CommonService
 {
@@ -43,7 +43,7 @@ class ProductService extends CommonService
         MtbStore $mtbStore,
         MtbExchangeRate $exchangeRate,
         ItemSpecific $itemSpecific,
-        ItemImage $itemImage,
+        ItemImage $itemImage
     ) {
         $this->setting         = $setting;
         $this->settingPolicy   = $settingPolicy;
@@ -143,17 +143,33 @@ class ProductService extends CommonService
 
             $crawler = $client->request('GET', $url);
             $arrayImage = [];
-            $crawler->filterXPath('//*[@id="l-main"]/div/div[1]/div[1]/ul/li/div/img')->each(function ($node) use (&$arrayImage) {
+            $index = 0;
+            $crawler->filterXPath('//*[@id="l-main"]/div/div[1]/div[1]/ul/li/div/img')->each(function ($node) use (&$arrayImage, $index) {
+                $index++;
                 $url = $node->attr('src');
                 $arrayItem = explode(".", $url);
                 $type = array_pop($arrayItem);
                 $item = [
                     'name' => '',
                     'type' => 'image/' . $type,
+                    'extension' => $type,
                     'file' => $url,
                 ];
+                // $client  = new Client();
+                // $client->getClient()->get($url, ['save_to' => $index . '.' . $type,
+                //     'headers'=>[ 'Referer' => $url]
+                // ]);
                 $arrayImage[] = $item;
             });
+            // Storage::makeDirectory(storage_path('app/public/upload/item-images', 0755, true, true));
+            // foreach ($arrayImage as $key => $item) {
+            //     $client  = new Client();
+            //     $client->getClient()->get($item['file'], [
+            //         'save_to' => storage_path('app/public/upload/item-images/' . $itemId . '_' . $key . '.' . $item['extension']),
+            //         'headers'=> [ 'Referer' => $item['file']]
+            //     ]);
+            // }
+            // dd($arrayImage);
         // } else {
         //     $isTypeAmazon = true;
         //     // call api amazon
@@ -181,9 +197,9 @@ class ProductService extends CommonService
     public static function uploadFile(
             $file, 
             $path, 
+            $rename = true,
             $allowType = [], 
             $maxSize = null, 
-            $rename = true,
             array $config = []
     ) {
         if ($file->isValid()) {
@@ -339,12 +355,76 @@ class ProductService extends CommonService
             }
             $itemImageId = $this->itemImage->insertGetId([
                 'item_id' => $productId,
-                'url_image' => is_string($data['files_upload_' . $i])) ? $data['files_upload_' . $i] : '',
+                'url_image' => is_string($data['files_upload_' . $i]) ? $data['files_upload_' . $i] : '',
                 'created_at' => $dateNow,
                 'updated_at' => $dateNow
             ]);
             $itemImageString = $productId . '_' . $itemImageId . '_' . date('ymd_his');
             $this->itemImage->updateItemImageById($itemImageId, ['item_image' => $itemImageString]);
         }
+    }
+
+    public function formatDataInsertProduct($data)
+    {
+        unset($data['_token']);
+        unset($data['fileuploader-list-files']);
+        unset($data['files']);
+        for ($i = 0; $i < $data['number_file']; $i++) {
+            $file = $data['files_upload_' . $i];
+            if (is_string($file)) {
+                $data['url_preview_' . $i] = $file;
+                $data['file_name' . $i] = $file;
+            } else {
+                $data['url_preview_' . $i] = $this->getBase64Image($file);
+                $data['file_name' . $i] = $this->uploadFile($file, 'public/upload/item-images');
+                // $data['file_' . $i] = [
+                //     'test' => false,
+                //     'originalName' => $file->getClientOriginalName(),
+                //     'mimeType' => $file->getClientMimeType(),
+                //     'size' => $file->getClientSize(),
+                //     'path' => $file->getPathname(),
+                // ];
+                // $data['file_name' . $i] = $data['files_upload_' . $i];
+            }
+            unset($data['files_upload_' . $i]);
+        }
+        // if (!is_string($data['files_upload_7'])) {
+        //     $file = $data['files_upload_7'];
+        //     $data['file_7'] = [
+        //         'test' => false,
+        //         'originalName' => $file->getClientOriginalName(),
+        //         'mimeType' => $file->getClientMimeType(),
+        //         'size' => $file->getClientSize(),
+        //         'path' => $file->getPathname(),
+        //     ];
+        //     // $data['file_new'] = new UploadedFile(
+        //     //     $data['file_7']['path'],
+        //     //     $data['file_7']['originalName'],
+        //     //     $data['file_7']['mimeType'],
+        //     //     $data['file_7']['size']
+        //     // );
+        //     unset($data['files_upload_7']);
+        //     // $data['files_upload_7'] = (array) $data['files_upload_7'];
+        // }
+        return $data;
+    }
+
+    public function getBase64Image($image)
+    {
+        $path = $image->getPathname();
+        $type = explode("/", $image->getClientMimeType())[1];
+        $file = file_get_contents($path);
+        return 'data:image/' . $type . ';base64,' . base64_encode($file);
+    }
+
+    public function uploadTesst($input)
+    {
+        $file = new UploadedFile(
+            $input['path'],
+            $input['originalName'],
+            $input['mimeType'],
+            $input['size']
+        );
+        $this->uploadFile($file, 'public/upload/item-images');
     }
 }

@@ -81,18 +81,26 @@ jQuery(document).ready(function() {
         var api = $.fileuploader.getInstance('#files');
         var files = [];
         var fileUpload = api.getFiles();
+        fd.append('original_id', $('#id_ebay_or_amazon').val());
+        fd.append('item_id', $('#item_id').val());
         $.each(fileUpload, function (index, value) {
             // files.push(value.file);
             fd.append('files_upload_' + index, value.file);
             // data.push({name: 'files_upload_' + index, value: value.file});
         });
-        console.log(fd);
+        var listImage = $('.fileuploader-item-image image');
+        // $.each(fileUpload, function (index, value) {
+        //     console.log(value.reader.src);
+        //     // files.push(value.file);
+        //     fd.append('url_preview_' + index, value.reader.src);
+        //     // data.push({name: 'files_upload_' + index, value: value.file});
+        // });
         fd.append('number_file', fileUpload.length);
         data.push({name: 'number_file', value: fileUpload.length});
         // data.files_upload = files;
-        console.log(data);
+        console.log(fd);
         $.ajax({
-            url: urlPosProduct,
+            url: urlPostProductConfirm,
             type: 'post',
             dataType: 'json',
             data: fd,
@@ -100,14 +108,8 @@ jQuery(document).ready(function() {
             processData: false,
             success: function (data) {
                 if (data.status) {
-                    // $('#conten-ajax').append(data.data);
-                    $('#conten-ajax').html(data.data);
-                    numberSpecificItem = $('.specific-item').length - 1;
-                    $('html, body').animate({
-                        scrollTop: $("#conten-ajax .ebay-info").offset().top
-                    }, 3000);
+                    window.location.href = data.url;
                 } else {
-                    $('#conten-ajax').html('');
                     $('#item-ebay-invalid').removeClass('display-none');
                 }
             },

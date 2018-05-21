@@ -4,7 +4,7 @@
         @if($data['istTypeAmazon'])
         <div class="form-group form-group-custom">
             <label for="dtb_item[item_name]">商品サイズ <span class="text-danger">(*)</span></label>
-            {!! Form::text("data_amazon[product_size]", old("data_amazon[product_size]", isset($data['data_amazon']['product_size']) ? $data['data_amazon']['product_size'] : ''), ['class' => 'form-control product_size']) !!}
+            {!! Form::text("dtb_item[product_size]", old("data_amazon[product_size]", isset($data['data_amazon']['product_size']) ? $data['data_amazon']['product_size'] : ''), ['class' => 'form-control product_size']) !!}
             {!! $errors->first("data_amazon[product_size]") ? '
             <p class="text-danger">'. $errors->first("data_amazon[product_size]") .'</p>
             ' : ''!!}

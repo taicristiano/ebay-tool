@@ -37,6 +37,11 @@ class ProductController extends AbstractController
         return view('admin.product.post', compact('data', 'originType'));
     }
 
+    /**
+     * api get item ebay info
+     * @param  Request $request
+     * @return Illuminate\Http\Response
+     */
     public function apiGetItemEbayInfo(Request $request)
     {
         try {
@@ -48,24 +53,11 @@ class ProductController extends AbstractController
         }
     }
 
-    public function postProductConfirm(Request $request)
-    {
-        try {
-            $data = $request->all();
-            $data = $this->productService->formatDataInsertProduct($data);
-            Session::forget('product-info');
-            Session::push('product-info', $data);
-            $response['status'] = true;
-            $response['url'] = route('admin.product.show-confirm');
-            return response()->json($response);
-        } catch (Exception $ex) {
-            Log::error($ex);
-            $response['status'] = false;
-            return response()->json($response);
-        }
-        // http://localhost/ebayTool/public/storage/test/rtRt2_1526574828.png
-    }
-
+    /**
+     * api get item yahoo or amazon info
+     * @param  Request $request
+     * @return Illuminate\Http\Response
+     */
     public function apiGetItemYahooOrAmazonInfo(Request $request)
     {
         try {
@@ -77,6 +69,11 @@ class ProductController extends AbstractController
         }
     }
 
+    /**
+     * calculator profit
+     * @param  Request $request
+     * @return Illuminate\Http\Response
+     */
     public function calculatorProfit(Request $request)
     {
         try {
@@ -88,16 +85,11 @@ class ProductController extends AbstractController
         }
     }
 
-    public function showConfirm(Request $request)
-    {
-        // $this->productService->uploadTesst(Session::get('product-info')[0]['file_7']);
-        $data = Session::get('product-info')[0];
-        if (!$data) {
-            return;
-        }
-        return view('admin.product.confirm', compact('data'));
-    }
-
+    /**
+     * update profit
+     * @param  Request $request
+     * @return Illuminate\Http\Response
+     */
     public function updateProfit(Request $request)
     {
         $response['status'] = false;
@@ -113,6 +105,45 @@ class ProductController extends AbstractController
             Log::error($ex);
             return response()->json($response);
         }
+    }
+
+    /**
+     * post product confirm
+     * @param  Request $request
+     * @return Illuminate\Http\Response
+     */
+    public function postProductConfirm(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $data = $this->productService->formatDataInsertProductConfirm($data);
+            Session::forget('product-info');
+            Session::push('product-info', $data);
+            $response['status'] = true;
+            $response['url'] = route('admin.product.show-confirm');
+            return response()->json($response);
+        } catch (Exception $ex) {
+            Log::error($ex);
+            $response['status'] = false;
+            return response()->json($response);
+        }
+        // http://localhost/ebayTool/public/storage/test/rtRt2_1526574828.png
+    }
+
+    /**
+     * show page confirm
+     * @param  Request $request
+     * @return Illuminate\Support\Facades\View
+     */
+    public function showConfirm(Request $request)
+    {
+        // $this->productService->uploadTesst(Session::get('product-info')[0]['file_7']);
+        $data = Session::get('product-info')[0];
+        if (!$data) {
+            return;
+        }
+        $data = $this->productService->formatDataPageConfirm($data);
+        return view('admin.product.confirm', compact('data'));
     }
 }
 

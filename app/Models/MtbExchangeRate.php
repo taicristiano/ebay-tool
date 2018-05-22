@@ -13,8 +13,13 @@ class MtbExchangeRate extends AbstractModel
 
     protected $guarded = [];
 
+    /**
+     * get exchange rate latest
+     * @return object
+     */
     public function getExchangeRateLatest()
     {
-    	return $this->orderBy('created_at', 'desc')->first();
+    	return $this->orderBy('created_at', 'desc')
+            ->first();
     }
 }

@@ -58,8 +58,9 @@ class ProductService extends CommonService
     }
 
     /**
-     * api get session id
-     * @return string
+     * api get item ebay info
+     * @param  integer $itemId
+     * @return Illuminate\Http\Response
      */
     public function apiGetItemEbayInfo($itemId)
     {
@@ -78,6 +79,13 @@ class ProductService extends CommonService
         return response()->json($response);
     }
 
+    /**
+     * format data ebay info
+     * @param  array $data
+     * @param  array $settingItem
+     * @param  array $settingPolicyData
+     * @return array
+     */
     public function formatDataEbayInfo($data, $settingItem, $settingPolicyData)
     {
         // data dtb_item
@@ -127,6 +135,12 @@ class ProductService extends CommonService
         return $result;
     }
 
+    /**
+     * api get item yahoo or amazon info
+     * @param  integer $itemId
+     * @param  integer $type
+     * @return Illuminate\Http\Response
+     */
     public function apiGetItemYahooOrAmazonInfo($itemId, $type)
     {
         $response['status'] = false;
@@ -194,50 +208,11 @@ class ProductService extends CommonService
 
     }
 
-    public static function uploadFile(
-            $file, 
-            $path, 
-            $rename = true,
-            $allowType = [], 
-            $maxSize = null, 
-            array $config = []
-    ) {
-        if ($file->isValid()) {
-            if ($allowType) {
-                $extension = $file->getClientMimeType();
-                if (! in_array($extension, $allowType)) {
-                    throw new Exception("Error Processing Request", 1);
-                }
-            }
-            if ($maxSize) {
-                $fileSize = $file->getClientSize();
-                if ($fileSize / 1000 > $maxSize) {
-                    throw new Exception("Error Processing Request", 1);
-                }
-            }
-            if ($rename) {
-                $extension = $file->getClientOriginalExtension();
-                if (is_string($rename)) {
-                    $fileName = $rename . '.' . $extension;
-                } else {
-                    $fileName = str_random(5) . '_' . time() . '.' . $extension;
-                }
-            } else {
-                $fileName = $file->getClientOriginalName();
-            }
-            $fullPathOrg = $file->getRealPath();
-            if ($config && isset($config['remove_exif']) && $config['remove_exif']) {
-                self::removeExifImage($fullPathOrg);
-            }
-            Storage::put(
-                $path . '/' . $fileName,
-                file_get_contents($fullPathOrg)
-            );
-            return $fileName;
-        }
-        return null;
-    }
-
+    /**
+     * calculator profit
+     * @param  array $input
+     * @return Illuminate\Http\Response
+     */
     public function calculatorProfit($input)
     {
         $data['istTypeAmazon'] = $input['type'] == $this->product->getOriginTypeAmazon() ? true : false;
@@ -249,6 +224,11 @@ class ProductService extends CommonService
         return response()->json($response);
     }
 
+    /**
+     * get setting shipping of user
+     * @param  array $input
+     * @return array
+     */
     public function getSettingShippingOfUser($input)
     {
         $length                = $input['length'];
@@ -271,6 +251,11 @@ class ProductService extends CommonService
         return $settingShippingOption;
     }
 
+    /**
+     * format store info
+     * @param  array $stores
+     * @return array
+     */
     public function formatStoreInfo($stores)
     {
         $arrayCategoryFee = ['standard_fee_rate', 'basic_fee_rate', 'premium_fee_rate', 'anchor_fee_rate'];
@@ -281,6 +266,12 @@ class ProductService extends CommonService
         return $result;
     }
 
+    /**
+     * calculator profit type amazon
+     * @param  array &$data
+     * @param  array $input
+     * @return none
+     */
     public function calculatorProfitTypeAmazon(&$data, $input)
     {
         $dataAmazon['product_size']      = $input['product_size'];
@@ -301,10 +292,14 @@ class ProductService extends CommonService
         $data['paypal_fee']              = $settingInfo->paypal_fee_rate  * $input['sell_price'] / 100;
         $data['buy_price']               = $input['buy_price'];
         $exchangeRate                    = $this->exchangeRate->getExchangeRateLatest();
-        // dd((float)$input['sell_price'],$data['ebay_fee'],$data['paypal_fee'], $exchangeRate->rate , $settingInfo->ex_rate_diff, (float) str_replace(',', '.', explode("円", $data['buy_price'])[0]), $settingInfo->gift_discount);
         $data['profit']                  = round(((float)$input['sell_price'] - $data['ebay_fee'] - $data['paypal_fee']- $data['ship_fee']) * ($exchangeRate->rate - $settingInfo->ex_rate_diff) - (float) str_replace(',', '.', explode("円", $data['buy_price'])[0]) * $settingInfo->gift_discount, 2);
     }
 
+    /**
+     * update profit
+     * @param  Request $request
+     * @return Illuminate\Http\Response
+     */
     public function updateProfit($data)
     {
         $totalWeigh         = $data['commodity_weight'] + $data['material_quantity'];
@@ -364,7 +359,12 @@ class ProductService extends CommonService
         }
     }
 
-    public function formatDataInsertProduct($data)
+    /**
+     * format data insert product confirm
+     * @param  array $data
+     * @return array
+     */
+    public function formatDataInsertProductConfirm($data)
     {
         unset($data['_token']);
         unset($data['fileuploader-list-files']);
@@ -426,5 +426,64 @@ class ProductService extends CommonService
             $input['size']
         );
         $this->uploadFile($file, 'public/upload/item-images');
+    }
+
+    /**
+     * upload file
+     * @param  object  $file
+     * @param  string  $path
+     * @param  string $rename
+     * @param  array   $allowType
+     * @param  integer  $maxSize
+     * @param  array   $config
+     * @return string
+     */
+    public static function uploadFile(
+        $file, 
+        $path, 
+        $rename = true,
+        $allowType = [], 
+        $maxSize = null, 
+        array $config = []
+    ) {
+        if ($file->isValid()) {
+            if ($allowType) {
+                $extension = $file->getClientMimeType();
+                if (! in_array($extension, $allowType)) {
+                    throw new Exception("Error Processing Request", 1);
+                }
+            }
+            if ($maxSize) {
+                $fileSize = $file->getClientSize();
+                if ($fileSize / 1000 > $maxSize) {
+                    throw new Exception("Error Processing Request", 1);
+                }
+            }
+            if ($rename) {
+                $extension = $file->getClientOriginalExtension();
+                if (is_string($rename)) {
+                    $fileName = $rename . '.' . $extension;
+                } else {
+                    $fileName = str_random(5) . '_' . time() . '.' . $extension;
+                }
+            } else {
+                $fileName = $file->getClientOriginalName();
+            }
+            $fullPathOrg = $file->getRealPath();
+            if ($config && isset($config['remove_exif']) && $config['remove_exif']) {
+                self::removeExifImage($fullPathOrg);
+            }
+            Storage::put(
+                $path . '/' . $fileName,
+                file_get_contents($fullPathOrg)
+            );
+            return $fileName;
+        }
+        return null;
+    }
+
+    public function formatDataPageConfirm($data)
+    {
+        return $data;
     }
 }

@@ -1,8 +1,8 @@
 <div class="box box-success" id="item-yaohoo-or-amazon-content">
-    <div class="box-header with-border">■製品詳細</div>
+    <div class="box-header with-border">@lang('view.product_details')</div>
     <div class="box-body">
         @if($price)
-        <p>即決価格: <span id="buy_price">{{ $price }}</span></p>
+        <p>@lang('view.buy_price'): <span id="buy_price">{{ $price }}</span></p>
         @endif
         <input type="file" name="files" id="files">
     </div>

@@ -7,14 +7,14 @@
 @endsection
 @section('content')
 <div class="content-wrapper">
-    @include('layouts.component.header-content', ['text' => 'Post product'])
+    @include('layouts.component.header-content', ['text' => @lang('view.post_product')])
     <!-- Main content -->
     <section class="content">
         <!-- Default box -->
         <div class="row">
             <div class="col-xs-12 col-md-8 col-md-offset-2">
                 <div class="box box-success">
-                    <div class="box-header with-border">Post product</div>
+                    <div class="box-header with-border">@lang('view.post_product')</div>
                     <div class="box-body">
                         <form class="form-inline text-center" id="filter-post" role="form" method="GET">
                             {!! Form::text('item_id', {{!empty($data['item_id']) ? $data['item_id'] : '192375777401'}}, ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'item_id']) !!}
@@ -38,7 +38,7 @@
                             &emsp;&emsp;&emsp;&emsp;{!! Form::text('id_ebay_or_amazon', {{!empty($data['original_id']) ? $data['original_id'] : 'u199058848'}}, ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
                             <button class="btn btn-primary" type="button" id="btn-get-yahoo-or-amazon"><i class="fa fa-info-circle"></i> {{ __('view.image_acquisition') }}</button>
                         </form>
-                        <p class="text-danger display-none" id="item-ebay-invalid">Item not found</p>
+                        <p class="text-danger display-none" id="item-ebay-invalid">@lang('view.item_not_found')</p>
                         <form role="form" id="form-post" enctype="multipart/form-data" method="post" action="{{route('admin.product.post-product-confirm')}}">
                             @csrf
                             <div id="conten-ajax">
@@ -53,7 +53,7 @@
                                     @endif
                                 </div>
                                 <div class="display-none margin-20" id="profit-calculation">
-                                    <button type="button" class="btn btn-primary" id="btn-calculator-profit"><i class="fa fa-calculator fa-fw"></i> 商品投稿</button>
+                                    <button type="button" class="btn btn-primary" id="btn-calculator-profit"><i class="fa fa-calculator fa-fw"></i> @lang('view.product_submission')</button>
                                 </div>
                                 <div class="calculator-info">
                                     @if(!empty($hasData))
@@ -65,7 +65,7 @@
                     </div>
                     <div class="box-footer display-none" id="post-product">
                         <div class="text-center margin-20 text-center">
-                            <button type="button" class="btn btn-primary" id="save"><i class="fa fa-floppy-o fa-fw"></i> 利益計算</button>
+                            <button type="button" class="btn btn-primary" id="save"><i class="fa fa-floppy-o fa-fw"></i> @lang('view.benefit_calculation')</button>
                         </div>
                     </div>
                 </div>

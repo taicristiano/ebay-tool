@@ -17,11 +17,17 @@
                     <div class="box-header with-border">Post product</div>
                     <div class="box-body">
                         <form class="form-inline text-center" id="filter-post" role="form" method="GET">
-                            {!! Form::text('item_id', 192375777401, ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'item_id']) !!}
+                            {!! Form::text('item_id', {{!empty($data['item_id']) ? $data['item_id'] : '192375777401'}}, ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'item_id']) !!}
                             <button class="btn btn-primary" type="button" id="btn-get-item-ebay-info"><i class="fa fa-info-circle"></i> {{ __('view.filter') }}</button>
+                            @php
+                                $typeCheck = 1;
+                                if (!empty($data['dtb_item']['type'])) {
+                                    $typeCheck = $data['dtb_item']['type'];
+                                }
+                            @endphp
                             @foreach($originType as $key => $type)
                             &emsp;&emsp;&emsp;&emsp;<label>
-                                <input type="radio" name="type" class="minimal type" {{$key == 1 ? 'checked' :''}} value="{{$key}}">
+                                <input type="radio" name="type" class="minimal type" {{$key == $typeCheck ? 'checked' :''}} value="{{$key}}">
                                 {{$type}}
                             </label>
                             @endforeach
@@ -29,7 +35,7 @@
                             <!-- c642534441 -->
                             <!-- r245539002 -->
                             <!-- u199058848 -->
-                            &emsp;&emsp;&emsp;&emsp;{!! Form::text('id_ebay_or_amazon', 'u199058848', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
+                            &emsp;&emsp;&emsp;&emsp;{!! Form::text('id_ebay_or_amazon', {{!empty($data['original_id']) ? $data['original_id'] : 'u199058848'}}, ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
                             <button class="btn btn-primary" type="button" id="btn-get-yahoo-or-amazon"><i class="fa fa-info-circle"></i> {{ __('view.image_acquisition') }}</button>
                         </form>
                         <p class="text-danger display-none" id="item-ebay-invalid">Item not found</p>
@@ -37,16 +43,22 @@
                             @csrf
                             <div id="conten-ajax">
                                 <div class="ebay-info">
-                                    
+                                    @if(!empty($hasData))
+                                        @include('admin.product.component.item_ebay_info')
+                                    @endif
                                 </div>
                                 <div class="yahoo-or-amazon-info">
-                                    
+                                    @if(!empty($hasData))
+                                        @include('admin.product.component.item_yahoo_or_amazon_info')
+                                    @endif
                                 </div>
                                 <div class="display-none margin-20" id="profit-calculation">
                                     <button type="button" class="btn btn-primary" id="btn-calculator-profit"><i class="fa fa-calculator fa-fw"></i> 商品投稿</button>
                                 </div>
                                 <div class="calculator-info">
-                                    
+                                    @if(!empty($hasData))
+                                        @include('admin.product.component.calculator_info')
+                                    @endif
                                 </div>
                             </div>
                         </form>

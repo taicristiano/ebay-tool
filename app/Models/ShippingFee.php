@@ -261,6 +261,12 @@ class ShippingFee extends AbstractModel
         ];
     }
 
+    /**
+     * get shipping fee by shipping id
+     * @param  integer $shippingId
+     * @param  float $totalWeigh
+     * @return object
+     */
     public function getShippingFeeByShippingId($shippingId, $totalWeigh)
     {
         return $this->where('shipping_id', $shippingId)

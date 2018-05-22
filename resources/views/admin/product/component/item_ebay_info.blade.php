@@ -1,8 +1,8 @@
 <div class="box box-success" id="item-ebay-content">
-    <div class="box-header with-border">■製品詳細</div>
+    <div class="box-header with-border">@lang('view.product_details')</div>
     <div class="box-body">
         <div class="form-group form-group-custom">
-            <label for="dtb_item[item_name]">商品名 <span class="text-danger">(*)</span></label>
+            <label for="dtb_item[item_name]">@lang('view.product_name') <span class="text-danger">(*)</span></label>
             {!! Form::text("dtb_item[item_name]", old("dtb_item[item_name]", isset($data['dtb_item']['item_name']) ? $data['dtb_item']['item_name'] : ''), ['class' => 'form-control']) !!}
             {!! $errors->first("dtb_item[item_name]") ? '
             <p class="text-danger">'. $errors->first("dtb_item[item_name]") .'</p>
@@ -10,14 +10,14 @@
         </div>
         <div class="form-group form-group-custom">
             {!! Form::hidden("dtb_item[category_id]", isset($data['dtb_item']['category_id']) ? $data['dtb_item']['category_id'] : '', ['id' => 'category_id']) !!}
-            <label for="dtb_item[category_name]">カテゴリー <span class="text-danger">(*)</span></label>
+            <label for="dtb_item[category_name]">@lang('view.category') <span class="text-danger">(*)</span></label>
             {!! Form::text("dtb_item[category_name]", old("dtb_item['category_name']", isset($data['dtb_item']['category_name']) ? $data['dtb_item']['category_name'] : ''), ['class' => 'form-control', 'readonly' => true]) !!}
             {!! $errors->first("dtb_item[category_name]") ? '
             <p class="text-danger">'. $errors->first("dtb_item[category_name]") .'</p>
             ' : ''!!}
         </div>
         <div class="form-group form-group-custom">
-            <label for="dtb_item[item_name]">JAN/UPC <span class="text-danger">(*)</span></label>
+            <label for="dtb_item[item_name]">@lang('view.JAN/UPC') <span class="text-danger">(*)</span></label>
             {!! Form::text("dtb_item[item_name]", old("dtb_item[item_name]", isset($data['dtb_item']['item_name']) ? $data['dtb_item']['item_name'] : ''), ['class' => 'form-control', 'readonly' => true]) !!}
             {!! $errors->first("dtb_item[item_name]") ? '
             <p class="text-danger">'. $errors->first("dtb_item[item_name]") .'</p>
@@ -25,13 +25,13 @@
         </div>
         <div class="form-group form-group-custom">
             {!! Form::hidden("dtb_item[condition_id]", isset($data['dtb_item']['condition_id']) ? $data['dtb_item']['condition_id'] : '') !!}
-            <label for="dtb_item[condition_name]">商品名 <span class="text-danger">(*)</span></label>
+            <label for="dtb_item[condition_name]">@lang('view.product_name') <span class="text-danger">(*)</span></label>
             {!! Form::text("dtb_item[condition_name]", old("dtb_item[condition_name]", isset($data['dtb_item']['condition_name']) ? $data['dtb_item']['condition_name'] : ''), ['class' => 'form-control']) !!}
             {!! $errors->first("dtb_item[condition_name]") ? '
             <p class="text-danger">'. $errors->first("dtb_item[condition_name]") .'</p>
             ' : ''!!}
         </div>
-        <p>■仕様詳細 plici</p>
+        <p>@lang('view.specifications')</p>
         <hr>
         @foreach($data['dtb_item_specifics'] as $key => $value)
         <div class="specific-item">
@@ -70,19 +70,19 @@
                 </div>
             </div>
         </div>
-        <p>■販売詳細</p>
+        <p>@lang('view.sale_details')</p>
         <hr>
         <div class="form-group form-group-custom">
-            <label for="dtb_item[price]">販売価格 <span class="text-danger">(*)</span></label>
+            <label for="dtb_item[price]">@lang('view.sell_price') <span class="text-danger">(*)</span></label>
             {!! Form::text("dtb_item[price]", old("dtb_item[price]", isset($data['dtb_item']['price']) ? $data['dtb_item']['price'] : ''), ['class' => 'form-control', 'id' => 'sell_price']) !!}
             {!! $errors->first("dtb_item[price]") ? '
             <p class="text-danger">'. $errors->first("dtb_item[price]") .'</p>
             ' : ''!!}
         </div>
-        <p>■設定価値</p>
+        <p>@lang('view.setting_value')</p>
         <hr>
         <div class="form-group form-group-custom">
-            <label for="dtb_item[duration]">販売期間 <span class="text-danger">(*)</span></label>
+            <label for="dtb_item[duration]">@lang('view.sale_period') <span class="text-danger">(*)</span></label>
             {!! Form::select("dtb_item[duration]", $data['duration']['option'], old("dtb_item[duration]", isset($data['duration']['value']) ? $data['duration']['value'] : ''), ['class' => 'form-control']) !!}
             {!! $errors->first("dtb_item[duration]") ? '
             <p class="text-danger">'. $errors->first("dtb_item[duration]") .'</p>
@@ -90,28 +90,28 @@
         </div>
 
         <div class="form-group form-group-custom">
-            <label for="dtb_item[quantity]">個数 <span class="text-danger">(*)</span></label>
+            <label for="dtb_item[quantity]">@lang('view.quantity') <span class="text-danger">(*)</span></label>
             {!! Form::text("dtb_item[quantity]", old("dtb_setting[quantity]", isset($data['dtb_setting']['quantity']) ? $data['dtb_setting']['quantity'] : ''), ['class' => 'form-control', 'readonly' => true]) !!}
             {!! $errors->first("dtb_item[quantity]") ? '
             <p class="text-danger">'. $errors->first("dtb_item[quantity]") .'</p>
             ' : ''!!}
         </div>
         <div class="form-group form-group-custom">
-            <label for="dtb_item[shipping_policy_id]">Shippingポリシー <span class="text-danger">(*)</span></label>
+            <label for="dtb_item[shipping_policy_id]">@lang('view.shipping_policy') <span class="text-danger">(*)</span></label>
             {!! Form::select("dtb_item[shipping_policy_id]", $data['dtb_setting_policies']['shipping'], old("dtb_item[shipping_policy_id]", isset($data['dtb_setting_policies']['shipping']) ? $data['dtb_setting_policies']['shipping'] : ''), ['class' => 'form-control']) !!}
             {!! $errors->first("dtb_item[shipping_policy_id]") ? '
             <p class="text-danger">'. $errors->first("dtb_item[shipping_policy_id]") .'</p>
             ' : ''!!}
         </div>
         <div class="form-group form-group-custom">
-            <label for="dtb_item[payment_policy_id]">Paymentポリシー <span class="text-danger">(*)</span></label>
+            <label for="dtb_item[payment_policy_id]">@lang('view.payment_policy') <span class="text-danger">(*)</span></label>
             {!! Form::select("dtb_item[payment_policy_id]", $data['dtb_setting_policies']['payment'], old("dtb_item[payment_policy_id]", isset($data['dtb_setting_policies']['payment']) ? $data['dtb_setting_policies']['payment'] : ''), ['class' => 'form-control']) !!}
             {!! $errors->first("dtb_item[payment_policy_id]") ? '
             <p class="text-danger">'. $errors->first("dtb_item[payment_policy_id]") .'</p>
             ' : ''!!}
         </div>
         <div class="form-group form-group-custom">
-            <label for="dtb_item[return_policy_id]">Returnポリシー <span class="text-danger">(*)</span></label>
+            <label for="dtb_item[return_policy_id]">@lang('view.return_policy') <span class="text-danger">(*)</span></label>
             {!! Form::select("dtb_item[return_policy_id]", $data['dtb_setting_policies']['return'], old("dtb_item[return_policy_id]", isset($data['dtb_setting_policies']['return']) ? $data['dtb_setting_policies']['return'] : ''), ['class' => 'form-control']) !!}
             {!! $errors->first("dtb_item[return_policy_id]") ? '
             <p class="text-danger">'. $errors->first("dtb_item[return_policy_id]") .'</p>

@@ -193,17 +193,17 @@ class ProductService extends CommonService
             return response()->json($response);
         }
         if ($isTypeAmazon) {
-            $data['product_size'] = 'M';
-            $data['commodity_weight'] = 950;
-            $data['length'] = 11;
-            $data['height'] = 11;
-            $data['width'] = 11;
+            $data['dtb_item']['product_size'] = 'M';
+            $data['dtb_item']['commodity_weight'] = 950;
+            $data['dtb_item']['length'] = 11;
+            $data['dtb_item']['height'] = 11;
+            $data['dtb_item']['width'] = 11;
         }
-        $data['buy_price'] = $price;
+        $data['dtb_item']['buy_price'] = $price;
         $response['is_type_amazon'] = $isTypeAmazon;
         $response['status'] = true;
         $response['image'] = $arrayImage;
-        $response['data'] = view('admin.product.component.item_yahoo_or_amazon_info', compact('data', 'arrayImage', 'price'))->render();
+        $response['data'] = view('admin.product.component.item_yahoo_or_amazon_info', compact('data', 'arrayImage'))->render();
         return response()->json($response);
 
     }
@@ -274,25 +274,24 @@ class ProductService extends CommonService
      */
     public function calculatorProfitTypeAmazon(&$data, $input)
     {
-        $dataAmazon['product_size']      = $input['product_size'];
-        $dataAmazon['commodity_weight']  = $input['commodity_weight'];
-        $data['data_amazon']             = $dataAmazon;
-        $settingShippingOption           = $this->getSettingShippingOfUser($input);
-        $data['setting_shipping_option'] = $settingShippingOption;
-        $shippingId                      = array_keys($settingShippingOption);
-        $shippingFee                     = $this->shippingFee->getShippingFeeByShippingId($shippingId[0], $input['commodity_weight']);
-        $data['ship_fee']                = $shippingFee->ship_fee;
-        $userId                          = Auth::user()->id;
-        $settingInfo                     = $this->setting->getSettingOfUser($userId);
-        $storeIdOfUser                   = $settingInfo->store_id;
-        $stores                          = $this->mtbStore->getAllStore();
-        $storeInfo                       = $this->formatStoreInfo($stores);
-        $typeFee                         = $storeInfo[$storeIdOfUser];
-        $data['ebay_fee']                = $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee;
-        $data['paypal_fee']              = $settingInfo->paypal_fee_rate  * $input['sell_price'] / 100;
-        $data['buy_price']               = $input['buy_price'];
-        $exchangeRate                    = $this->exchangeRate->getExchangeRateLatest();
-        $data['profit']                  = round(((float)$input['sell_price'] - $data['ebay_fee'] - $data['paypal_fee']- $data['ship_fee']) * ($exchangeRate->rate - $settingInfo->ex_rate_diff) - (float) str_replace(',', '.', explode("円", $data['buy_price'])[0]) * $settingInfo->gift_discount, 2);
+        $data['dtb_item']['product_size']     = $input['product_size'];
+        $data['dtb_item']['commodity_weight'] = $input['commodity_weight'];
+        $settingShippingOption                = $this->getSettingShippingOfUser($input);
+        $data['setting_shipping_option']      = $settingShippingOption;
+        $shippingId                           = array_keys($settingShippingOption);
+        $shippingFee                          = $this->shippingFee->getShippingFeeByShippingId($shippingId[0], $input['commodity_weight']);
+        $data['dtb_item']['ship_fee']         = $shippingFee->ship_fee;
+        $userId                               = Auth::user()->id;
+        $settingInfo                          = $this->setting->getSettingOfUser($userId);
+        $storeIdOfUser                        = $settingInfo->store_id;
+        $stores                               = $this->mtbStore->getAllStore();
+        $storeInfo                            = $this->formatStoreInfo($stores);
+        $typeFee                              = $storeInfo[$storeIdOfUser];
+        $data['dtb_item']['ebay_fee']         = $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee;
+        $data['dtb_item']['paypal_fee']       = $settingInfo->paypal_fee_rate  * $input['sell_price'] / 100;
+        $data['dtb_item']['buy_price']        = $input['buy_price'];
+        $exchangeRate                         = $this->exchangeRate->getExchangeRateLatest();
+        $data['dtb_item']['profit']           = round(((float)$input['sell_price'] - $data['dtb_item']['ebay_fee'] - $data['dtb_item']['paypal_fee']- $data['dtb_item']['ship_fee']) * ($exchangeRate->rate - $settingInfo->ex_rate_diff) - (float) str_replace(',', '.', explode("円", $data['dtb_item']['buy_price'])[0]) * $settingInfo->gift_discount, 2);
     }
 
     /**
@@ -373,10 +372,10 @@ class ProductService extends CommonService
             $file = $data['files_upload_' . $i];
             if (is_string($file)) {
                 $data['url_preview_' . $i] = $file;
-                $data['file_name' . $i] = $file;
+                $data['file_name_' . $i] = $file;
             } else {
                 $data['url_preview_' . $i] = $this->getBase64Image($file);
-                $data['file_name' . $i] = $this->uploadFile($file, 'public/upload/item-images');
+                $data['file_name_' . $i] = $this->uploadFile($file, 'public/upload/item-images');
                 // $data['file_' . $i] = [
                 //     'test' => false,
                 //     'originalName' => $file->getClientOriginalName(),
@@ -384,7 +383,7 @@ class ProductService extends CommonService
                 //     'size' => $file->getClientSize(),
                 //     'path' => $file->getPathname(),
                 // ];
-                // $data['file_name' . $i] = $data['files_upload_' . $i];
+                // $data['file_name_' . $i] = $data['files_upload_' . $i];
             }
             unset($data['files_upload_' . $i]);
         }
@@ -485,5 +484,69 @@ class ProductService extends CommonService
     public function formatDataPageConfirm($data)
     {
         return $data;
+    }
+
+    public function formatDataPageProduct($data)
+    {
+        $data['duration']['option']      = $this->product->getDurationOption();
+        $data['duration']['value']       = $data['dtb_item']['duration'];
+        $data['istTypeAmazon']           = $data['dtb_item']['type'] == $this->product->getOriginTypeAmazon() ? true : false;
+        $settingShippingOption           = $this->getSettingShippingOfUser($data['dtb_item']);
+        $data['setting_shipping_option'] = $settingShippingOption;
+        $shippingType                    = [];
+        $paymentType                     = [];
+        $returnType                      = [];
+        $userId                          = Auth::user()->id;
+        $settingPolicyData               = $this->settingPolicy->getSettingPolicyOfUser($userId);
+        foreach ($settingPolicyData as $key => $policy) {
+            if ($policy->policy_type == SettingPolicy::TYPE_SHIPPING) {
+                $shippingType[$policy->id] = $policy->policy_name;
+            } elseif ($policy->policy_type == SettingPolicy::TYPE_PAYMENT) {
+                $paymentType[$policy->id] = $policy->policy_name;
+            } else {
+                $returnType[$policy->id] = $policy->policy_name;
+            }
+        }
+        $data['dtb_setting_policies'] = [
+            'shipping' => $shippingType,
+            'payment'  => $paymentType,
+            'return'   => $returnType
+        ];
+        $arrayImage = [];
+        for ($i = 0; $i < $data['number_file']; $i++) {
+            $url = $data['file_name_' . $i];
+            $arrayItem = explode(".", $url);
+            $type = array_pop($arrayItem);
+            $item = [
+                'name' => '',
+                'type' => 'image/' . $type,
+                'extension' => $type,
+                'file' => $data['url_preview_' . $i],
+            ];
+            $arrayImage[] = $item;
+        }
+        $data['image'] = json_encode($arrayImage);
+        // dd($data['image']);
+        return $data;
+    }
+
+    public function getImageInit($data)
+    {
+        $arrayImage = [];
+        for ($i = 0; $i < $data['number_file']; $i++) {
+            $url = $data['file_name_' . $i];
+            $arrayItem = explode(".", $url);
+            $type = array_pop($arrayItem);
+            $item = [
+                'name' => '',
+                'type' => 'image/' . $type,
+                'extension' => $type,
+                'file' => $data['url_preview_' . $i],
+            ];
+            $arrayImage[] = $item;
+        }
+        $result['status'] = true;
+        $result['images']   = $arrayImage;
+        return response()->json($result);
     }
 }

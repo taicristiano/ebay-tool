@@ -1,6 +1,13 @@
 jQuery(document).ready(function() {
     numberSpecificItem = 0;
     var token = window.Laravel.csrfToken;
+    if ($('#item-yaohoo-or-amazon-content').length) {
+        $.get(urlGetImageInit, function(data, status){
+            if (data.status) {
+                fnInitFIlerImage(data.images);
+            }
+        });
+    }
     $(document).on("click", "#btn-get-item-ebay-info", function() {
         $('body').addClass('loading-ajax');
         var button = $(this)
@@ -81,14 +88,15 @@ jQuery(document).ready(function() {
         var api = $.fileuploader.getInstance('#files');
         var files = [];
         var fileUpload = api.getFiles();
-        fd.append('original_id', $('#id_ebay_or_amazon').val());
-        fd.append('item_id', $('#item_id').val());
+        fd.append('dtb_item[original_id]', $('#id_ebay_or_amazon').val());
+        fd.append('dtb_item[item_id]', $('#item_id').val());
+        fd.append('dtb_item[type]', $('.type:checked').val());
         $.each(fileUpload, function (index, value) {
             // files.push(value.file);
             fd.append('files_upload_' + index, value.file);
             // data.push({name: 'files_upload_' + index, value: value.file});
         });
-        var listImage = $('.fileuploader-item-image image');
+        // var listImage = $('.fileuploader-item-image image');
         // $.each(fileUpload, function (index, value) {
         //     console.log(value.reader.src);
         //     // files.push(value.file);
@@ -254,11 +262,11 @@ function getCalculateProfitInfo(button)
     var data = {
         _token: token,
         type: type,
-        product_size: $('#product_size').text(),
-        commodity_weight: $('#commodity_weight').text(),
-        length: $('#length').text(),
-        height: $('#height').text(),
-        width: $('#width').text(),
+        product_size: $('#product_size').val(),
+        commodity_weight: $('#commodity_weight').val(),
+        length: $('#length').val(),
+        height: $('#height').val(),
+        width: $('#width').val(),
         sell_price: $('#sell_price').val(),
         buy_price: $('#buy_price').text(),
         category_id: $('#category_id').val(),

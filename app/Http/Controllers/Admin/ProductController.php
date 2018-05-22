@@ -31,8 +31,13 @@ class ProductController extends AbstractController
     {
         // Storage::move('/public/test/tainhot.png', '/public/test/tainhot1.png');
 
-        // dd(Session::get('product-info'));
         // dd($this->productService->uploadTesst(Session::get('product-info')[0]['file_7']));
+        // Session::forget('product-info');
+        $data = [];
+        if (Session::has('product-info')) {
+            // $data = Session::get('product-info')[0];
+            $data = $this->productService->formatDataPageProduct(Session::get('product-info')[0]);
+        }
         $originType = $this->product->getOriginType();
         return view('admin.product.post', compact('data', 'originType'));
     }
@@ -143,7 +148,29 @@ class ProductController extends AbstractController
             return;
         }
         $data = $this->productService->formatDataPageConfirm($data);
+            dd($data);
+        
         return view('admin.product.confirm', compact('data'));
+    }
+
+    /**
+     * get image init
+     * @param  Request $request
+     * @return Illuminate\Http\Response
+     */
+    public function getImageInit(Request $request)
+    {
+        try {
+            $data = Session::get('product-info')[0];
+            if (!$data) {
+                throw new Exception();
+            }
+            return $this->productService->getImageInit($data);
+        } catch (Exception $ex) {
+            Log::error($ex);
+            $response['status'] = false;
+            return response()->json($response);
+        }
     }
 }
 

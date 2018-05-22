@@ -7,7 +7,7 @@
 @endsection
 @section('content')
 <div class="content-wrapper">
-    @include('layouts.component.header-content', ['text' => @lang('view.post_product')])
+    @include('layouts.component.header-content', ['text' => __('view.post_product')])
     <!-- Main content -->
     <section class="content">
         <!-- Default box -->
@@ -20,11 +20,11 @@
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-6">
                                     <label class="col-md-3 col-sm-3 col-xs-3">@lang('view.item_id')</label>
-                                    <label class="col-md-9 col-sm-9 col-xs-9">{{$data['item_id']}}</label>
+                                    <label class="col-md-9 col-sm-9 col-xs-9">{{$data['dtb_item']['item_id']}}</label>
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-6">
                                     <label class="col-md-3 col-sm-3 col-xs-3">@lang('view.original_id')</label>
-                                    <label class="col-md-9 col-sm-9 col-xs-9">{{$data['original_id']}}</label>
+                                    <label class="col-md-9 col-sm-9 col-xs-9">{{$data['dtb_item']['original_id']}}</label>
                                 </div>
                             </div>
                             <div id="conten-ajax">
@@ -129,7 +129,7 @@
                                             </div>
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-3 col-sm-3 col-xs-3">@lang('view.material_quantity')</label>
-                                                <label class="col-md-9 col-sm-9 col-xs-9">???</label>
+                                                <label class="col-md-9 col-sm-9 col-xs-9">{{$data['dtb_item']['material_quantity']}}</label>
                                             </div>
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-3 col-sm-3 col-xs-3">@lang('view.duration')</label>
@@ -185,5 +185,6 @@
     $('input[type="radio"].minimal').iCheck({
         radioClass: 'iradio_minimal-blue'
     });
+    var urlGetImageInit = "{{route('admin.product.get-image-init')}}";
 </script>
 @endsection

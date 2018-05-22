@@ -1,14 +1,14 @@
 <div class="box box-success" id="item-yaohoo-or-amazon-content">
     <div class="box-header with-border">@lang('view.product_details')</div>
     <div class="box-body">
-        @if($price)
-        <p>@lang('view.buy_price'): <span id="buy_price">{{ $price }}</span></p>
+        @if(!empty($data['dtb_item']['buy_price']))
+        <p>@lang('view.buy_price'): <span id="buy_price">{{ $data['dtb_item']['buy_price'] }}</span></p>
         @endif
         <input type="file" name="files" id="files">
     </div>
-    <span id="product_size" class="display-none">{{ isset($data['product_size']) ? $data['product_size'] : '' }}</span>
-    <span id="commodity_weight" class="display-none">{{ isset($data['commodity_weight']) ? $data['commodity_weight'] : '' }}</span>
-    <span id="length" class="display-none">{{ isset($data['length']) ? $data['length'] : '' }}</span>
-    <span id="height" class="display-none">{{ isset($data['height']) ? $data['height'] : '' }}</span>
-    <span id="width" class="display-none">{{ isset($data['width']) ? $data['width'] : '' }}</span>
+    <input id="product_size" type="hidden" name="dtb_item[product_size]" value="{{ isset($data['dtb_item']['product_size']) ? $data['dtb_item']['product_size'] : '' }}">
+    <input id="commodity_weight" type="hidden" name="dtb_item[commodity_weight]" value="{{ isset($data['dtb_item']['commodity_weight']) ? $data['dtb_item']['commodity_weight'] : '' }}">
+    <input id="length" type="hidden" name="dtb_item[length]" value="{{ isset($data['dtb_item']['length']) ? $data['dtb_item']['length'] : '' }}">
+    <input id="height" type="hidden" name="dtb_item[height]" value="{{ isset($data['dtb_item']['height']) ? $data['dtb_item']['height'] : '' }}">
+    <input id="width" type="hidden" name="dtb_item[width]" value="{{ isset($data['dtb_item']['width']) ? $data['dtb_item']['width'] : '' }}">
 </div>

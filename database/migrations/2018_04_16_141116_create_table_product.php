@@ -16,7 +16,8 @@ class CreateTableProduct extends Migration
         Schema::create('dtb_item', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('original_id');
-            $table->integer('item_id');
+            $table->string('original_id', 20);
+            $table->string('item_id', 20);
             $table->smallInteger('original_type');
             $table->string('item_name', 200)->nullable();
             $table->string('category_id', 20)->nullable();

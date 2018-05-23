@@ -9,7 +9,7 @@ class Item extends AbstractModel
      *
      * @var string
      */
-    protected $table = 'dtb_product';
+    protected $table = 'dtb_item';
 
     protected $guarded = [];
 

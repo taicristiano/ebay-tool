@@ -47,8 +47,8 @@ jQuery(document).ready(function() {
             $('#div-add-specific').addClass('display-none');
         }
         var specificItemAdd = $('#specific-item-none .specific-item');
-        specificItemAdd.find('.specific-name').attr('name', "dtb_item_specifics[" + numberSpecificItem + "]['name']");
-        specificItemAdd.find('.specific-value').attr('name', "dtb_item_specifics[" + numberSpecificItem + "]['value']");
+        specificItemAdd.find('.specific-name').attr('name', "dtb_item_specifics[" + numberSpecificItem + "][name]");
+        specificItemAdd.find('.specific-value').attr('name', "dtb_item_specifics[" + numberSpecificItem + "][value]");
         $('#div-add-specific').before($('#specific-item-none').html());
         numberSpecificItem++;
         specificItemAdd.find('.specific-name').removeAttr('name');
@@ -67,8 +67,8 @@ jQuery(document).ready(function() {
             }
             $('.specific-item').each(function(index) {
                 if (index < numberSpecificItem) {
-                    $(this).find('.specific-name').attr('name', "dtb_item_specifics[" + index + "]['name']");
-                    $(this).find('.specific-value').attr('name', "dtb_item_specifics[" + index + "]['value']");
+                    $(this).find('.specific-name').attr('name', "dtb_item_specifics[" + index + "][name]");
+                    $(this).find('.specific-value').attr('name', "dtb_item_specifics[" + index + "][value]");
                 }
             });
         }
@@ -84,7 +84,6 @@ jQuery(document).ready(function() {
         var fd = new FormData($('#form-post')[0]);
         var error = false;
         fd.append('_token', token);
-        var data = $('#form-post').serializeArray();
         var api = $.fileuploader.getInstance('#files');
         var files = [];
         var fileUpload = api.getFiles();
@@ -92,21 +91,9 @@ jQuery(document).ready(function() {
         fd.append('dtb_item[item_id]', $('#item_id').val());
         fd.append('dtb_item[type]', $('.type:checked').val());
         $.each(fileUpload, function (index, value) {
-            // files.push(value.file);
             fd.append('files_upload_' + index, value.file);
-            // data.push({name: 'files_upload_' + index, value: value.file});
         });
-        // var listImage = $('.fileuploader-item-image image');
-        // $.each(fileUpload, function (index, value) {
-        //     console.log(value.reader.src);
-        //     // files.push(value.file);
-        //     fd.append('url_preview_' + index, value.reader.src);
-        //     // data.push({name: 'files_upload_' + index, value: value.file});
-        // });
         fd.append('number_file', fileUpload.length);
-        data.push({name: 'number_file', value: fileUpload.length});
-        // data.files_upload = files;
-        console.log(fd);
         $.ajax({
             url: urlPostProductConfirm,
             type: 'post',
@@ -141,18 +128,11 @@ jQuery(document).ready(function() {
         var isShowCalculate = $('#item-calculator-info').length;
         if (isShowYaohoo) {
             getYahooOrAmazonInfo($("#btn-get-yahoo-or-amazon"));
-            // if (isShowCalculate) {
-            //     getCalculateProfitInfo($('#btn-calculator-profit'));
-            // }
         }
     });
 
     $(document).on("change", "#material-quantity, #setting-shipping", function() {
         var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : 0;
-        // if (materialQuantity !== parseInt(materialQuantity, 10)) {
-        //     $('#error-material-quantity').removeClass('display-none');
-        //     return;
-        // }
         $('body').addClass('loading-ajax');
         var data = {
             _token: token,
@@ -279,18 +259,8 @@ function getCalculateProfitInfo(button)
         success: function (data) {
             if (data.status) {
                 $('#conten-ajax .calculator-info').html(data.data);
-                // if ($('.product_size').length) {
-                //     $('.product_size').val(dataAmazon.product_size);
-                //     $('.commodity_weight').val(dataAmazon.commodity_weight);
-                // }
-                // fnInitFIlerImage(data.image);
-                // toggleBtnSlove();
-                // $('html, body').animate({
-                //     scrollTop: $("#conten-ajax .calculator-info").offset().top
-                // }, 3000);
             } else {
                 $('#conten-ajax .calculator-info').html('');
-                // $('#item-ebay-invalid').removeClass('display-none');
             }
             toggleBtnSlove();
         },

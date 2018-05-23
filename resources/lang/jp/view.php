@@ -95,7 +95,7 @@ return [
     'product_size' => '商品サイズ',
     'commodity_weight' => '商品重量',
     'material_quantity' => '梱包資材量',
-    'duration' => '発送方法',
+    'setting_shipping_option' => '発送方法',
     'ship_fee' => '送料',
     'ebay_fee' => '販売手数料',
     'paypal_fee' => 'paypal手数料',
@@ -103,5 +103,8 @@ return [
     'profit' => '利益',
     'benefit_calculation' => '利益計算',
     'product_submission' => '商品投稿',
-    'g' => 'g'
+    'g' => 'g',
+    'back' => '修正',
+    'save' => '確認',
+    'confirm' => 'Confirm',
 ];

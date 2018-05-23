@@ -18,7 +18,6 @@ class CreateTableItemImages extends Migration
             $table->unsignedInteger('item_id');
             $table->foreign('item_id')->references('id')->on('dtb_item')->onDelete('cascade');
             $table->string('item_image', 50)->nullable();
-            $table->string('url_image', 50)->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

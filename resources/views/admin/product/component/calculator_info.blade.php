@@ -26,10 +26,10 @@
             </div>
         </div>
         <div class="form-group form-group-custom">
-            <label for="dtb_item[duration]">@lang('view.duration') <span class="text-danger">(*)</span></label>
-            {!! Form::select("dtb_item[duration]", $data['setting_shipping_option'], old("dtb_item[duration]", isset($data['duration']['value']) ? $data['duration']['value'] : ''), ['class' => 'form-control', 'id' => 'setting-shipping']) !!}
-            {!! $errors->first("dtb_item[duration]") ? '
-            <p class="text-danger">'. $errors->first("dtb_item[duration]") .'</p>
+            <label for="dtb_item[setting_shipping_option]">@lang('view.setting_shipping_option') <span class="text-danger">(*)</span></label>
+            {!! Form::select("dtb_item[setting_shipping_option]", $data['setting_shipping_option'], old("dtb_item[setting_shipping_option]", isset($data['setting_shipping_option']['value']) ? $data['setting_shipping_option']['value'] : ''), ['class' => 'form-control', 'id' => 'setting-shipping']) !!}
+            {!! $errors->first("dtb_item[setting_shipping_option]") ? '
+            <p class="text-danger">'. $errors->first("dtb_item[setting_shipping_option]") .'</p>
             ' : ''!!}
         </div>
         <div class="form-group form-group-custom">

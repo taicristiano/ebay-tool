@@ -83,7 +83,7 @@
         <hr>
         <div class="form-group form-group-custom">
             <label for="dtb_item[duration]">@lang('view.sale_period') <span class="text-danger">(*)</span></label>
-            {!! Form::select("dtb_item[duration]", $data['duration']['option'], old("dtb_item[duration]", isset($data['duration']['value']) ? $data['duration']['value'] : ''), ['class' => 'form-control']) !!}
+            {!! Form::select("dtb_item[duration]", $data['duration']['option'], old("dtb_item[duration]", isset($data['dtb_item']['duration']) ? $data['dtb_item']['duration'] : ''), ['class' => 'form-control']) !!}
             {!! $errors->first("dtb_item[duration]") ? '
             <p class="text-danger">'. $errors->first("dtb_item[duration]") .'</p>
             ' : ''!!}
@@ -91,7 +91,7 @@
 
         <div class="form-group form-group-custom">
             <label for="dtb_item[quantity]">@lang('view.quantity') <span class="text-danger">(*)</span></label>
-            {!! Form::text("dtb_item[quantity]", old("dtb_setting[quantity]", isset($data['dtb_setting']['quantity']) ? $data['dtb_setting']['quantity'] : ''), ['class' => 'form-control', 'readonly' => true]) !!}
+            {!! Form::text("dtb_item[quantity]", old("dtb_setting[quantity]", isset($data['dtb_item']['quantity']) ? $data['dtb_item']['quantity'] : ''), ['class' => 'form-control', 'readonly' => true]) !!}
             {!! $errors->first("dtb_item[quantity]") ? '
             <p class="text-danger">'. $errors->first("dtb_item[quantity]") .'</p>
             ' : ''!!}

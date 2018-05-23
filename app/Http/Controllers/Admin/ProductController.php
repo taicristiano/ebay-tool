@@ -30,16 +30,70 @@ class ProductController extends AbstractController
     public function showPagePostProduct()
     {
         // Storage::move('/public/test/tainhot.png', '/public/test/tainhot1.png');
-
-        // dd($this->productService->uploadTesst(Session::get('product-info')[0]['file_7']));
         // Session::forget('product-info');
         $data = [];
         if (Session::has('product-info')) {
-            // $data = Session::get('product-info')[0];
             $data = $this->productService->formatDataPageProduct(Session::get('product-info')[0]);
         }
         $originType = $this->product->getOriginType();
         return view('admin.product.post', compact('data', 'originType'));
+    }
+
+    /**
+     * post product confirm
+     * @param  Request $request
+     * @return Illuminate\Http\Response
+     */
+    public function postProductConfirm(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $dataSession = [];
+            if (Session::has('product-info')) {
+                $dataSession = Session::get('product-info')[0];
+                Session::forget('product-info');
+            }
+            $data = $this->productService->formatDataInsertProductConfirm($data, $dataSession);
+            Session::push('product-info', $data);
+            $response['status'] = true;
+            $response['url'] = route('admin.product.show-confirm');
+            return response()->json($response);
+        } catch (Exception $ex) {
+            Log::error($ex);
+            $response['status'] = false;
+            return response()->json($response);
+        }
+    }
+
+    /**
+     * show page confirm
+     * @param  Request $request
+     * @return Illuminate\Support\Facades\View
+     */
+    public function showConfirm(Request $request)
+    {
+        $data = Session::get('product-info')[0];
+        if (!$data) {
+            return;
+        }
+        $data = $this->productService->formatDataPageConfirm($data);
+        return view('admin.product.confirm', compact('data'));
+    }
+
+    /**
+     * post product publish
+     * @param  Request $request
+     * @return Illuminate\Http\Response
+     */
+    public function postProductPublish(Request $request)
+    {
+        try {
+            return $this->productService->postProductPublish();
+        } catch (Exception $ex) {
+            Log::error($ex);
+            $response['status'] = false;
+            return response()->json($response);
+        }
     }
 
     /**
@@ -110,51 +164,6 @@ class ProductController extends AbstractController
             Log::error($ex);
             return response()->json($response);
         }
-    }
-
-    /**
-     * post product confirm
-     * @param  Request $request
-     * @return Illuminate\Http\Response
-     */
-    public function postProductConfirm(Request $request)
-    {
-        try {
-            $data = $request->all();
-            $dataSession = [];
-            if (Session::has('product-info')) {
-                $dataSession = Session::get('product-info')[0];
-                Session::forget('product-info');
-            }
-            $data = $this->productService->formatDataInsertProductConfirm($data, $dataSession);
-            Session::push('product-info', $data);
-            $response['status'] = true;
-            $response['url'] = route('admin.product.show-confirm');
-            return response()->json($response);
-        } catch (Exception $ex) {
-            Log::error($ex);
-            $response['status'] = false;
-            return response()->json($response);
-        }
-        // http://localhost/ebayTool/public/storage/test/rtRt2_1526574828.png
-    }
-
-    /**
-     * show page confirm
-     * @param  Request $request
-     * @return Illuminate\Support\Facades\View
-     */
-    public function showConfirm(Request $request)
-    {
-        // $this->productService->uploadTesst(Session::get('product-info')[0]['file_7']);
-        $data = Session::get('product-info')[0];
-        if (!$data) {
-            return;
-        }
-        $data = $this->productService->formatDataPageConfirm($data);
-            dd($data);
-        
-        return view('admin.product.confirm', compact('data'));
     }
 
     /**

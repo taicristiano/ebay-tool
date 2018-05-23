@@ -363,16 +363,24 @@ class ProductService extends CommonService
      * @param  array $data
      * @return array
      */
-    public function formatDataInsertProductConfirm($data)
+    public function formatDataInsertProductConfirm($data, $dataSession)
     {
         unset($data['_token']);
         unset($data['fileuploader-list-files']);
         unset($data['files']);
+        $dataImageOld = [];
+        if ($dataSession) {
+            for ($i = 0; $i < $dataSession['number_file']; $i++) {
+                array_push($dataImageOld, $dataSession['file_name_' . $i]);
+            }
+        }
+        $dataImageNew = [];
         for ($i = 0; $i < $data['number_file']; $i++) {
             $file = $data['files_upload_' . $i];
             if (is_string($file)) {
                 $data['url_preview_' . $i] = $file;
                 $data['file_name_' . $i] = $file;
+                array_push($dataImageNew, $file);
             } else {
                 $data['url_preview_' . $i] = $this->getBase64Image($file);
                 $data['file_name_' . $i] = $this->uploadFile($file, 'public/upload/item-images');
@@ -387,6 +395,12 @@ class ProductService extends CommonService
             }
             unset($data['files_upload_' . $i]);
         }
+
+        $imageDelete = array_diff($dataImageOld, $dataImageNew);
+        foreach ($imageDelete as $key => &$item) {
+        }
+        Storage::delete(storage_path('app/public/9770.PNG'));
+        Storage::delete(['file.jpg', 'file2.jpg']);
         // if (!is_string($data['files_upload_7'])) {
         //     $file = $data['files_upload_7'];
         //     $data['file_7'] = [

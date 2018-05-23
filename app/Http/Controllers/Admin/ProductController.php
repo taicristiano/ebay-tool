@@ -121,8 +121,12 @@ class ProductController extends AbstractController
     {
         try {
             $data = $request->all();
-            $data = $this->productService->formatDataInsertProductConfirm($data);
-            Session::forget('product-info');
+            $dataSession = [];
+            if (Session::has('product-info')) {
+                $dataSession = Session::get('product-info')[0];
+                Session::forget('product-info');
+            }
+            $data = $this->productService->formatDataInsertProductConfirm($data, $dataSession);
             Session::push('product-info', $data);
             $response['status'] = true;
             $response['url'] = route('admin.product.show-confirm');

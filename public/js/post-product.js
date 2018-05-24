@@ -1,8 +1,7 @@
 jQuery(document).ready(function() {
-    numberSpecificItem = 0;
     var token = window.Laravel.csrfToken;
     if ($('#item-yaohoo-or-amazon-content').length) {
-        $.get(urlGetImageInit, function(data, status){
+        $.get(urlGetImageInit, function(data, status) {
             if (data.status) {
                 fnInitFIlerImage(data.images);
             }

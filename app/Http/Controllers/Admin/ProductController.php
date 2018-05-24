@@ -21,6 +21,7 @@ class ProductController extends AbstractController
     ) {
         $this->productService = $productService;
         $this->product = $product;
+        $this->keyProduct = Item::SESSION_KEY_PRODUCT_INFO;
     }
 
     /**
@@ -29,11 +30,10 @@ class ProductController extends AbstractController
      */
     public function showPagePostProduct()
     {
-        // Storage::move('/public/test/tainhot.png', '/public/test/tainhot1.png');
-        // Session::forget('product-info');
+        // Session::forget($this->keyProduct);
         $data = [];
-        if (Session::has('product-info')) {
-            $data = $this->productService->formatDataPageProduct(Session::get('product-info')[0]);
+        if (Session::has($this->keyProduct)) {
+            $data = $this->productService->formatDataPageProduct(Session::get($this->keyProduct)[0]);
         }
         $originType = $this->product->getOriginType();
         return view('admin.product.post', compact('data', 'originType'));
@@ -49,12 +49,12 @@ class ProductController extends AbstractController
         try {
             $data = $request->all();
             $dataSession = [];
-            if (Session::has('product-info')) {
-                $dataSession = Session::get('product-info')[0];
-                Session::forget('product-info');
+            if (Session::has($this->keyProduct)) {
+                $dataSession = Session::get($this->keyProduct)[0];
+                Session::forget($this->keyProduct);
             }
             $data = $this->productService->formatDataInsertProductConfirm($data, $dataSession);
-            Session::push('product-info', $data);
+            Session::push($this->keyProduct, $data);
             $response['status'] = true;
             $response['url'] = route('admin.product.show-confirm');
             return response()->json($response);
@@ -72,9 +72,9 @@ class ProductController extends AbstractController
      */
     public function showConfirm(Request $request)
     {
-        $data = Session::get('product-info')[0];
+        $data = Session::get($this->keyProduct)[0];
         if (!$data) {
-            return;
+            return redirect()->route('admin.product.show-page-post-product');
         }
         $data = $this->productService->formatDataPageConfirm($data);
         return view('admin.product.confirm', compact('data'));
@@ -174,7 +174,7 @@ class ProductController extends AbstractController
     public function getImageInit(Request $request)
     {
         try {
-            $data = Session::get('product-info')[0];
+            $data = Session::get($this->keyProduct)[0];
             if (!$data) {
                 throw new Exception();
             }

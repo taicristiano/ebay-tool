@@ -40,6 +40,8 @@ class Item extends AbstractModel
     const ORIGIN_TYPE_YAHOO_AUCTION = 1;
     const ORIGIN_TYPE_AMAZON = 2;
 
+    const SESSION_KEY_PRODUCT_INFO = 'product-info';
+
     /**
      * get origin type yahoo auction
      * @return integer

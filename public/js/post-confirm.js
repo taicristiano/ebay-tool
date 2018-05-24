@@ -19,11 +19,8 @@ jQuery(document).ready(function() {
         });
     })
 
-    $(document).on("click", "#back", function() {
+    $(document).on("click", "#back, .swal-button--confirm", function() {
         window.location.href = urlBack;
-    })
-    $(document).on("click", ".swal-button--confirm", function() {
-        // window.location.href = urlBack;
     })
 });
 

@@ -33,6 +33,11 @@ class ProductService extends CommonService
     protected $exchangeRate;
     protected $itemSpecific;
     protected $itemImage;
+    protected $keyProduct;
+    protected $keyImageFromApi;
+    protected $pathUpload;
+    protected $fullpathUpload;
+    protected $pathStorageFile;
 
     public function __construct(
         Setting $setting,
@@ -56,6 +61,11 @@ class ProductService extends CommonService
         $this->exchangeRate    = $exchangeRate;
         $this->itemSpecific    = $itemSpecific;
         $this->itemImage       = $itemImage;
+        $this->keyProduct      = Item::SESSION_KEY_PRODUCT_INFO;
+        $this->keyImageFromApi = ItemImage::SESSION_KEY_IMAGE_FROM_API;
+        $this->pathUpload      = $this->itemImage->getPathUploadFile();
+        $this->fullpathUpload  = $this->itemImage->getFullPathUploadFile();
+        $this->pathStorageFile = $this->itemImage->getPathStorageFile();
     }
 
     /**
@@ -169,21 +179,21 @@ class ProductService extends CommonService
                 $arrayImage[] = $item;
             });
             $arrayImageFormApi = [];
-            Storage::makeDirectory('/upload/item-images');
+            Storage::makeDirectory($this->pathUpload);
             foreach ($arrayImage as $key => &$item) {
-                if (!Storage::disk(env('FILESYSTEM_DRIVER'))->exists('upload/item-images/' . $itemId . '_' . $key . '.' . $item['extension'])) {
+                if (!Storage::disk(env('FILESYSTEM_DRIVER'))->exists($this->pathUpload . $itemId . '_' . $key . '.' . $item['extension'])) {
                     $client  = new Client();
                     $client->getClient()->get($item['file'], [
-                        'save_to' => storage_path('app/public/upload/item-images/' . $itemId . '_' . $key . '.' . $item['extension']),
+                        'save_to' => storage_path($this->fullpathUpload . $itemId . '_' . $key . '.' . $item['extension']),
                         'headers'=> [ 'Referer' => $item['file']]
                     ]);
                 }
-                $item['file'] = asset('storage/upload/item-images/' . $itemId . '_' . $key . '.' . $item['extension']);
+                $item['file'] = asset($this->pathStorageFile . $itemId . '_' . $key . '.' . $item['extension']);
                 array_push($arrayImageFormApi, $itemId . '_' . $key . '.' . $item['extension']);
             }
 
-            Session::forget('image-from-api');
-            Session::push('image-from-api', $arrayImageFormApi);
+            Session::forget($this->keyImageFromApi);
+            Session::push($this->keyImageFromApi, $arrayImageFormApi);
         // } else {
         //     $isTypeAmazon = true;
         //     // call api amazon
@@ -317,17 +327,6 @@ class ProductService extends CommonService
         return response()->json($result);
     }
 
-    // public function postProduct($data)
-    // {
-    //     $dateNow = date('Y-m-d H:i:s');
-    //     $data['item']['created_at'] = $dateNow;
-    //     $data['item']['updated_at'] = $dateNow;
-    //     $productId = $this->product->insertGetId($data['item']);
-    //     $dataItemSpecifics = $this->formatDataItemSpecifics($data['dtb_item_specifics'], $productId);
-    //     $this->itemSpecific->insert($dataItemSpecifics);
-    //     $this->insertItemImage($data);
-    // }
-
     /**
      * format data insert product confirm
      * @param  array $data
@@ -346,9 +345,9 @@ class ProductService extends CommonService
             }
         }
 
-        if (Session::has('image-from-api')) {
-            $imageFromApi = Session::get('image-from-api')[0];
-            Session::forget('image-from-api');
+        if (Session::has($this->keyImageFromApi)) {
+            $imageFromApi = Session::get($this->keyImageFromApi)[0];
+            Session::forget($this->keyImageFromApi);
             foreach ($imageFromApi as $key => $item) {
                 if (!in_array($item, $dataImageOld)) {
                    array_push($dataImageOld, $item);     
@@ -365,14 +364,14 @@ class ProductService extends CommonService
                 array_push($dataImageNew, $data['file_name_' . $i]);
             } else {
                 $data['url_preview_' . $i] = $this->getBase64Image($file);
-                $data['file_name_' . $i] = $this->uploadFile($file, 'upload/item-images');
+                $data['file_name_' . $i] = $this->uploadFile($file, $this->pathUpload);
             }
             unset($data['files_upload_' . $i]);
         }
 
         $imageDelete = array_diff($dataImageOld, $dataImageNew);
         foreach ($imageDelete as $key => $item) {
-            Storage::delete('upload/item-images/' . $item);
+            Storage::delete($this->pathUpload . $item);
         }
         return $data;
     }
@@ -447,7 +446,9 @@ class ProductService extends CommonService
         $data['dtb_item']['shipping_policy_name'] = $this->getPoliciNameById(!empty($data['dtb_item']['shipping_policy_id']) ? $data['dtb_item']['shipping_policy_id'] : '' , $settingPolicyData);
         $data['dtb_item']['payment_policy_name'] = $this->getPoliciNameById(!empty($data['dtb_item']['payment_policy_id']) ? $data['dtb_item']['payment_policy_id'] : '', $settingPolicyData);
         $data['dtb_item']['return_policy_name'] = $this->getPoliciNameById(!empty($data['dtb_item']['return_policy_id']) ? $data['dtb_item']['return_policy_id'] : '', $settingPolicyData);
-        $data['dtb_item']['setting_shipping_option'] = $this->settingShipping->findById($data['dtb_item']['setting_shipping_option'])->shipping_name;
+        if (isset($data['dtb_item']['setting_shipping_option'])) {
+            $data['dtb_item']['setting_shipping_option'] = $this->settingShipping->findById($data['dtb_item']['setting_shipping_option'])->shipping_name;
+        }
         return $data;
     }
 
@@ -514,7 +515,7 @@ class ProductService extends CommonService
     {
         try {
             DB::beginTransaction();
-            $data = Session::get('product-info')[0];
+            $data = Session::get($this->keyProduct)[0];
             // insert item
             $dateNow = date('Y-m-d H:i:s');
             $dataItem = [
@@ -532,7 +533,7 @@ class ProductService extends CommonService
                 'shipping_policy_id' => $data['dtb_item']['shipping_policy_id'],
                 'payment_policy_id' => $data['dtb_item']['payment_policy_id'],
                 // 'return_policy_id' => $data['dtb_item']['return_policy_id'],
-                'ship_fee' => $data['dtb_item']['ship_fee'],
+                // 'ship_fee' => $data['dtb_item']['ship_fee'],
                 'created_at' => $dateNow,
                 'updated_at' => $dateNow,
             ];
@@ -547,7 +548,7 @@ class ProductService extends CommonService
             
             // post to ebay
             DB::commit();
-            Session::forget('product-info');
+            Session::forget($this->keyProduct);
             $response['status'] = true;
             return response()->json($response);
         } catch (Exception $ex) {
@@ -653,10 +654,14 @@ class ProductService extends CommonService
                 'created_at' => $dateNow,
                 'updated_at' => $dateNow
             ]);
-            $extension = 'png';
-            $itemImageString = $productId . '_' . $itemImageId . '_' . date('ymd_his') . '.' .$extension;
+            $arrayItem = explode(".", $data['file_name_' . $i]);
+            $extension = array_pop($arrayItem);
+            $itemImageString = $productId . '_' . $itemImageId . '_' . date('ymd_his') . '.' . $extension;
             $this->itemImage->updateItemImageById($itemImageId, ['item_image' => $itemImageString]);
-            Storage::move('upload/item-images/' . $data['file_name_' . $i], 'upload/item-images/' . $itemImageString);
+            $this->pathUpload = $this->itemImage->getPathUploadFile();
+            if (Storage::disk(env('FILESYSTEM_DRIVER'))->exists($this->pathUpload . $data['file_name_' . $i])) {
+                Storage::move($this->pathUpload . $data['file_name_' . $i], $this->pathUpload . $itemImageString);
+            }
         }
     }
 }

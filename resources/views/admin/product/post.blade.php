@@ -89,6 +89,7 @@
     $('input[type="radio"].minimal').iCheck({
         radioClass: 'iradio_minimal-blue'
     });
+    var numberSpecificItem = {{ !empty($data['dtb_item_specifics']) ? count($data['dtb_item_specifics']) : 0 }};
     var urlGetImageInit = "{{route('admin.product.get-image-init')}}";
 </script>
 @endsection

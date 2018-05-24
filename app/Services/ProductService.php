@@ -18,6 +18,7 @@ use App\Models\MtbStore;
 use App\Models\MtbExchangeRate;
 use App\Models\ItemSpecific;
 use App\Models\ItemImage;
+use App\Services\SignatureAmazon;
 use DB;
 use Log;
 
@@ -151,8 +152,8 @@ class ProductService extends CommonService
     public function apiGetItemYahooOrAmazonInfo($itemId, $type)
     {
         $response['status'] = false;
-        // if ($type == $this->product->getOriginTypeYahooAuction()) {
-        //     $isTypeAmazon = true;
+        if ($type == $this->product->getOriginTypeYahooAuction()) {
+            $isTypeAmazon = false;
             $url     = config('api_info.api_yahoo_action_info') . $itemId;
             $client  = new Client();
             $crawler = $client->request('GET', $url);
@@ -194,10 +195,30 @@ class ProductService extends CommonService
 
             Session::forget($this->keyImageFromApi);
             Session::push($this->keyImageFromApi, $arrayImageFormApi);
-        // } else {
-        //     $isTypeAmazon = true;
-        //     // call api amazon
-        // }
+        } else {
+            $isTypeAmazon = true;
+            $url = config('api_info.api_amazon_get_item');
+            $body = config('api_info.body_request_api_amazon_get_item');
+            // $header = config('api_info.header_api_amazon_get_item');
+            $body['Query'] = 'B0742J781D';
+            $signalture = $this->getSignatureAmazon($body);
+            $body['Signature'] = $signalture;
+            // dd($body);
+            // https://github.com/amzn/amazon-pay-sdk-php
+            $result             = $this->callApi(null, $body, $url, 'post');
+            $response['status'] = false;
+            if ($result['Ack'] == 'Failure') {
+                return response()->json($response);
+            }
+            $userId             = Auth::user()->id;
+            $settingData        = $this->setting->getSettingOfUser($userId);
+            $settingPolicyData  = $this->settingPolicy->getSettingPolicyOfUser($userId);
+            $data               = $this->formatDataEbayInfo($result, $settingData, $settingPolicyData);
+            $response['status'] = true;
+            $response['data']   = view('admin.product.component.item_ebay_info', compact('data'))->render();
+            return response()->json($response);
+                // call api amazon
+        }
         $isTypeAmazon = true;
         if (!count($arrayImage)) {
             return response()->json($response);
@@ -216,6 +237,32 @@ class ProductService extends CommonService
         $response['data'] = view('admin.product.component.item_yahoo_or_amazon_info', compact('data', 'arrayImage'))->render();
         return response()->json($response);
 
+    }
+
+    public function getSignatureAmazon($parameters)
+    {
+        // $configParams = array(
+        //     'merchant_id' => 'test',
+        //     'access_key' => 'test',
+        //     'secret_key' => "test",
+        //     'currency_code' => 'usd',
+        //     'client_id' => 'test',
+        //     'region' => 'jp',
+        //     'sandbox' => true,
+        //     'platform_id' => 'test',
+        //     'application_name' => 'sdk testing',
+        //     'application_version' => '1.0',
+        //     'proxy_host' => null,
+        //     'proxy_port' => -1,
+        //     'proxy_username' => null,
+        //     'proxy_Password' => null
+        // );
+        $configs = $parameters;
+        $configs['sandbox'] = false;
+        $configs['region'] = 'jp';
+        $configs['secret_key'] = 'A2GI94OS9KGZVF';
+        $signatureObj = new SignatureAmazon($configs, $parameters);
+        return $signatureObj->getSignature();
     }
 
     /**

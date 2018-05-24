@@ -61,7 +61,7 @@ class CommonService
         $result = $client->$type(
             $url, [
                 'headers' => $header,
-                'body'    => $body,
+                'form_params'    => $body,
             ]
         );
         $result = $result ->getBody()->getContents();

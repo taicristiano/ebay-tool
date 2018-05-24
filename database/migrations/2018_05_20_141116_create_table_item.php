@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableProduct extends Migration
+class CreateTableItem extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +15,6 @@ class CreateTableProduct extends Migration
     {
         Schema::create('dtb_item', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('original_id');
             $table->string('original_id', 20);
             $table->string('item_id', 20);
             $table->smallInteger('original_type');

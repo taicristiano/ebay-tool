@@ -43,6 +43,7 @@ return [
 		'SignatureMethod' => 'HmacSHA256',
 		'MarketplaceId' => 'A1VC38T7YXB528',
 		// 'Query' => 'AWSAccessKeyId',
+		'SecretKey' => 'l4CCqytm56ps5QFw7AFv347bKxqzJWK4xL2hrVmb',
 	],
 	'header_api_amazon_get_item' => [
 		'Content-Type' => 'text/xml',

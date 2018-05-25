@@ -260,7 +260,7 @@ class ProductService extends CommonService
         $configs = $parameters;
         $configs['sandbox'] = false;
         $configs['region'] = 'jp';
-        $configs['secret_key'] = 'A2GI94OS9KGZVF';
+        $configs['secret_key'] = $parameters['SecretKey'];
         $signatureObj = new SignatureAmazon($configs, $parameters);
         return $signatureObj->getSignature();
     }

@@ -184,18 +184,31 @@ function toggleBtnSlove()
     }
 }
 
+function urlEncode(str)
+{
+    str = encodeURIComponent(str);
+    str = str.replace(/\*/g, '%2A');
+    str = str.replace(/\(/g, '%28');
+    str = str.replace(/\)/g, '%29');
+    str = str.replace(/'/g, '%27');
+    str = str.replace(/\!/g, '%21');
+    return str;
+}
 function getYahooOrAmazonInfo(button)
 {
     $('body').addClass('loading-ajax');
     if (button.data('requestRunning')) {
         return;
     }
+    var timestamp = dateFormat(new Date(), 'isoUtcDateTime');
+    timestamp = urlEncode(timestamp);
     button.data('requestRunning', true);
     var token = window.Laravel.csrfToken;
     var data = {
         _token: token,
         item_id: $('#id_ebay_or_amazon').val(),
         type: $('.type:checked').val(),
+        timestamp: timestamp
     };
     $.ajax({
         url: urlGetItemYahooOrAmazonInfo,

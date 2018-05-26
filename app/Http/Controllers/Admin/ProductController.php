@@ -120,7 +120,7 @@ class ProductController extends AbstractController
     public function apiGetItemYahooOrAmazonInfo(Request $request)
     {
         try {
-            return $this->productService->apiGetItemYahooOrAmazonInfo($request->item_id, $request->type);
+            return $this->productService->apiGetItemYahooOrAmazonInfo($request->item_id, $request->type, $request->timestamp);
         } catch (Exception $ex) {
             Log::error($ex);
             $response['status'] = false;

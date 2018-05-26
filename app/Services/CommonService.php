@@ -60,7 +60,7 @@ class CommonService
         $client = new \GuzzleHttp\Client();
         $result = $client->$type(
             $url, [
-                'headers' => $header,
+                // 'headers' => $header,
                 'form_params'    => $body,
             ]
         );

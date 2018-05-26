@@ -141,7 +141,6 @@ class SignatureAmazon
         } else {
             throw new \Exception("Non-supported signing method specified");
         }
-        
         return base64_encode(hash_hmac($hash, $data, $this->config['secret_key'], true));
     }
     
@@ -162,8 +161,6 @@ class SignatureAmazon
                 $this->mwsEndpointUrl  = $this->mwsServiceUrls[$this->regionMappings[$region]];
                 $this->mwsServiceUrl   = 'https://' . $this->mwsEndpointUrl . '/' . $this->modePath . '/' . self::MWS_VERSION;
                 $this->mwsEndpointPath = '/' . $this->modePath . '/' . self::MWS_VERSION;
-
-                // dd($this->mwsEndpointUrl, $this->mwsServiceUrl, $this->mwsEndpointPath);
             } else {
                 throw new \Exception($region . ' is not a valid region');
             }

@@ -149,7 +149,7 @@ class ProductService extends CommonService
      * @param  integer $type
      * @return Illuminate\Http\Response
      */
-    public function apiGetItemYahooOrAmazonInfo($itemId, $type)
+    public function apiGetItemYahooOrAmazonInfo($itemId, $type, $timestamp)
     {
         $response['status'] = false;
         if ($type == $this->product->getOriginTypeYahooAuction()) {
@@ -199,13 +199,27 @@ class ProductService extends CommonService
             $isTypeAmazon = true;
             $url = config('api_info.api_amazon_get_item');
             $body = config('api_info.body_request_api_amazon_get_item');
-            // $header = config('api_info.header_api_amazon_get_item');
-            $body['Query'] = 'B0742J781D';
-            $signalture = $this->getSignatureAmazon($body);
+            $parameters = config('api_info.parameters_api_amazon_get_item');
+            $header = config('api_info.header_api_amazon_get_item');
+            // $body['Query'] = 'B0742J781D';
+            $body = config('api_info.parameters_api_amazon_get_item');
+            // $body .= 'B0742J781D';
+            $signalture = $this->getSignatureAmazon($parameters);
+            dd($signalture, urldecode($signalture));
+            $signalture = urldecode($signalture);
+            $signalture = self::encodeNew($signalture);
+            // $body .= '&Signature=' . $signalture;
+            // $body .= '&Timestamp=' . date('Y-m-d\Th:m:s\Z');
+            // dd($signalture);
             $body['Signature'] = $signalture;
-            // dd($body);
+            // $body['Timestamp'] = date('Y-m-d\Th:m:s\Z');
+            // $body['Timestamp'] = $timestamp;
+            // dd(date(DATE_ISO8601, time()));
+            $body['Timestamp'] = date(DATE_ISO8601, time());
             // https://github.com/amzn/amazon-pay-sdk-php
-            $result             = $this->callApi(null, $body, $url, 'post');
+            // $body = null;
+            $result             = $this->callApi($header, $body, $url, 'post');
+            dd($result);
             $response['status'] = false;
             if ($result['Ack'] == 'Failure') {
                 return response()->json($response);
@@ -260,11 +274,30 @@ class ProductService extends CommonService
         $configs = $parameters;
         $configs['sandbox'] = false;
         $configs['region'] = 'jp';
+        // $configs['secret_key'] = 'l4CCqytm56ps5QFw7AFv347bKxqzJWK4xL2hrVmb';
         $configs['secret_key'] = $parameters['SecretKey'];
+        unset($configs['SecretKey']);
+        unset($parameters['SecretKey']);
+        // dd($configs, $parameters);
         $signatureObj = new SignatureAmazon($configs, $parameters);
         return $signatureObj->getSignature();
     }
 
+    public function encodeNew($string)
+    {
+        $string = preg_replace('/\*/g', '%2A', $string);
+        $string = preg_replace('/\(/g', '%28', $string);
+        $string = preg_replace('/\)/g', '%29', $string);
+        return $string;
+        // $string = preg_replace('/'/g, '%2A', $string);
+        // $string = preg_replace('/\*/g', '%2A', $string);
+        // $string = preg_replace('/\*/g', '%2A', $string);
+    // str = str.replace(/\*/g, '%2A');
+    // str = str.replace(/\(/g, '%28');
+    // str = str.replace(/\)/g, '%29');
+    // str = str.replace(/'/g, '%27');
+    // str = str.replace(/\!/g, '%21');
+    }
     /**
      * calculator profit
      * @param  array $input

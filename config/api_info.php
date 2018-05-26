@@ -31,7 +31,7 @@ return [
 	'api_ebay_get_item' => 'http://open.api.ebay.com/shopping?callname=GetSingleItem&responseencoding=XML&appid=YOURSCOM--PRD-de039438e-536f99c0&siteid=0&version=967&IncludeSelector=Details,ItemSpecifics&ItemID=',
 	'api_yahoo_action_info' => 'https://page.auctions.yahoo.co.jp/jp/auction/',
 	'api_amazon_get_item' => 'https://mws.amazonservices.jp/Products/2011-10-01',
-	'body_request_api_amazon_get_item' => [
+	'parameters_api_amazon_get_item' => [
 		'AWSAccessKeyId' => 'AKIAJWROE4YTDKN5COQQ',
 		'Action' => 'ListMatchingProducts',
 		'SellerId' => 'A2GI94OS9KGZVF',
@@ -39,7 +39,6 @@ return [
 		'SignatureVersion' => 2,
 		'Timestamp' => date('Y-m-d\Th:m:s\Z'),
 		'Version' => '2011-10-01',
-		// 'Signature' => 'AWSAccessKeyId',
 		'SignatureMethod' => 'HmacSHA256',
 		'MarketplaceId' => 'A1VC38T7YXB528',
 		// 'Query' => 'AWSAccessKeyId',
@@ -48,4 +47,5 @@ return [
 	'header_api_amazon_get_item' => [
 		'Content-Type' => 'text/xml',
 	],
+	'body_request_api_amazon_get_item' => 'AWSAccessKeyId=AKIAJWROE4YTDKN5COQQ&Action=ListMatchingProducts&SellerId=A2GI94OS9KGZVF&MWSAuthToken=amzn.mws.f8b1b1e5-f8df-3d8c-48ff-d8655ad92d86&SignatureVersion=2&Version=2011-10-01&SignatureMethod=HmacSHA256&MarketplaceId=A1VC38T7YXB528&Query=',
 ];

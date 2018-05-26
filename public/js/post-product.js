@@ -200,15 +200,34 @@ function getYahooOrAmazonInfo(button)
     if (button.data('requestRunning')) {
         return;
     }
+    // var timestamp = dateFormat(new Date(), 'isoUtcDateTime');
+    // timestamp = urlEncode(timestamp);
+    button.data('requestRunning', true);
+
+    var endpoint = "mws.amazonservices.jp";
+    var apiPath = '/Products/2011-10-01';
+    var stringToSign = "POST\n" + endpoint + "\n";
     var timestamp = dateFormat(new Date(), 'isoUtcDateTime');
     timestamp = urlEncode(timestamp);
-    button.data('requestRunning', true);
+    stringToSign += apiPath + "\n";
+    stringToSign += 'AWSAccessKeyId=AKIAJWROE4YTDKN5COQQ&Action=ListMatchingProducts&MWSAuthToken=amzn.mws.f8b1b1e5-f8df-3d8c-48ff-d8655ad92d86&MarketplaceId=A1VC38T7YXB528&Query=0439708184&SellerId=A2GI94OS9KGZVF&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp='+timestamp+'&Version=2011-10-01';
+    // var stringToSign = 'https://mws.amazonservices.jp/Products/2011-10-01';
+    var secretKey = 'l4CCqytm56ps5QFw7AFv347bKxqzJWK4xL2hrVmb';
+    console.log(stringToSign);
+    var hmac = Crypto.HMAC(Crypto.SHA256, stringToSign, secretKey, { asString: false });
+
+    var b64hmac = hexstr2b64(hmac);
+    var b64hmac = urlEncode(b64hmac);
+    var j = b64hmac.length % 4;
+    for(var i=0;i<j;i++) b64hmac += '=';
+
     var token = window.Laravel.csrfToken;
     var data = {
         _token: token,
         item_id: $('#id_ebay_or_amazon').val(),
         type: $('.type:checked').val(),
-        timestamp: timestamp
+        timestamp: timestamp,
+        sign: urlEncode(b64hmac),
     };
     $.ajax({
         url: urlGetItemYahooOrAmazonInfo,

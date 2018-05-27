@@ -18,7 +18,7 @@ class ValidateProvider extends ServiceProvider
             if (is_numeric($value) && $value >= 0 && $value <= 100) {
                 if (filter_var($value, FILTER_VALIDATE_INT)) {
                     return true;
-                } elseif(filter_var($value, FILTER_VALIDATE_FLOAT) && strlen(explode('.', $value)[1]) == 1) {
+                } elseif (filter_var($value, FILTER_VALIDATE_FLOAT) && strlen(explode('.', $value)[1]) == 1) {
                     return true;
                 } else {
                     return false;
@@ -29,7 +29,6 @@ class ValidateProvider extends ServiceProvider
         Validator::extend('greateThanOrEqualZero', function ($attribute, $value, $parameters, $validator) {
             return $value >= 0;
         });
-        
     }
 
     /**

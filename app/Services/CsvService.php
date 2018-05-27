@@ -164,7 +164,7 @@ class CsvService extends CommonService
     {
         try {
             DB::beginTransaction();
-            Excel::load($file, function($reader) {
+            Excel::load($file, function ($reader) {
                 $results = $reader->toArray();
                 foreach ($results as $key => $item) {
                     if (self::checkExistEmail($item['email'])) {
@@ -248,7 +248,7 @@ class CsvService extends CommonService
     /**
      * excute export csv
      * @param  string $fileName
-     * @param  array $columns 
+     * @param  array $columns
      * @param  array $rowList
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */

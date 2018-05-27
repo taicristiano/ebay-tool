@@ -115,8 +115,8 @@ class ProductService extends CommonService
         //data dtb_item_specifics
         $result['dtb_item_specifics'] = [];
         foreach ($data['Item']['ItemSpecifics']['NameValueList'] as $specific) {
-            $item['name']  = $specific['Name'];
-            $item['value'] = $specific['Value'];
+            $item['name']                   = $specific['Name'];
+            $item['value']                  = $specific['Value'];
             $result['dtb_item_specifics'][] = $item;
         }
 
@@ -151,11 +151,11 @@ class ProductService extends CommonService
      */
     public function apiGetItemYahooOrAmazonInfo($data)
     {
-        $itemId = $data['item_id'];
-        $type = $data['type'];
-        $sign = $data['sign'];
-        $itemId = $data['item_id'];
-        $time = $data['timestamp'];
+        $itemId             = $data['item_id'];
+        $type               = $data['type'];
+        $sign               = $data['sign'];
+        $itemId             = $data['item_id'];
+        $time               = $data['timestamp'];
         $response['status'] = false;
         if ($type == $this->product->getOriginTypeYahooAuction()) {
             $isTypeAmazon = false;
@@ -177,10 +177,10 @@ class ProductService extends CommonService
                 $arrayItem = explode(".", $url);
                 $type = array_pop($arrayItem);
                 $item = [
-                    'name' => '',
-                    'type' => 'image/' . $type,
+                    'name'      => '',
+                    'type'      => 'image/' . $type,
                     'extension' => $type,
-                    'file' => $url,
+                    'file'      => $url,
                 ];
                 $arrayImage[] = $item;
             });
@@ -202,41 +202,58 @@ class ProductService extends CommonService
             Session::push($this->keyImageFromApi, $arrayImageFormApi);
         } else {
             $isTypeAmazon = true;
-            $url = config('api_info.api_amazon_get_item');
-            $body = config('api_info.body_request_api_amazon_get_item');
-            $parameters = config('api_info.parameters_api_amazon_get_item');
-            $header = config('api_info.header_api_amazon_get_item');
+            $url        = config('api_info.api_amazon_get_item');
+            // $body       = config('api_info.body_request_api_amazon_get_item');
+            // $parameters = config('api_info.parameters_api_amazon_get_item');
+            // $header     = config('api_info.header_api_amazon_get_item');
             // $body['Query'] = 'B0742J781D';
-            $body = config('api_info.parameters_api_amazon_get_item');
+            $body = config('api_info.body_request_api_amazon_get_item');
+            
+            $gensign = config('api_info.gen_sign');
             // $body .= 'B0742J781D';
-            $signalture = $this->getSignatureAmazon($parameters);
+            $signalture = $this->getSignatureAmazon($gensign);
             //dd($signalture, self::encodeNew($signalture));
             // $signalture = self::encodeNew($signalture);
-            $signalture = str_replace(
-                    array('+', '=', '/'),
-                    array('-', '_', '~'),
-                    $signalture);
+            // $signalture = str_replace(
+            //         array('+', '=', '/'),
+            //         array('-', '_', '~'),
+            //         $signalture);
             // $body .= '&Signature=' . $signalture;
             // $body .= '&Timestamp=' . date('Y-m-d\Th:m:s\Z');
             // dd($signalture);
             // $signalture = self::encodeNew($signalture);
             // dd($signalture, $sign);
 
+            $body = [
+                'AWSAccessKeyId' => 'AKIAJWROE4YTDKN5COQQ',
+                'Action' => 'ListMatchingProducts',
+                'SellerId' => 'A2GI94OS9KGZVF',
+                'MWSAuthToken' => 'amzn.mws.f8b1b1e5-f8df-3d8c-48ff-d8655ad92d86',
+                'SignatureVersion' => 2,
+                'Timestamp' => date(DATE_ISO8601, time()),
+                'Version' => '2011-10-01',
+                'Signature' => $sign,
+                'SignatureMethod' => 'HmacSHA256',
+                'MarketplaceId' => 'A1VC38T7YXB528',
+                'Query' => '0439708184 ',
+            ];
+            dd($sign);
+            // $body['Signature'] = $sign;
             // $body['Signature'] = $signalture;
-            $body['Signature'] = $sign;
             // $body['Timestamp'] = date('Y-m-d\Th:m:s\Z');
             // $body['Timestamp'] = $timestamp;
             // dd(date(DATE_ISO8601, time()));
-            $body['Timestamp'] = date(DATE_ISO8601, time());
-            $body['Timestamp'] = gmdate("Y-m-d\TH:i:s.\\0\\0\\0\\Z", time());
+            // $body['Timestamp'] = date(DATE_ISO8601, time());
+            // $body['Timestamp'] = gmdate("Y-m-d\TH:i:s.\\0\\0\\0\\Z", time());
             // $body['Timestamp'] = $time;
             // dd($body);
             // $body['Timestamp'] = $data['timestamp'];
             // https://github.com/amzn/amazon-pay-sdk-php
             // $body = null;
             //dd($signalture);
-            $result             = $this->callApi($header, $body, $url, 'post');
-            dd($result);
+            // dd($body);
+            // dd($body);
+            $result             = $this->callApi(null, $body, $url, 'post', true);
             $response['status'] = false;
             if ($result['Ack'] == 'Failure') {
                 return response()->json($response);
@@ -255,48 +272,30 @@ class ProductService extends CommonService
             return response()->json($response);
         }
         if ($isTypeAmazon) {
-            $data['dtb_item']['product_size'] = 'M';
+            $data['dtb_item']['product_size']     = 'M';
             $data['dtb_item']['commodity_weight'] = 950;
-            $data['dtb_item']['length'] = 11;
-            $data['dtb_item']['height'] = 11;
-            $data['dtb_item']['width'] = 11;
+            $data['dtb_item']['length']           = 11;
+            $data['dtb_item']['height']           = 11;
+            $data['dtb_item']['width']            = 11;
         }
         $data['dtb_item']['buy_price'] = $price;
-        $response['is_type_amazon'] = $isTypeAmazon;
-        $response['status'] = true;
-        $response['image'] = $arrayImage;
-        $response['data'] = view('admin.product.component.item_yahoo_or_amazon_info', compact('data', 'arrayImage'))->render();
+        $response['is_type_amazon']    = $isTypeAmazon;
+        $response['status']            = true;
+        $response['image']             = $arrayImage;
+        $response['data']              = view('admin.product.component.item_yahoo_or_amazon_info', compact('data', 'arrayImage'))->render();
         return response()->json($response);
 
     }
 
     public function getSignatureAmazon($parameters)
     {
-        // $configParams = array(
-        //     'merchant_id' => 'test',
-        //     'access_key' => 'test',
-        //     'secret_key' => "test",
-        //     'currency_code' => 'usd',
-        //     'client_id' => 'test',
-        //     'region' => 'jp',
-        //     'sandbox' => true,
-        //     'platform_id' => 'test',
-        //     'application_name' => 'sdk testing',
-        //     'application_version' => '1.0',
-        //     'proxy_host' => null,
-        //     'proxy_port' => -1,
-        //     'proxy_username' => null,
-        //     'proxy_Password' => null
-        // );
-        $configs = $parameters;
-        $configs['sandbox'] = false;
-        $configs['region'] = 'jp';
-        // $configs['secret_key'] = 'l4CCqytm56ps5QFw7AFv347bKxqzJWK4xL2hrVmb';
-        $configs['secret_key'] = $parameters['SecretKey'];
-        unset($configs['SecretKey']);
-        unset($parameters['SecretKey']);
-        // dd($configs, $parameters);
-        $signatureObj = new SignatureAmazon($configs, $parameters);
+        $configs               = $parameters;
+        $configs['sandbox']    = false;
+        $configs['region']     = 'jp';
+        $configs['secret_key'] = 'l4CCqytm56ps5QFw7AFv347bKxqzJWK4xL2hrVmb';
+        // unset($configs['SecretKey']);
+        // unset($parameters['SecretKey']);
+        $signatureObj          = new SignatureAmazon($configs, $parameters);
         return $signatureObj->getSignature();
     }
 
@@ -445,12 +444,12 @@ class ProductService extends CommonService
             $file = $data['files_upload_' . $i];
             if (is_string($file)) {
                 $data['url_preview_' . $i] = $file;
-                $fileString = explode("/", $file);
-                $data['file_name_' . $i] = array_pop($fileString);
+                $fileString                = explode("/", $file);
+                $data['file_name_' . $i]   = array_pop($fileString);
                 array_push($dataImageNew, $data['file_name_' . $i]);
             } else {
                 $data['url_preview_' . $i] = $this->getBase64Image($file);
-                $data['file_name_' . $i] = $this->uploadFile($file, $this->pathUpload);
+                $data['file_name_' . $i]   = $this->uploadFile($file, $this->pathUpload);
             }
             unset($data['files_upload_' . $i]);
         }
@@ -528,10 +527,10 @@ class ProductService extends CommonService
     {
         $userId = Auth::user()->id;
         $settingPolicyData = $this->settingPolicy->getSettingPolicyOfUser($userId);
-        $data['dtb_item']['duration'] = $this->product->getDurationOption()[$data['dtb_item']['duration']];
+        $data['dtb_item']['duration']             = $this->product->getDurationOption()[$data['dtb_item']['duration']];
         $data['dtb_item']['shipping_policy_name'] = $this->getPoliciNameById(!empty($data['dtb_item']['shipping_policy_id']) ? $data['dtb_item']['shipping_policy_id'] : '' , $settingPolicyData);
-        $data['dtb_item']['payment_policy_name'] = $this->getPoliciNameById(!empty($data['dtb_item']['payment_policy_id']) ? $data['dtb_item']['payment_policy_id'] : '', $settingPolicyData);
-        $data['dtb_item']['return_policy_name'] = $this->getPoliciNameById(!empty($data['dtb_item']['return_policy_id']) ? $data['dtb_item']['return_policy_id'] : '', $settingPolicyData);
+        $data['dtb_item']['payment_policy_name']  = $this->getPoliciNameById(!empty($data['dtb_item']['payment_policy_id']) ? $data['dtb_item']['payment_policy_id'] : '', $settingPolicyData);
+        $data['dtb_item']['return_policy_name']   = $this->getPoliciNameById(!empty($data['dtb_item']['return_policy_id']) ? $data['dtb_item']['return_policy_id'] : '', $settingPolicyData);
         if (isset($data['dtb_item']['setting_shipping_option'])) {
             $data['dtb_item']['setting_shipping_option'] = $this->settingShipping->findById($data['dtb_item']['setting_shipping_option'])->shipping_name;
         }
@@ -575,10 +574,10 @@ class ProductService extends CommonService
             $arrayItem = explode(".", $url);
             $type = array_pop($arrayItem);
             $item = [
-                'name' => '',
-                'type' => 'image/' . $type,
+                'name'      => '',
+                'type'      => 'image/' . $type,
                 'extension' => $type,
-                'file' => $data['url_preview_' . $i],
+                'file'      => $data['url_preview_' . $i],
             ];
             $arrayImage[] = $item;
         }
@@ -605,23 +604,23 @@ class ProductService extends CommonService
             // insert item
             $dateNow = date('Y-m-d H:i:s');
             $dataItem = [
-                'original_id' => $data['dtb_item']['original_id'],
-                'item_id' => $data['dtb_item']['item_id'],
-                'original_type' => $data['dtb_item']['type'],
-                'item_name' => $data['dtb_item']['item_name'],
-                'category_id' => $data['dtb_item']['category_id'],
-                'category_name' => $data['dtb_item']['category_name'],
-                'condition_id' => $data['dtb_item']['condition_id'],
-                'condition_name' => $data['dtb_item']['condition_name'],
-                'price' => $data['dtb_item']['price'],
-                'duration' => $data['dtb_item']['duration'],
-                'quantity' => $data['dtb_item']['quantity'],
-                'shipping_policy_id' => $data['dtb_item']['shipping_policy_id'],
-                'payment_policy_id' => $data['dtb_item']['payment_policy_id'],
+                'original_id'         => $data['dtb_item']['original_id'],
+                'item_id'             => $data['dtb_item']['item_id'],
+                'original_type'       => $data['dtb_item']['type'],
+                'item_name'           => $data['dtb_item']['item_name'],
+                'category_id'         => $data['dtb_item']['category_id'],
+                'category_name'       => $data['dtb_item']['category_name'],
+                'condition_id'        => $data['dtb_item']['condition_id'],
+                'condition_name'      => $data['dtb_item']['condition_name'],
+                'price'               => $data['dtb_item']['price'],
+                'duration'            => $data['dtb_item']['duration'],
+                'quantity'            => $data['dtb_item']['quantity'],
+                'shipping_policy_id'  => $data['dtb_item']['shipping_policy_id'],
+                'payment_policy_id'   => $data['dtb_item']['payment_policy_id'],
                 // 'return_policy_id' => $data['dtb_item']['return_policy_id'],
-                // 'ship_fee' => $data['dtb_item']['ship_fee'],
-                'created_at' => $dateNow,
-                'updated_at' => $dateNow,
+                // 'ship_fee'         => $data['dtb_item']['ship_fee'],
+                'created_at'          => $dateNow,
+                'updated_at'          => $dateNow,
             ];
             $itemId = $this->product->insertGetId($dataItem);
 
@@ -638,7 +637,6 @@ class ProductService extends CommonService
             $response['status'] = true;
             return response()->json($response);
         } catch (Exception $ex) {
-            dd($ex);
             DB::rollback();
             Log::error($ex);
             $response['status'] = false;
@@ -724,7 +722,7 @@ class ProductService extends CommonService
         foreach ($input as $key => &$item) {
             $item['created_at'] = $dateNow;
             $item['updated_at'] = $dateNow;
-            $item['item_id'] = $productId;
+            $item['item_id']    = $productId;
         }
         return $input;
     }
@@ -740,8 +738,8 @@ class ProductService extends CommonService
                 'created_at' => $dateNow,
                 'updated_at' => $dateNow
             ]);
-            $arrayItem = explode(".", $data['file_name_' . $i]);
-            $extension = array_pop($arrayItem);
+            $arrayItem       = explode(".", $data['file_name_' . $i]);
+            $extension       = array_pop($arrayItem);
             $itemImageString = $productId . '_' . $itemImageId . '_' . date('ymd_his') . '.' . $extension;
             $this->itemImage->updateItemImageById($itemImageId, ['item_image' => $itemImageString]);
             $this->pathUpload = $this->itemImage->getPathUploadFile();

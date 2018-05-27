@@ -53,17 +53,19 @@ class CommonService
      * @param  string $body
      * @param  string $url
      * @param  string $type
+     * @param  boolean $isFormParams
      * @return array
      */
-    public function callApi($header, $body, $url, $type)
+    public function callApi($header, $body, $url, $type, $isFormParams = false)
     {
+        $bodyRequest = [
+            $isFormParams ? 'form_params' : 'body'    => $body,
+        ];
+        if (!$isFormParams) {
+            $bodyRequest['headers'] = $header;
+        }
         $client = new \GuzzleHttp\Client();
-        $result = $client->$type(
-            $url, [
-                // 'headers' => $header,
-                'form_params'    => $body,
-            ]
-        );
+        $result = $client->$type($url, $bodyRequest);
         $result = $result ->getBody()->getContents();
         $xml    = simplexml_load_string($result, "SimpleXMLElement", LIBXML_NOCDATA);
         $json   = json_encode($xml);

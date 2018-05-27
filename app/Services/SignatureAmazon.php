@@ -45,7 +45,7 @@ class SignatureAmazon
     
     private function calculateSignature($parameters)
     {
-    	$this->createServiceUrl();
+        $this->createServiceUrl();
     	$signature = $this->signParameters($parameters);
     	return $signature;
     }
@@ -92,7 +92,6 @@ class SignatureAmazon
         } else {
             throw new \Exception("Invalid Signature Version specified");
         }
-        
         return $this->sign($stringToSign, $algorithm);
     }
     
@@ -121,7 +120,6 @@ class SignatureAmazon
         foreach ($parameters as $key => $value) {
             $queryParameters[] = $key . '=' . $this->urlEncode($value);
         }
-        
         return implode('&', $queryParameters);
     }
     
@@ -153,7 +151,7 @@ class SignatureAmazon
     
     private function createServiceUrl()
     {
-        $this->modePath = strtolower($this->config['sandbox']) ? 'OffAmazonPayments_Sandbox' : 'OffAmazonPayments';
+        $this->modePath = strtolower($this->config['sandbox']) ? 'OffAmazonPayments_Sandbox' : 'Products';
         
         if (!empty($this->config['region'])) {
             $region = strtolower($this->config['region']);

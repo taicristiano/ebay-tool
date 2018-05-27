@@ -107,13 +107,11 @@ class UserController extends AbstractController
             DB::commit();
             session()->forget('introducer');
             return redirect()->back()->with([
-                'message' => __('message.' . ($userId ? 'update' : 'create') . '_user_success'),
+                'message' => __('message.' . ($userId ? 'updated' : 'created') . '_user_success'),
             ]);
         } catch (Exception | QueryException $e) {
             DB::rollback();
-            return redirect()->back()->withInput()->withErrors([
-                'message' => __('message.server_error'),
-            ]);
+            return redirect()->back()->withInput()->with(['error' => __('message.server_error')]);
         }
     }
 

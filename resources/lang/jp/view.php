@@ -34,7 +34,7 @@ return [
     'display_all'              => '会員検索',
     'filter'                   => '検索',
     'create'                   => '新規会員登録',
-    'submit'                   => 'Submit',
+    'submit'                   => '登録',
     'user'                     => [
         'create_title'          => '新規作成',
         'user_name'             => '民名',

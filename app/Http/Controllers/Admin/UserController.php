@@ -20,6 +20,7 @@ use App\Http\Requests\NormalSettingRequest;
 use Lang;
 use App\Models\MtbStore;
 use App\Models\SettingPolicy;
+use App\Models\Item;
 use Auth;
 
 class UserController extends AbstractController
@@ -32,6 +33,7 @@ class UserController extends AbstractController
     protected $shippingFee;
     protected $store;
     protected $settingPolicy;
+    protected $product;
 
     public function __construct(
         User $user,
@@ -42,7 +44,8 @@ class UserController extends AbstractController
         ShippingFee $shippingFee,
         MtbStore $store,
         SettingService $settingService,
-        SettingPolicy $settingPolicy
+        SettingPolicy $settingPolicy,
+        Item $product
     )
     {
         $this->user           = $user;
@@ -54,6 +57,7 @@ class UserController extends AbstractController
         $this->store          = $store;
         $this->settingService = $settingService;
         $this->settingPolicy  = $settingPolicy;
+        $this->product        = $product;
     }
 
     /**
@@ -190,14 +194,14 @@ class UserController extends AbstractController
         $userId = Auth::user()->id;
         if ($request->has('username')) {
             $result = $this->settingService->apiFetchToken();
-            $this->user->updateOrCreate(['id' => $userId], $result);
+            $this->user->updateById($userId, $result);
             return redirect()->route('admin.user.normal_setting')->with('message', Lang::get('message.get_token_success'));
         }
         $isShowButtonGetToken = $this->settingService->checkDisplayButtonGetToken();
         $setting = $this->setting->getSettingOfUser($userId);
         $stores = $this->store->getAllStore();
         $storeOption = $this->settingService->getOptionStores($stores);
-        $durationOption =$this->setting->getDurationOption();
+        $durationOption = $this->product->getDurationOption();
         return view('admin.setting.normal', compact('storeOption', 'setting', 'isShowButtonGetToken', 'durationOption'));
     }
 

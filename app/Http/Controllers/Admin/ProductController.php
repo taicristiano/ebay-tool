@@ -30,6 +30,10 @@ class ProductController extends AbstractController
      */
     public function showPagePostProduct()
     {
+        $hasSettingPolicyData = $this->productService->checkHasSettingPolicyData();
+        if (!$hasSettingPolicyData) {
+            return view('admin.product.none_policy');
+        }
         // Session::forget($this->keyProduct);
         $data = [];
         if (Session::has($this->keyProduct)) {

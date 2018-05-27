@@ -1,4 +1,7 @@
 @extends('layouts.default')
+@section('title')
+{{ __('view.user.' . (isset($user) ? 'create_title' : 'create_title')) }}
+@endsection
 @section('content')
 <div class="content-wrapper">
     @include('layouts.component.header-content', ['text' => __('view.user.' . (isset($user) ? 'create_title' : 'create_title'))])

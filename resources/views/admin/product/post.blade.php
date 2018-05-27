@@ -1,4 +1,7 @@
 @extends('layouts.default')
+@section('title')
+@lang('view.post_product')
+@endsection
 @section('head')
 <link rel="stylesheet" href="{{asset('adminlte/plugins/iCheck/all.css')}}">
 <link rel="stylesheet" href="{{ asset('css/product/post.css') }}">
@@ -35,7 +38,7 @@
                             <!-- c642534441 -->
                             <!-- r245539002 -->
                             <!-- u199058848 -->
-                            &emsp;&emsp;&emsp;&emsp;{!! Form::text('id_ebay_or_amazon', !empty($data['original_id']) ? $data['original_id'] : 'b311542372', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
+                            &emsp;&emsp;&emsp;&emsp;{!! Form::text('id_ebay_or_amazon', !empty($data['original_id']) ? $data['original_id'] : 'u199818803', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
                             <button class="btn btn-primary" type="button" id="btn-get-yahoo-or-amazon"><i class="fa fa-info-circle"></i> {{ __('view.image_acquisition') }}</button>
                         </form>
                         <p class="text-danger display-none" id="item-ebay-invalid">@lang('view.item_not_found')</p>
@@ -64,8 +67,8 @@
                         </form>
                     </div>
                     <div class="box-footer {{!empty($data) ? '' : 'display-none'}}" id="post-product">
-                        <div class="text-center margin-20 text-center">
-                            <button type="button" class="btn btn-primary" id="save"><i class="fa fa-floppy-o fa-fw"></i> @lang('view.benefit_calculation')</button>
+                        <div class="form-group text-center col-sm-4 col-sm-offset-4">
+                            <button type="button" class="btn btn-block btn-primary btn-lg" id="save"><i class="fa fa-floppy-o fa-fw"></i> @lang('view.benefit_calculation')</button>
                         </div>
                     </div>
                 </div>

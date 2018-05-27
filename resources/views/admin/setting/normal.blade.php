@@ -1,4 +1,7 @@
 @extends('layouts.default')
+@section('title')
+@lang('side_bar.normal_setting')
+@endsection
 @section('content')
 <div class="content-wrapper">
     @include('layouts.component.header-content', ['text' => __('side_bar.normal_setting')])

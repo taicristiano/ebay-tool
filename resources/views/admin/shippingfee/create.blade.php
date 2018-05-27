@@ -1,25 +1,10 @@
 @extends('layouts.default')
+@section('title')
+{{ __('view.shipping.' . (isset($shipping) ? 'update_fee' : 'create_fee')) }}
+@endsection
 @section('content')
 <div class="content-wrapper">
-    <section class="content-header">
-        <h1>
-            {{ __('view.shipping.' . (isset($shippingFee) ? 'update_fee' : 'create_fee')) }}
-        </h1>
-        <ol class="breadcrumb">
-            <li>
-                <a href="#">
-                    <i class="fa fa-dashboard">
-                    </i>
-                    Home
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    {{ __('side_bar.shipping') }}
-                </a>
-            </li>
-        </ol>
-    </section>
+    @include('layouts.component.header-content', ['text' => __('view.shipping.' . (isset($shippingFee) ? 'update_fee' : 'create_fee'))])
     <!-- Main content -->
     <section class="content">
         <!-- Default box -->

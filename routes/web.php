@@ -26,9 +26,9 @@ Route::group([
 ], function () {
     Route::get('/', 'AdminController@index')->name('index');
     Route::group([
-        'prefix' => 'user',
-        'as'     => 'user.',
-        'middleware' => 'can:user_manager'
+        'prefix'     => 'user',
+        'as'         => 'user.',
+        'middleware' => 'can:user_manager',
     ], function () {
         Route::get('/', 'UserController@index')->name('index');
         Route::get('/create', 'UserController@create')->name('create');
@@ -41,6 +41,35 @@ Route::group([
         Route::post('/upload/csv', 'UserController@uploadCsv')->name('upload-csv');
         Route::any('/fetch', 'UserController@fetch')->name('fetch');
     });
+
+    // setting shipping route
+    Route::group([
+        'prefix' => 'shipping',
+        'as'     => 'shipping.',
+        'middleware' => 'can:user_manager',
+    ], function () {
+        Route::get('/', 'ShippingController@index')->name('index');
+        Route::get('/create', 'ShippingController@create')->name('create');
+        Route::post('/create', 'ShippingController@create')->name('create');
+        Route::get('/update/{shippingId}', 'ShippingController@update')->name('update');
+        Route::post('/update/{shippingId}', 'ShippingController@update')->name('update');
+        Route::delete('/delete/{shippingId}', 'ShippingController@delete')->name('delete');
+    });
+
+    // shipping fee
+    Route::group([
+        'prefix' => 'shipping/{shippingId}/fee',
+        'as'     => 'shipping_fee.',
+        'middleware' => 'can:user_manager',
+    ], function () {
+        Route::get('/', 'ShippingFeeController@index')->name('index');
+        Route::get('/create', 'ShippingFeeController@create')->name('create');
+        Route::post('/create', 'ShippingFeeController@create')->name('create');
+        Route::get('/update/{feeId}', 'ShippingFeeController@create')->name('update');
+        Route::post('/update/{feeId}', 'ShippingFeeController@create')->name('update');
+        Route::delete('/delete/{feeId}', 'ShippingFeeController@delete')->name('delete');
+    });
+
     Route::group([
         'prefix' => 'user',
         'as'     => 'user.',

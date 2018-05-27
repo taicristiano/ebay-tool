@@ -155,6 +155,7 @@ class ProductService extends CommonService
         $type = $data['type'];
         $sign = $data['sign'];
         $itemId = $data['item_id'];
+        $time = $data['timestamp'];
         $response['status'] = false;
         if ($type == $this->product->getOriginTypeYahooAuction()) {
             $isTypeAmazon = false;
@@ -184,7 +185,7 @@ class ProductService extends CommonService
                 $arrayImage[] = $item;
             });
             $arrayImageFormApi = [];
-            Storage::makeDirectory('/'.$this->pathUpload);
+            Storage::makeDirectory($this->pathUpload);
             foreach ($arrayImage as $key => &$item) {
                 if (!Storage::disk(env('FILESYSTEM_DRIVER'))->exists($this->pathUpload . $itemId . '_' . $key . '.' . $item['extension'])) {
                     $client  = new Client();
@@ -210,26 +211,32 @@ class ProductService extends CommonService
             // $body .= 'B0742J781D';
             $signalture = $this->getSignatureAmazon($parameters);
             //dd($signalture, self::encodeNew($signalture));
-            //$signalture = urldecode($signalture);
+            // $signalture = self::encodeNew($signalture);
+            $signalture = str_replace(
+                    array('+', '=', '/'),
+                    array('-', '_', '~'),
+                    $signalture);
             // $body .= '&Signature=' . $signalture;
             // $body .= '&Timestamp=' . date('Y-m-d\Th:m:s\Z');
             // dd($signalture);
-            $signalture = self::encodeNew($signalture);
+            // $signalture = self::encodeNew($signalture);
             // dd($signalture, $sign);
-            $body['Signature'] = $signalture;
 
-            // $body['Signature'] = $sign;
+            // $body['Signature'] = $signalture;
+            $body['Signature'] = $sign;
             // $body['Timestamp'] = date('Y-m-d\Th:m:s\Z');
             // $body['Timestamp'] = $timestamp;
             // dd(date(DATE_ISO8601, time()));
             $body['Timestamp'] = date(DATE_ISO8601, time());
             $body['Timestamp'] = gmdate("Y-m-d\TH:i:s.\\0\\0\\0\\Z", time());
-
+            // $body['Timestamp'] = $time;
+            // dd($body);
             // $body['Timestamp'] = $data['timestamp'];
             // https://github.com/amzn/amazon-pay-sdk-php
             // $body = null;
             //dd($signalture);
             $result             = $this->callApi($header, $body, $url, 'post');
+            dd($result);
             $response['status'] = false;
             if ($result['Ack'] == 'Failure') {
                 return response()->json($response);
@@ -296,18 +303,6 @@ class ProductService extends CommonService
     public function encodeNew($string)
     {
         return str_replace('%7E', '~', rawurlencode($string));
-        //$string = preg_replace(/'/g', '%2A', $string);
-        $string = preg_replace('/\(/g', '%28', $string);
-        $string = preg_replace('/\)/g', '%29', $string);
-        return $string;
-        // $string = preg_replace('/'/g, '%2A', $string);
-        // $string = preg_replace('/\*/g', '%2A', $string);
-        // $string = preg_replace('/\*/g', '%2A', $string);
-    // str = str.replace(/\*/g, '%2A');
-    // str = str.replace(/\(/g, '%28');
-    // str = str.replace(/\)/g, '%29');
-    // str = str.replace(/'/g, '%27');
-    // str = str.replace(/\!/g, '%21');
     }
     /**
      * calculator profit

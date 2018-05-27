@@ -35,7 +35,7 @@
                             <!-- c642534441 -->
                             <!-- r245539002 -->
                             <!-- u199058848 -->
-                            &emsp;&emsp;&emsp;&emsp;{!! Form::text('id_ebay_or_amazon', !empty($data['original_id']) ? $data['original_id'] : 'u199058848', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
+                            &emsp;&emsp;&emsp;&emsp;{!! Form::text('id_ebay_or_amazon', !empty($data['original_id']) ? $data['original_id'] : 'b311542372', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
                             <button class="btn btn-primary" type="button" id="btn-get-yahoo-or-amazon"><i class="fa fa-info-circle"></i> {{ __('view.image_acquisition') }}</button>
                         </form>
                         <p class="text-danger display-none" id="item-ebay-invalid">@lang('view.item_not_found')</p>
@@ -87,9 +87,9 @@
     var urlCalculatorProfit = "{{ route('admin.product.calculator-profit') }}";
     var urlPostProductConfirm = "{{ route('admin.product.post-product-confirm') }}";
     var updateProfit = "{{ route('admin.product.update-profit') }}";
-    $('input[type="radio"].minimal').iCheck({
-        radioClass: 'iradio_minimal-blue'
-    });
+    // $('input[type="radio"].minimal').iCheck({
+        // radioClass: 'iradio_minimal-blue'
+    // });
     var numberSpecificItem = '{{ !empty($data['dtb_item_specifics']) ? count($data['dtb_item_specifics']) : 0 }}';
     var urlGetImageInit = "{{route('admin.product.get-image-init')}}";
 </script>

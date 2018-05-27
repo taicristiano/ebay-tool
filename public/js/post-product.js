@@ -115,14 +115,15 @@ jQuery(document).ready(function() {
     });
 
     $(document).on("click", "#btn-get-yahoo-or-amazon", function() {
-        getYahooOrAmazonInfo($(this))
+        getYahooOrAmazonInfo($(this));
     });
 
     $(document).on("click", "#btn-calculator-profit",function() {
         getCalculateProfitInfo($(this));
     });
 
-    $('.type').on('ifChanged', function(event){
+    // $('.type').on('ifChanged', function(event) {
+    $('.type').change(function() {
         var isShowYaohoo = $('#item-yaohoo-or-amazon-content').length;
         var isShowCalculate = $('#item-calculator-info').length;
         if (isShowYaohoo) {
@@ -213,7 +214,6 @@ function getYahooOrAmazonInfo(button)
     stringToSign += 'AWSAccessKeyId=AKIAJWROE4YTDKN5COQQ&Action=ListMatchingProducts&MWSAuthToken=amzn.mws.f8b1b1e5-f8df-3d8c-48ff-d8655ad92d86&MarketplaceId=A1VC38T7YXB528&Query=0439708184&SellerId=A2GI94OS9KGZVF&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp='+timestamp+'&Version=2011-10-01';
     // var stringToSign = 'https://mws.amazonservices.jp/Products/2011-10-01';
     var secretKey = 'l4CCqytm56ps5QFw7AFv347bKxqzJWK4xL2hrVmb';
-    console.log(stringToSign);
     var hmac = Crypto.HMAC(Crypto.SHA256, stringToSign, secretKey, { asString: false });
 
     var b64hmac = hexstr2b64(hmac);

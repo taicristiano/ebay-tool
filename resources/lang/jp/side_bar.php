@@ -12,5 +12,6 @@ return [
     'order_manager'   => '受注管理',
     'revenue_manager' => '売上管理',
     'setting'         => '設定画面',
-    'normal_setting'  => '通常設定'
+    'normal_setting'  => '通常設定',
+    'create_many_user' => '一括登録',
 ];

@@ -1,25 +1,7 @@
 @extends('layouts.default')
 @section('content')
 <div class="content-wrapper">
-    <section class="content-header">
-        <h1>
-            {{ __('view.user.' . (isset($user) ? 'create_title' : 'create_title')) }}
-        </h1>
-        <ol class="breadcrumb">
-            <li>
-                <a href="#">
-                    <i class="fa fa-dashboard">
-                    </i>
-                    Home
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    {{ __('side_bar.user_manager') }}
-                </a>
-            </li>
-        </ol>
-    </section>
+    @include('layouts.component.header-content', ['text' => __('view.user.' . (isset($user) ? 'create_title' : 'create_title'))])
     <!-- Main content -->
     <section class="content">
         @include('layouts.component.alert')

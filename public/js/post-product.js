@@ -104,7 +104,7 @@ jQuery(document).ready(function() {
                 if (data.status) {
                     window.location.href = data.url;
                 } else {
-                    $('#item-ebay-invalid').removeClass('display-none');
+                    // $('#item-ebay-invalid').removeClass('display-none');
                 }
             },
             complete: function () {

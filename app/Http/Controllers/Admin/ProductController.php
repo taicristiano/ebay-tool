@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\ProductService;
 use App\Models\Item;
 use App\Http\Requests\UpdateProfitRequest;
+use App\Http\Requests\PostProductRequest;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
@@ -51,7 +52,15 @@ class ProductController extends AbstractController
     public function postProductConfirm(Request $request)
     {
         try {
+            $response['status'] = false;
             $data = $request->all();
+            dd($data);
+            $postProductValidate = PostProductRequest::validateData($data);
+            if ($postProductValidate->fails()) {
+                $response['message_error'] = $postProductValidate->errors();
+                return response()->json($response);
+            }
+            dd(222);
             $dataSession = [];
             if (Session::has($this->keyProduct)) {
                 $dataSession = Session::get($this->keyProduct)[0];

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Requests\Request;
 use Illuminate\Support\Facades\Validator;
 
-class UpdateProfitRequest extends Request
+class PostProductRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,18 @@ class UpdateProfitRequest extends Request
      */
     public static function rules($data)
     {
-        return [
-            'material_quantity' => 'integer|greate_than_or_equal_zero',
+        dd($data);
+        $rules = [
+            'dtb_item.item_name' => 'required',
+            'dtb_item.condition_name' => 'required',
+            'dtb_item.condition_des' => 'required',
+            'dtb_item.price' => 'required',
         ];
+        foreach($data['dtb_item_specifics'] as $key => $item) {
+            $rules['dtb_item_specifics.' . $key . '.name'] = 'required';
+            $rules['dtb_item_specifics.' . $key . '.value'] = 'required';
+        }
+        return $rules;
     }    
 
     /**
@@ -36,8 +45,8 @@ class UpdateProfitRequest extends Request
     public static function messagesValidates()
     {
         return [
-            'material_quantity.integer'                   => trans('message.material quantity must be integer'),
-            'material_quantity.greate_than_or_equal_zero' => trans('message.material quantity must be integer'),
+            // 'dtb_item.item_name.integer' => trans('message.material quantity must be integer'),
+            'dtb_item[item_name].required' => 'test',
         ];
     }
 

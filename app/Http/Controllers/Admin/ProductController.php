@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use Log;
 use Goutte\Client;
 use Illuminate\Http\Request;
@@ -199,4 +200,3 @@ class ProductController extends AbstractController
         }
     }
 }
-

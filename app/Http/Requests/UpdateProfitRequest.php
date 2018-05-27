@@ -27,7 +27,7 @@ class UpdateProfitRequest extends Request
         return [
             'material_quantity' => 'integer|greate_than_or_equal_zero',
         ];
-    }    
+    }
 
     /**
      * message validate
@@ -42,7 +42,7 @@ class UpdateProfitRequest extends Request
     }
 
     /**
-     * validate data 
+     * validate data
      * @param array
      * @return validator
      */

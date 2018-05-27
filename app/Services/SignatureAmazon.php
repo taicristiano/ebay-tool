@@ -30,7 +30,7 @@ class SignatureAmazon
     
     public function getSignature()
     {
-	   return trim($this->signature);
+        return trim($this->signature);
     }
     
     /* Create an Array of required parameters, sort them
@@ -46,8 +46,8 @@ class SignatureAmazon
     private function calculateSignature($parameters)
     {
         $this->createServiceUrl();
-    	$signature = $this->signParameters($parameters);
-    	return $signature;
+        $signature = $this->signParameters($parameters);
+        return $signature;
     }
     
     /* Computes RFC 2104-compliant HMAC signature for request parameters
@@ -134,7 +134,7 @@ class SignatureAmazon
     {
         if ($algorithm === 'HmacSHA1') {
             $hash = 'sha1';
-        } else if ($algorithm === 'HmacSHA256') {
+        } elseif ($algorithm === 'HmacSHA256') {
             $hash = 'sha256';
         } else {
             throw new \Exception("Non-supported signing method specified");

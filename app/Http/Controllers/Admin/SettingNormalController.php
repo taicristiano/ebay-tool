@@ -32,8 +32,7 @@ class SettingNormalController extends AbstractController
         SettingService $settingService,
         SettingPolicy $settingPolicy,
         Item $product
-    )
-    {
+    ) {
         $this->user           = $user;
         $this->setting        = $setting;
         $this->store          = $store;

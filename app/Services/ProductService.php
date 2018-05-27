@@ -284,7 +284,6 @@ class ProductService extends CommonService
         $response['image']             = $arrayImage;
         $response['data']              = view('admin.product.component.item_yahoo_or_amazon_info', compact('data', 'arrayImage'))->render();
         return response()->json($response);
-
     }
 
     public function getSignatureAmazon($parameters)
@@ -435,7 +434,7 @@ class ProductService extends CommonService
             Session::forget($this->keyImageFromApi);
             foreach ($imageFromApi as $key => $item) {
                 if (!in_array($item, $dataImageOld)) {
-                   array_push($dataImageOld, $item);     
+                    array_push($dataImageOld, $item);
                 }
             }
         }
@@ -485,11 +484,11 @@ class ProductService extends CommonService
      * @return string
      */
     public static function uploadFile(
-        $file, 
-        $path, 
+        $file,
+        $path,
         $rename = true,
-        $allowType = [], 
-        $maxSize = null, 
+        $allowType = [],
+        $maxSize = null,
         array $config = []
     ) {
         if ($file->isValid()) {
@@ -533,7 +532,7 @@ class ProductService extends CommonService
         $userId = Auth::user()->id;
         $settingPolicyData = $this->settingPolicy->getSettingPolicyOfUser($userId);
         $data['dtb_item']['duration']             = $this->product->getDurationOption()[$data['dtb_item']['duration']];
-        $data['dtb_item']['shipping_policy_name'] = $this->getPoliciNameById(!empty($data['dtb_item']['shipping_policy_id']) ? $data['dtb_item']['shipping_policy_id'] : '' , $settingPolicyData);
+        $data['dtb_item']['shipping_policy_name'] = $this->getPoliciNameById(!empty($data['dtb_item']['shipping_policy_id']) ? $data['dtb_item']['shipping_policy_id'] : '', $settingPolicyData);
         $data['dtb_item']['payment_policy_name']  = $this->getPoliciNameById(!empty($data['dtb_item']['payment_policy_id']) ? $data['dtb_item']['payment_policy_id'] : '', $settingPolicyData);
         $data['dtb_item']['return_policy_name']   = $this->getPoliciNameById(!empty($data['dtb_item']['return_policy_id']) ? $data['dtb_item']['return_policy_id'] : '', $settingPolicyData);
         if (isset($data['dtb_item']['setting_shipping_option'])) {

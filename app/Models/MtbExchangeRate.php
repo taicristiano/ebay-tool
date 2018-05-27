@@ -4,7 +4,7 @@ namespace App\Models;
 
 class MtbExchangeRate extends AbstractModel
 {
-	/**
+    /**
      * The database table used by the model.
      *
      * @var string
@@ -19,7 +19,7 @@ class MtbExchangeRate extends AbstractModel
      */
     public function getExchangeRateLatest()
     {
-    	return $this->orderBy('created_at', 'desc')
+        return $this->orderBy('created_at', 'desc')
             ->first();
     }
 }

@@ -111,7 +111,7 @@ class UserController extends AbstractController
             ]);
         } catch (Exception | QueryException $e) {
             DB::rollback();
-            return redirect()->back()->withInput()->withErrors(__('message.server_error'), 'message');
+            return redirect()->back()->withInput()->with(['error' => __('message.server_error')]);
         }
     }
 

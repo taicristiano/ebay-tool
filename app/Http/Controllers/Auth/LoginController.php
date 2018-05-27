@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Hash;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use DB, Hash;
-use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -19,7 +19,7 @@ class LoginController extends Controller
     | redirecting them to your home screen. The controller uses a trait
     | to conveniently provide its functionality to your applications.
     |
-    */
+     */
 
     use AuthenticatesUsers;
 
@@ -51,7 +51,7 @@ class LoginController extends Controller
     {
         $this->validate($request, [
             $this->username() => 'nullable|string',
-            'password' => 'nullable|string',
+            'password'        => 'nullable|string',
         ]);
     }
 
@@ -64,9 +64,15 @@ class LoginController extends Controller
     protected function attemptLogin(Request $request)
     {
         if ($user = $this->user->findByEmail($request->email)) {
-            if (Hash::check($request->password, $user->password)
-                && $user->start_date <= date('Y-m-d H:i:s')
-                && !$user->isCancelationUser()) {
+            if (Hash::check($request->password, $user->password)) {
+                if ($user->start_date > date('Y-m-d H:i:s')) {
+                    return redirect()->back()->withErrors(__('message.start_date_error', [
+                        'date' => date('Y年m月d日', strtotime($user->start_date)),
+                    ]), 'login');
+                }
+                if ($user->isCancelationUser()) {
+                    return redirect()->back()->withErrors(__('message.denied_cancelation_user'), 'login');
+                }
                 $this->guard()->login($user);
             }
         }

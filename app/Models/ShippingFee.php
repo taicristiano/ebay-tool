@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class ShippingFee extends AbstractModel
 {
+    use SoftDeletes;
+
     /**
      * The database table used by the model.
      *
@@ -13,6 +17,12 @@ class ShippingFee extends AbstractModel
     
     protected $guarded = [];
     
+    /**
+     * define default data
+     */
+    const DEFAULT_WEIGHT   = 100;
+    const DEFAULT_SHIP_FEE = 550;
+
     /**
      * get data master
      * @param  integer  $settingShippingId
@@ -262,6 +272,33 @@ class ShippingFee extends AbstractModel
     }
 
     /**
+     * create default data
+     * @param  integer $shippingId
+     * @return boolean
+     */
+    public function createDefaultData($shippingId)
+    {
+        $currentTimestamp = date('Y-m-d H:i:s');
+        return $this->insert([
+            'shipping_id' => $shippingId,
+            'weight'      => static::DEFAULT_WEIGHT,
+            'ship_fee'    => static::DEFAULT_SHIP_FEE,
+            'created_at'  => $currentTimestamp,
+            'updated_at'  => $currentTimestamp,
+        ]);
+    }
+
+    /**
+     * get shipping fee by shipping
+     * @param  array|integer $shippingId
+     * @return Collections
+     */
+    public function getFeeListByShipping($shippingId)
+    {
+        return $this->select('id', 'shipping_id', 'weight', 'ship_fee')->where('shipping_id', $shippingId)->paginate();
+    }
+
+    /*
      * get shipping fee by shipping id
      * @param  integer $shippingId
      * @param  float $totalWeigh

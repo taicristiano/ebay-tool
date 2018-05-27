@@ -116,6 +116,21 @@ return [
             'confirmed' => 'パスワードは統一しません。',
             'min'       => 'パスワードは:min英数字で入力してください。',
         ],
+        'shipping_name' => [
+            'required' => '発送方法を入力してください。'
+        ],
+        'max_size' => [
+            'required' => '全辺合計を入力してください。'
+        ],
+        'side_max_size' => [
+            'required' => '一辺最長を入力してください。'
+        ],
+        'weight' => [
+            'required' => '重量を入力してください。',
+        ],
+        'ship_fee' => [
+            'required' => '送料を入力してください。',
+        ]
     ],
 
     /*

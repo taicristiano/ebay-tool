@@ -43,10 +43,9 @@
             </li>
             @endcan
             @can('post_product')
-            <li class="treeview" id="admin.product.post">
-                <a href="#">
-                    <i class="fa fa-upload"></i>
-                    <span>{{ __('side_bar.post_product') }}</span>
+            <li id="admin.product.post">
+                <a href="">
+                    <i class="fa fa-upload"></i>{{ __('side_bar.post_product') }}
                 </a>
             </li>
             @endcan
@@ -75,11 +74,7 @@
             </li>
             @endcan
             @can('setting')
-<<<<<<< HEAD
-            <li class="treeview" id="admin.setting|admin.shipping">
-=======
-            <li class="treeview @if($isActiveMenuSetting)active menu-open @endif" id="admin.setting">
->>>>>>> develop
+            <li class="treeview @if($isActiveMenuSetting)active menu-open @endif" id="admin.setting|admin.shipping">
                 <a href="#">
                     <i class="fa fa-gears"></i>
                     <span>{{ __('side_bar.setting') }}</span>
@@ -88,11 +83,8 @@
                     </span>
                 </a>
                 <ul class="treeview-menu" style="padding-left: 20px">
-<<<<<<< HEAD
                     <li><a href="{{ route('admin.shipping.index') }}"><i class="fa fa-cog"></i>{{ __('side_bar.shipping') }}</a></li>
-=======
                     <li @if($urlCurrent == $urlSettingNormal) class="active" @endif><a href="{{ $urlSettingNormal }}"><i class="fa fa-list-ul"></i>{{ __('side_bar.normal_setting') }}</a></li>
->>>>>>> develop
                 </ul>
             </li>
             @endcan

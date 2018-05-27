@@ -16,4 +16,14 @@ abstract class AbstractModel extends Model
 	{
 		return $this->fillable;
 	}
+
+	/**
+	 * find item by id
+	 * @param  integer $id
+	 * @return object
+	 */
+	public function findById($id)
+	{
+		return $this->find($id);
+	}
 }

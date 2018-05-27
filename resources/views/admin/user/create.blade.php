@@ -4,7 +4,6 @@
     @include('layouts.component.header-content', ['text' => __('view.user.' . (isset($user) ? 'create_title' : 'create_title'))])
     <!-- Main content -->
     <section class="content">
-        @include('layouts.component.alert')
         <!-- Default box -->
         <div class="row">
             <form action="{{ isset($user) ? route('admin.user.update', $user->id) : route('admin.user.create') }}" class="col-xs-12 col-md-8 col-md-offset-2" method="POST" role="form">
@@ -56,7 +55,10 @@
                         <label>
                             {{ __('view.user.start_date') }}
                         </label>
-                        {!! Form::text('start_date', old('start_date', isset($user) ? $user->start_date : ''), ['class' => 'form-control', 'id' => 'input-start-date']) !!}
+                        @php
+                        $startDate = old('start_date', isset($user) ? $user->start_date : '');
+                        @endphp
+                        {!! Form::text('start_date', $startDate ? date('Y/m/d', strtotime($startDate)) : '', ['class' => 'form-control', 'id' => 'input-start-date']) !!}
                         {!! $errors->first('start_date') ? '<p class="text-danger">'. $errors->first('start_date') .'</p>' : ''!!}
                     </div>
                     <div class="form-group">

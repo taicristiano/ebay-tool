@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SettingPolicy extends AbstractModel
 {
     use SoftDeletes;
+    
     /**
      * The database table used by the model.
      *
@@ -57,4 +58,15 @@ class SettingPolicy extends AbstractModel
         return $this->where('user_id', $userId)->delete();
     }
 
+    /**
+     * get setting policy of user
+     * @param  integer $userId
+     * @return object
+     */
+    public function getSettingPolicyOfUser($userId)
+    {
+        return $this->select('id', 'policy_name', 'policy_type')
+            ->where('user_id', $userId)
+            ->get();
+    }
 }

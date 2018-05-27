@@ -113,4 +113,15 @@ class SettingShipping extends AbstractModel
         }
         return $shippings->paginate();
     }
+
+    /*
+     * get setting shipping of user
+     * @param  integer $userId
+     * @return array object
+     */
+    public function getSettingShippingOfUser($userId)
+    {
+        return $this->where('user_id', $userId)
+            ->get();
+    }
 }

@@ -107,4 +107,8 @@ return [
     'back' => '修正',
     'save' => '確認',
     'confirm' => 'Confirm',
+    'seller_id' => 'MWSの出品者ID',
+    'mws_auth_token' => 'MWS認証トークン',
+    'mws_access_key' => 'MWSのアクセスキー',
+    'mws_secret_key' => 'MWSの秘密キー',
 ];

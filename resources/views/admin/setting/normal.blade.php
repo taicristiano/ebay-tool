@@ -81,6 +81,34 @@
                                 ' : ''!!}
                             </div>
                             <div class="form-group">
+                                <label for="seller_id">@lang('view.seller_id') <span class="text-danger">(*)</span></label>
+                                {!! Form::text('seller_id', old('seller_id', isset($setting->seller_id) ? $setting->seller_id : ''), ['class' => 'form-control']) !!}
+                                {!! $errors->first('seller_id') ? '
+                                <p class="text-danger">'. $errors->first('seller_id') .'</p>
+                                ' : ''!!}
+                            </div>
+                            <div class="form-group">
+                                <label for="mws_auth_token">@lang('view.mws_auth_token') <span class="text-danger">(*)</span></label>
+                                {!! Form::text('mws_auth_token', old('mws_auth_token', isset($setting->mws_auth_token) ? $setting->mws_auth_token : ''), ['class' => 'form-control']) !!}
+                                {!! $errors->first('mws_auth_token') ? '
+                                <p class="text-danger">'. $errors->first('mws_auth_token') .'</p>
+                                ' : ''!!}
+                            </div>
+                            <div class="form-group">
+                                <label for="mws_access_key">@lang('view.mws_access_key') <span class="text-danger">(*)</span></label>
+                                {!! Form::text('mws_access_key', old('mws_access_key', isset($setting->mws_access_key) ? $setting->mws_access_key : ''), ['class' => 'form-control']) !!}
+                                {!! $errors->first('mws_access_key') ? '
+                                <p class="text-danger">'. $errors->first('mws_access_key') .'</p>
+                                ' : ''!!}
+                            </div>
+                            <div class="form-group">
+                                <label for="mws_secret_key">@lang('view.mws_secret_key') <span class="text-danger">(*)</span></label>
+                                {!! Form::text('mws_secret_key', old('mws_secret_key', isset($setting->mws_secret_key) ? $setting->mws_secret_key : ''), ['class' => 'form-control']) !!}
+                                {!! $errors->first('mws_secret_key') ? '
+                                <p class="text-danger">'. $errors->first('mws_secret_key') .'</p>
+                                ' : ''!!}
+                            </div>
+                            <div class="form-group">
                                 <button class="btn btn-primary" type="button" id="btn-get-policy" {{ $isShowButtonGetToken ? 'disabled': ''}}>@lang('view.acquire_business_policy')</button>
                             </div>
                         </div>

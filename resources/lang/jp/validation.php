@@ -145,6 +145,10 @@ return [
         'the_quantity_field_is_required' => '個数を入力してください。',
         'the_quantity_field_must_be_an_integer' => '個数は整数で入力してください。',
         'the_quantity_field_is_must_be_greate_than_zero' => '個数は0以上で入力してください。',
+        'the_seller_id_field_is_required' => 'MWSの出品者IDを入力してください。',
+        'the_mws_auth_token_field_is_required' => 'MWS認証トークンを入力してください。',
+        'the_mws_access_key_field_is_required' => 'MWSのアクセスキーを入力してください。',
+        'the_mws_secret_key_field_is_required' => 'MWSの秘密キーを入力してください。',
     ]
 
 ];

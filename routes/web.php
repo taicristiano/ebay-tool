@@ -51,4 +51,19 @@ Route::group([
         Route::post('api-get-session-id', 'UserController@apiGetSessionId')->name('api-get-session-id');
         Route::post('api-get-policy', 'UserController@apiGetPolicy')->name('api-get-policy');
     });
+    Route::group([
+        'prefix' => 'product',
+        'as'     => 'product.',
+        'middleware' => 'can:setting'
+    ], function () {
+        Route::get('post', 'ProductController@showPagePostProduct')->name('show-page-post-product');
+        Route::get('confirm', 'ProductController@showConfirm')->name('show-confirm');
+        Route::post('publish', 'ProductController@postProductPublish')->name('publish');
+        Route::post('api-get-item-ebay-info', 'ProductController@apiGetItemEbayInfo')->name('api-get-item-ebay-info');
+        Route::post('post-product-confirm', 'ProductController@postProductConfirm')->name('post-product-confirm');
+        Route::post('api-get-item-yahoo-or-amazon-info', 'ProductController@apiGetItemYahooOrAmazonInfo')->name('api-get-item-yahoo-or-amazon-info');
+        Route::post('calculator-profit', 'ProductController@calculatorProfit')->name('calculator-profit');
+        Route::post('update-profit', 'ProductController@updateProfit')->name('update-profit');
+        Route::get('get-image-init', 'ProductController@getImageInit')->name('get-image-init');
+    });
 });

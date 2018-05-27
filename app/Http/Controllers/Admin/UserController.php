@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use App\Services\CsvService;
 use App\Services\SettingService;
 use App\Http\Requests\UploadCsvRequest;
-use App\Http\Requests\NormalSettingRequest ;
+use App\Http\Requests\NormalSettingRequest;
 use Lang;
 use App\Models\MtbStore;
 use App\Models\SettingPolicy;

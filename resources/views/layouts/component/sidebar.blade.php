@@ -43,10 +43,9 @@
             </li>
             @endcan
             @can('post_product')
-            <li class="treeview" id="admin.product.post">
-                <a href="#">
-                    <i class="fa fa-upload"></i>
-                    <span>{{ __('side_bar.post_product') }}</span>
+            <li id="admin.product.post">
+                <a href="">
+                    <i class="fa fa-upload"></i>{{ __('side_bar.post_product') }}
                 </a>
             </li>
             @endcan

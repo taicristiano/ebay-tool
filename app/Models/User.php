@@ -325,4 +325,16 @@ class User extends Authenticatable
         }
         return $yearMonth . '001';
     }
+
+    /**
+     * update by id
+     * @param  integer $id
+     * @param  array $data
+     * @return boolean
+     */
+    public function updateById($id, $data)
+    {
+        return $this->where('id', $id)
+            ->update($data);
+    }
 }

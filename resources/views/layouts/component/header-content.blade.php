@@ -3,8 +3,10 @@
         {{$text}}
     </h1>
     <ol class="breadcrumb">
-        <li><a href="{{url('')}}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="{{url('')}}"><i class="fa fa-dashboard"></i> TOP</a></li>
+        @if (url()->current() !== url(''))
         <li class="active">{{$text}}</li>
+        @endif
     </ol>
     @if(session()->has('error'))
     <div class="alert alert-danger alert-dismissible alert-margin">

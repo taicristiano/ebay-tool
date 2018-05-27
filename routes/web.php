@@ -75,10 +75,10 @@ Route::group([
         'as'     => 'user.',
         'middleware' => 'can:setting'
     ], function () {
-        Route::get('normal-setting', 'UserController@normalSetting')->name('normal_setting');
-        Route::post('normal-setting', 'UserController@normalSettingUpdate')->name('normal_setting_post');
-        Route::post('api-get-session-id', 'UserController@apiGetSessionId')->name('api-get-session-id');
-        Route::post('api-get-policy', 'UserController@apiGetPolicy')->name('api-get-policy');
+        Route::get('normal-setting', 'SettingNormalController@normalSetting')->name('normal_setting');
+        Route::post('normal-setting', 'SettingNormalController@normalSettingUpdate')->name('normal_setting_post');
+        Route::post('api-get-session-id', 'SettingNormalController@apiGetSessionId')->name('api-get-session-id');
+        Route::post('api-get-policy', 'SettingNormalController@apiGetPolicy')->name('api-get-policy');
     });
     Route::group([
         'prefix' => 'product',

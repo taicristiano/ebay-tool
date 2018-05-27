@@ -87,4 +87,37 @@ class UserPolicy
     {
         return $user->isSuperAdmin() || $user->isGuestAdmin();
     }
+
+    /**
+     * accept or block order
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function order(User $user)
+    {
+        return $user->isSuperAdmin() || $user->isGuestAdmin();
+    }
+
+    /**
+     * accept or block revenue
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function revenue(User $user)
+    {
+        return $user->isSuperAdmin() || $user->isGuestAdmin();
+    }
+
+    /**
+     * accept or block post product
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function postProduct(User $user)
+    {
+        return $user->isSuperAdmin() || $user->isGuestAdmin();
+    }
 }

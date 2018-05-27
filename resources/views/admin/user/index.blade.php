@@ -1,27 +1,10 @@
 @extends('layouts.default')
 @section('content')
 <div class="content-wrapper">
-<!-- Content Header (Page header) -->
-    <section class="content-header">
-        <h1>
-            {{ __('side_bar.user_manager') }}
-        </h1>
-        <ol class="breadcrumb">
-            <li>
-                <a href="#">
-                    <i class="fa fa-dashboard">
-                    </i>
-                    Home
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    {{ __('side_bar.user_manager') }}
-                </a>
-            </li>    </ol>
-    </section>
+    @include('layouts.component.header-content', ['text' => __('side_bar.user_manager')])
     <!-- Main content -->
     <section class="content">
+        @include('layouts.component.alert')
         <!-- Default box -->
         <div class="box">
             <div class="box-header">

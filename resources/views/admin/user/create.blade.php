@@ -1,25 +1,7 @@
 @extends('layouts.default')
 @section('content')
 <div class="content-wrapper">
-    <section class="content-header">
-        <h1>
-            {{ __('view.user.' . (isset($user) ? 'create_title' : 'create_title')) }}
-        </h1>
-        <ol class="breadcrumb">
-            <li>
-                <a href="#">
-                    <i class="fa fa-dashboard">
-                    </i>
-                    Home
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    {{ __('side_bar.user_manager') }}
-                </a>
-            </li>
-        </ol>
-    </section>
+    @include('layouts.component.header-content', ['text' => __('view.user.' . (isset($user) ? 'create_title' : 'create_title'))])
     <!-- Main content -->
     <section class="content">
         <!-- Default box -->
@@ -73,7 +55,10 @@
                         <label>
                             {{ __('view.user.start_date') }}
                         </label>
-                        {!! Form::text('start_date', old('start_date', isset($user) ? $user->start_date : ''), ['class' => 'form-control', 'id' => 'input-start-date']) !!}
+                        @php
+                        $startDate = old('start_date', isset($user) ? $user->start_date : '');
+                        @endphp
+                        {!! Form::text('start_date', $startDate ? date('Y/m/d', strtotime($startDate)) : '', ['class' => 'form-control', 'id' => 'input-start-date']) !!}
                         {!! $errors->first('start_date') ? '<p class="text-danger">'. $errors->first('start_date') .'</p>' : ''!!}
                     </div>
                     <div class="form-group">

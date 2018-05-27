@@ -24,6 +24,7 @@ class CreateTableItem extends Migration
             $table->string('jan_upc', 20)->nullable();
             $table->string('condition_id', 20)->nullable();
             $table->string('condition_name', 200)->nullable();
+            $table->text('condition_des')->nullable();
             $table->double('price', 10, 2)->nullable();
             $table->string('duration', 10)->nullable();
             $table->smallInteger('quantity')->nullable();

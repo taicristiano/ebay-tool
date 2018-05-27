@@ -27,7 +27,7 @@
             </li>
             @endcan
             <li id="admin.product.post">
-                <a href="{{ route('admin.product.show-page-post-product') }}">
+                <a href="">
                     <i class="fa fa-upload"></i>{{ __('side_bar.post_product') }}
                 </a>
             </li>

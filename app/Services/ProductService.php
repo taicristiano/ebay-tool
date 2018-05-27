@@ -237,7 +237,7 @@ class ProductService extends CommonService
                 'MarketplaceId' => 'A1VC38T7YXB528',
                 'Query' => '0439708184 ',
             ];
-            dd($sign);
+            // dd($sign);
             // $body['Signature'] = $sign;
             // $body['Signature'] = $signalture;
             // $body['Timestamp'] = date('Y-m-d\Th:m:s\Z');
@@ -461,14 +461,6 @@ class ProductService extends CommonService
         return $data;
     }
 
-    public function getBase64Image($image)
-    {
-        $path = $image->getPathname();
-        $type = explode("/", $image->getClientMimeType())[1];
-        $file = file_get_contents($path);
-        return 'data:image/' . $type . ';base64,' . base64_encode($file);
-    }
-
     /**
      * upload file
      * @param  object  $file
@@ -642,78 +634,6 @@ class ProductService extends CommonService
             $response['status'] = false;
             return response()->json($response);
         }
-        
-        // array:18 [
-        //   "dtb_item" => array:25 [
-        //     "item_name" => "Beats by Dr. Dre - Beats Solo3 Wireless Headphones - Rose Gold"
-        //     "category_id" => "112529"
-        //     "category_name" => "Consumer Electronics:Portable Audio & Headphones:Headphones"
-        //     "condition_id" => "1000"
-        //     "condition_name" => "New"
-        //     "price" => "299.99"
-        //     "duration" => "Days_120"
-        //     "quantity" => "1"
-        //     "shipping_policy_id" => "4"
-        //     "payment_policy_id" => "3"
-        //     "product_size" => "M"
-        //     "commodity_weight" => "950"
-        //     "length" => "11"
-        //     "height" => "11"
-        //     "width" => "11"
-        //     "material_quantity" => "11"
-        //     "setting_shipping_option" => "1"
-        //     "ship_fee" => "1320"
-        //     "ebay_fee" => "10"
-        //     "paypal_fee" => "10.79964"
-        //     "buy_price" => "26,200円（税 0 円）"
-        //     "profit" => "-117910.48"
-        //     "original_id" => "u199058848"
-        //     "item_id" => "192375777401"
-        //     "type" => "2"
-        //   ]
-        //   "dtb_item_specifics" => array:6 [
-        //     0 => array:2 [
-        //       "name" => "Brand"
-        //       "value" => "Beats by Dr. Dre"
-        //     ]
-        //     1 => array:2 [
-        //       "name" => "MPN"
-        //       "value" => "MNET2LL/A"
-        //     ]
-        //     2 => array:2 [
-        //       "name" => "UPC"
-        //       "value" => "190198105455"
-        //     ]
-        //     3 => array:2 [
-        //       "name" => "Manufacturer Warranty"
-        //       "value" => "Yes"
-        //     ]
-        //     4 => array:2 [
-        //       "name" => "Warranty - Parts"
-        //       "value" => "1 year"
-        //     ]
-        //     5 => array:2 [
-        //       "name" => "Warranty - Labor"
-        //       "value" => "1 year"
-        //     ]
-        //   ]
-        //   "number_file" => "7"
-        //   "istTypeAmazon" => true
-        //   "url_preview_0" => "http://localhost/ebayTool/public/storage/upload/item-images/u199058848_0.jpg"
-        //   "file_name_0" => "u199058848_0.jpg"
-        //   "url_preview_1" => "http://localhost/ebayTool/public/storage/upload/item-images/u199058848_1.jpg"
-        //   "file_name_1" => "u199058848_1.jpg"
-        //   "url_preview_2" => "http://localhost/ebayTool/public/storage/upload/item-images/u199058848_2.jpg"
-        //   "file_name_2" => "u199058848_2.jpg"
-        //   "url_preview_3" => "http://localhost/ebayTool/public/storage/upload/item-images/u199058848_3.jpg"
-        //   "file_name_3" => "u199058848_3.jpg"
-        //   "url_preview_4" => "http://localhost/ebayTool/public/storage/upload/item-images/u199058848_4.jpg"
-        //   "file_name_4" => "u199058848_4.jpg"
-        //   "url_preview_5" => "http://localhost/ebayTool/public/storage/upload/item-images/u199058848_5.jpg"
-        //   "file_name_5" => "u199058848_5.jpg"
-        //   "url_preview_6" => "http://localhost/ebayTool/public/storage/upload/item-images/u199058848_6.jpg"
-        //   "file_name_6" => "u199058848_6.jpg"
-        // ]
     }
 
     public function formatDataItemSpecifics($input, $productId)

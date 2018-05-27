@@ -31,8 +31,7 @@ class UserController extends AbstractController
         CsvService $csvService,
         Setting $setting,
         SettingShipping $shipping
-    )
-    {
+    ) {
         $this->user           = $user;
         $this->authorization  = $authorization;
         $this->csvService     = $csvService;
@@ -148,7 +147,7 @@ class UserController extends AbstractController
             }
             return redirect()->back()
                 ->with('error', Lang::get('message.error_while_upload'));
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             return redirect()->back()
                 ->with('error', Lang::get('message.error_while_upload'));
         }

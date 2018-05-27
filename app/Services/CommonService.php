@@ -9,7 +9,7 @@ class CommonService
 {
     /**
      * validate email
-     * @param  string $email 
+     * @param  string $email
      * @return boolean
      */
     public function validateEmail($email)
@@ -69,6 +69,6 @@ class CommonService
         $result = $result ->getBody()->getContents();
         $xml    = simplexml_load_string($result, "SimpleXMLElement", LIBXML_NOCDATA);
         $json   = json_encode($xml);
-        return json_decode($json, TRUE);
+        return json_decode($json, true);
     }
 }

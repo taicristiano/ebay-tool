@@ -13,4 +13,3 @@ class AdminController extends AbstractController
         return view('admin.index');
     }
 }
-

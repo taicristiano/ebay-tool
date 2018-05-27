@@ -45,7 +45,7 @@ class SettingService extends CommonService
             return;
         }
         $time = date_create($time);
-        return date_format($time,"Y/m/d H:i:s");
+        return date_format($time, "Y/m/d H:i:s");
     }
 
     /**

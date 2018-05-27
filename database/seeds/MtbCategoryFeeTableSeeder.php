@@ -15,7 +15,7 @@ class MtbCategoryFeeTableSeeder extends Seeder
         try {
             $dataInsert = [];
             DB::beginTransaction();
-            \Excel::load(public_path('data/mtb_category_fee_data.csv'), function($reader) {
+            \Excel::load(public_path('data/mtb_category_fee_data.csv'), function ($reader) {
                 $results = $reader->toArray();
                 foreach ($results as $key => $item) {
                     $data['category_path']     = $item['category_path'];
@@ -30,10 +30,9 @@ class MtbCategoryFeeTableSeeder extends Seeder
                 }
             });
             DB::commit();
-        } catch(Exception $ex) {
+        } catch (Exception $ex) {
             \Log::info($ex);
             DB::rollback();
         }
-        
     }
 }

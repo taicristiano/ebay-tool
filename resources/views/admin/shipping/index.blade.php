@@ -1,25 +1,10 @@
 @extends('layouts.default')
+@section('title')
+{{ __('side_bar.shipping') }}
+@endsection
 @section('content')
 <div class="content-wrapper">
-<!-- Content Header (Page header) -->
-    <section class="content-header">
-        <h1>
-            {{ __('side_bar.shipping') }}
-        </h1>
-        <ol class="breadcrumb">
-            <li>
-                <a href="#">
-                    <i class="fa fa-dashboard">
-                    </i>
-                    Home
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    {{ __('side_bar.shipping') }}
-                </a>
-            </li>    </ol>
-    </section>
+    @include('layouts.component.header-content', ['text' => __('side_bar.shipping')])
     <!-- Main content -->
     <section class="content">
         <!-- Default box -->

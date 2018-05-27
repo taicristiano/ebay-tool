@@ -1,4 +1,7 @@
 @extends('layouts.default')
+@section('title')
+{{ __('side_bar.user_manager') }}
+@endsection
 @section('content')
 <div class="content-wrapper">
     @include('layouts.component.header-content', ['text' => __('side_bar.user_manager')])

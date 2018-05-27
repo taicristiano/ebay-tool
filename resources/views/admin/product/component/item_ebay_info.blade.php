@@ -31,6 +31,13 @@
             <p class="text-danger">'. $errors->first("dtb_item[condition_name]") .'</p>
             ' : ''!!}
         </div>
+        <div class="form-group form-group-custom">
+            <label for="dtb_item[condition_des]">@lang('view.product_name') <span class="text-danger">(*)</span></label>
+            {{ Form::textarea('dtb_item[condition_des]', old("dtb_item[condition_des]", isset($data['dtb_item']['condition_des']) ? $data['dtb_item']['condition_des'] : ''), ['size' => '30x5', 'class' => 'form-control']) }}
+            {!! $errors->first("dtb_item[condition_des]") ? '
+            <p class="text-danger">'. $errors->first("dtb_item[condition_des]") .'</p>
+            ' : ''!!}
+        </div>
         <p>@lang('view.specifications')</p>
         <hr>
         @foreach($data['dtb_item_specifics'] as $key => $value)

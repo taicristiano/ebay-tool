@@ -1,4 +1,7 @@
 @extends('layouts.default')
+@section('title')
+{{ __('view.create_many') }}
+@endsection
 @section('content')
 <div class="content-wrapper">
     @include('layouts.component.header-content', ['text' => __('view.create_many')])

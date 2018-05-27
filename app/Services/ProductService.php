@@ -108,7 +108,7 @@ class ProductService extends CommonService
             'condition_id'   => $data['Item']['ConditionID'],
             'condition_name' => $data['Item']['ConditionDisplayName'],
             'price'          => $data['Item']['ConvertedCurrentPrice'],
-            'duration'       => Item::VALUE_DURATION_30_DAY,
+            'duration'       => $settingItem->duration,
             'quantity'       => $settingItem->quantity,
         ];
 
@@ -462,6 +462,19 @@ class ProductService extends CommonService
     }
 
     /**
+     * get base 64 image
+     * @param  image $image
+     * @return string
+     */
+    public function getBase64Image($image)
+    {
+        $path = $image->getPathname();
+        $type = explode("/", $image->getClientMimeType())[1];
+        $file = file_get_contents($path);
+        return 'data:image/' . $type . ';base64,' . base64_encode($file);
+    }
+
+    /**
      * upload file
      * @param  object  $file
      * @param  string  $path
@@ -602,6 +615,7 @@ class ProductService extends CommonService
                 'item_name'           => $data['dtb_item']['item_name'],
                 'category_id'         => $data['dtb_item']['category_id'],
                 'category_name'       => $data['dtb_item']['category_name'],
+                'condition_des'       => $data['dtb_item']['condition_des'],
                 'condition_id'        => $data['dtb_item']['condition_id'],
                 'condition_name'      => $data['dtb_item']['condition_name'],
                 'price'               => $data['dtb_item']['price'],
@@ -667,5 +681,16 @@ class ProductService extends CommonService
                 Storage::move($this->pathUpload . $data['file_name_' . $i], $this->pathUpload . $itemImageString);
             }
         }
+    }
+
+
+    /**
+     * check has setting policy data
+     * @return boolean
+     */
+    public function checkHasSettingPolicyData()
+    {
+        $userId = Auth::user()->id;
+        return $this->settingPolicy->getSettingPolicyOfUser($userId) ? true : false;
     }
 }

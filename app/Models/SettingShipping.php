@@ -19,18 +19,7 @@ class SettingShipping extends AbstractModel
     const DEFAULT_MAX_SIZE      = 90;
     const DEFAULT_SIDE_MAX_SIZE = 60;
 
-    /**
-     * The attributes that are mass assignable.
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'user_id',
-        'shipping_name',
-        'max_size',
-        'side_max_size',
-    ];
+    protected $guarded = [];
 
     /**
      * create default shipping

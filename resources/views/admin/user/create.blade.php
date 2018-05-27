@@ -1,27 +1,10 @@
 @extends('layouts.default')
 @section('content')
 <div class="content-wrapper">
-    <section class="content-header">
-        <h1>
-            {{ __('view.user.' . (isset($user) ? 'create_title' : 'create_title')) }}
-        </h1>
-        <ol class="breadcrumb">
-            <li>
-                <a href="#">
-                    <i class="fa fa-dashboard">
-                    </i>
-                    Home
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    {{ __('side_bar.user_manager') }}
-                </a>
-            </li>
-        </ol>
-    </section>
+    @include('layouts.component.header-content', ['text' => __('view.user.' . (isset($user) ? 'create_title' : 'create_title'))])
     <!-- Main content -->
     <section class="content">
+        @include('layouts.component.alert')
         <!-- Default box -->
         <div class="row">
             <form action="{{ isset($user) ? route('admin.user.update', $user->id) : route('admin.user.create') }}" class="col-xs-12 col-md-8 col-md-offset-2" method="POST" role="form">

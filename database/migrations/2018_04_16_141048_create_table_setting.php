@@ -19,15 +19,12 @@ class CreateTableSetting extends Migration
             $table->foreign('user_id')->references('id')->on('dtb_user')->onDelete('cascade');
             $table->unsignedInteger('store_id')->default(1);
             $table->foreign('store_id')->references('id')->on('mtb_store')->onDelete('cascade');
-            $table->float('paypal_fee_rate', 4, 2)->default(3.6);
-            $table->float('paypal_fixed_fee', 4, 2)->default(40);
+            $table->float('paypal_fee_rate', 11, 2)->default(3.6);
+            $table->float('paypal_fixed_fee', 11, 2)->default(40);
             $table->smallInteger('ex_rate_diff')->default(0);
             $table->smallInteger('gift_discount')->default(100);
             $table->smallInteger('duration')->default(30);
             $table->smallInteger('quantity')->default(1);
-            $table->text('shipping_policy')->nullable();
-            $table->text('payment_policy')->nullable();
-            $table->text('return_policy')->nullable();
             $table->boolean('del_flg')->default(false);
             $table->timestamps();
         });

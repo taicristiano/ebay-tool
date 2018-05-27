@@ -27,23 +27,24 @@ class User extends Authenticatable
     protected $table = 'dtb_user';
 
     /**
-     * The attributes that are mass assignable.
-     *
+     * field list
      * @var array
      */
     protected $fillable = [
+        'type',
         'user_code',
         'user_name',
-        'password',
-        'type',
-        'introducer_id',
-        'email',
         'name_kana',
+        'introducer_id',
         'ebay_account',
-        'tel',
-        'memo',
         'start_date',
+        'tel',
+        'email',
+        'password',
+        'memo',
     ];
+
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -106,6 +107,16 @@ class User extends Authenticatable
     public function getTypeGuestAdmin()
     {
         return static::TYPE_GUEST_ADMIN;
+    }
+
+    /**
+     * check type setting by type
+     * @param  integer  $type
+     * @return boolean
+     */
+    public function isSetting($type)
+    {
+        return in_array($type, [static::TYPE_SUPER_ADMIN, static::TYPE_GUEST_ADMIN]);
     }
 
     /**
@@ -246,7 +257,7 @@ class User extends Authenticatable
                 'tel',
                 'user_code',
                 'email',
-                'memo'
+                'memo',
             ];
             $condition = $this->select($fieldSelect);
         }
@@ -308,7 +319,7 @@ class User extends Authenticatable
     public static function generateUserCode()
     {
         $yearMonth = date('ym');
-        if ($lastUser = static::select('user_code')->orderBy('id', 'desc')->first()) {
+        if ($lastUser = static::select('user_code')->whereNotNull('user_code')->orderBy('id', 'desc')->first()) {
             $lastIndex = ((Int) preg_replace('/^[0-9]{4}/', '', $lastUser->user_code) + 1);
             return $yearMonth . str_repeat('0', (3 - strlen($lastIndex))) . $lastIndex;
         }

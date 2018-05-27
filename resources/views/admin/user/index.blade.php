@@ -1,34 +1,17 @@
 @extends('layouts.default')
 @section('content')
 <div class="content-wrapper">
-<!-- Content Header (Page header) -->
-    <section class="content-header">
-        <h1>
-            {{ __('side_bar.user_manager') }}
-        </h1>
-        <ol class="breadcrumb">
-            <li>
-                <a href="#">
-                    <i class="fa fa-dashboard">
-                    </i>
-                    Home
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    {{ __('side_bar.user_manager') }}
-                </a>
-            </li>    </ol>
-    </section>
+    @include('layouts.component.header-content', ['text' => __('side_bar.user_manager')])
     <!-- Main content -->
     <section class="content">
+        @include('layouts.component.alert')
         <!-- Default box -->
         <div class="box">
             <div class="box-header">
                 <!-- <h3 class="box-title">{{ __('view.list') }}</h3> -->
             </div><!-- /.box-header -->
             <div class="box-body">
-                <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <form class="form-inline" id="filter-post" role="form" method="GET">
                         {!! Form::select("type", $typeOptions, old('type'), ['class' => 'form-control', 'id' => 'select-type']) !!}
                         {!! Form::text('user_name', old('user_name'), ['class' => 'form-control', 'placeholder' => __('view.user.placeholder_user_name')]) !!}
@@ -36,7 +19,7 @@
                         <a href="{{ route('admin.user.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i>{{ __('view.create') }}</a>
                     </form>
                 </div>
-                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <form class="form-inline pull-right" id="export-csv" role="form" method="GET" action="{{ route('admin.user.export-csv') }}">
                         <input type="hidden" name="type_csv" id="type_csv">
                         <input type="hidden" name="type_user" id="type_user">

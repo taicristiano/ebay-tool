@@ -46,7 +46,7 @@ Route::group([
     Route::group([
         'prefix' => 'shipping',
         'as'     => 'shipping.',
-        // 'middleware' => 'can:user_manager',
+        'middleware' => 'can:user_manager',
     ], function () {
         Route::get('/', 'ShippingController@index')->name('index');
         Route::get('/create', 'ShippingController@create')->name('create');
@@ -56,10 +56,11 @@ Route::group([
         Route::delete('/delete/{shippingId}', 'ShippingController@delete')->name('delete');
     });
 
+    // shipping fee
     Route::group([
         'prefix' => 'shipping/{shippingId}/fee',
         'as'     => 'shipping_fee.',
-        // 'middleware' => 'can:user_manager',
+        'middleware' => 'can:user_manager',
     ], function () {
         Route::get('/', 'ShippingFeeController@index')->name('index');
         Route::get('/create', 'ShippingFeeController@create')->name('create');
@@ -67,5 +68,16 @@ Route::group([
         Route::get('/update/{feeId}', 'ShippingFeeController@create')->name('update');
         Route::post('/update/{feeId}', 'ShippingFeeController@create')->name('update');
         Route::delete('/delete/{feeId}', 'ShippingFeeController@delete')->name('delete');
+    });
+
+    Route::group([
+        'prefix' => 'user',
+        'as'     => 'user.',
+        'middleware' => 'can:setting'
+    ], function () {
+        Route::get('normal-setting', 'UserController@normalSetting')->name('normal_setting');
+        Route::post('normal-setting', 'UserController@normalSettingUpdate')->name('normal_setting_post');
+        Route::post('api-get-session-id', 'UserController@apiGetSessionId')->name('api-get-session-id');
+        Route::post('api-get-policy', 'UserController@apiGetPolicy')->name('api-get-policy');
     });
 });

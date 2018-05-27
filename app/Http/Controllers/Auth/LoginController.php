@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use DB, Hash;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -33,9 +35,10 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user)
     {
         $this->middleware('guest')->except('logout');
+        $this->user = $user;
     }
 
     /**
@@ -50,5 +53,22 @@ class LoginController extends Controller
             $this->username() => 'nullable|string',
             'password' => 'nullable|string',
         ]);
+    }
+
+    /**
+     * Attempt to log the user into the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected function attemptLogin(Request $request)
+    {
+        if ($user = $this->user->findByEmail($request->email)) {
+            if (Hash::check($request->password, $user->password)
+                && $user->start_date <= date('Y-m-d H:i:s')
+                && !$user->isCancelationUser()) {
+                $this->guard()->login($user);
+            }
+        }
     }
 }

@@ -15,7 +15,7 @@
     <section class="content">
         <!-- Default box -->
         <div class="row">
-            <div class="col-xs-12 col-md-8 col-md-offset-2">
+            <div class="col-xs-12 col-md-12">
                 <div class="box box-success">
                     <div class="box-header with-border">@lang('view.post_product')</div>
                     <div class="box-body">

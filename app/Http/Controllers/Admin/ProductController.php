@@ -45,6 +45,20 @@ class ProductController extends AbstractController
         return view('admin.product.post', compact('data', 'originType'));
     }
 
+    public function XML2Array(SimpleXMLElement $parent)
+    {
+        $array = array();
+
+        foreach ($parent as $name => $element) {
+            ($node = & $array[$name])
+                && (1 === count($node) ? $node = array($node) : 1)
+                && $node = & $node[];
+
+            $node = $element->count() ? $this->XML2Array($element) : trim($element);
+        }
+
+        return $array;
+    }
     /**
      * post product confirm
      * @param  Request $request

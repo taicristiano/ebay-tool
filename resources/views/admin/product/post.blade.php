@@ -38,7 +38,9 @@
                             <!-- c642534441 -->
                             <!-- r245539002 -->
                             <!-- u199058848 -->
-                            &emsp;&emsp;&emsp;&emsp;{!! Form::text('id_ebay_or_amazon', !empty($data['original_id']) ? $data['original_id'] : 'u199818803', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
+                            {{-- B00RF2ZNI0 --}}
+                            {{-- u199818803 --}}
+                            &emsp;&emsp;&emsp;&emsp;{!! Form::text('id_ebay_or_amazon', !empty($data['original_id']) ? $data['original_id'] : 'B00RF2ZNI0', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
                             <button class="btn btn-primary" type="button" id="btn-get-yahoo-or-amazon"><i class="fa fa-info-circle"></i> {{ __('view.image_acquisition') }}</button>
                         </form>
                         <p class="text-danger display-none" id="item-ebay-invalid">@lang('view.item_not_found')</p>

@@ -42,7 +42,7 @@ return [
         'Signature' => '',
         'SignatureMethod' => 'HmacSHA256',
         'MarketplaceId' => 'A1VC38T7YXB528',
-        'Query' => '0439708184 ',
+        'Query' => '0439708184',
     ],
     'gen_sign' => [
         'AWSAccessKeyId' => 'AKIAJWROE4YTDKN5COQQ',

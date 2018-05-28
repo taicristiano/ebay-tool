@@ -21,6 +21,7 @@ use App\Models\ItemImage;
 use App\Services\SignatureAmazon;
 use DB;
 use Log;
+use App\Services\AmazonMwsClient;
 
 class ProductService extends CommonService
 {
@@ -202,72 +203,28 @@ class ProductService extends CommonService
             Session::push($this->keyImageFromApi, $arrayImageFormApi);
         } else {
             $isTypeAmazon = true;
-            $url        = config('api_info.api_amazon_get_item');
-            // $body       = config('api_info.body_request_api_amazon_get_item');
-            // $parameters = config('api_info.parameters_api_amazon_get_item');
-            // $header     = config('api_info.header_api_amazon_get_item');
-            // $body['Query'] = 'B0742J781D';
-            $body = config('api_info.body_request_api_amazon_get_item');
-            
-            $gensign = config('api_info.gen_sign');
-            // $body .= 'B0742J781D';
-            $signalture = $this->getSignatureAmazon($gensign);
-            //dd($signalture, self::encodeNew($signalture));
-            // $signalture = self::encodeNew($signalture);
-            // $signalture = str_replace(
-            //         array('+', '=', '/'),
-            //         array('-', '_', '~'),
-            //         $signalture);
-            // $body .= '&Signature=' . $signalture;
-            // $body .= '&Timestamp=' . date('Y-m-d\Th:m:s\Z');
-            // dd($signalture);
-            // $signalture = self::encodeNew($signalture);
-            // dd($signalture, $sign);
-
-            $body = [
-                'AWSAccessKeyId' => 'AKIAJWROE4YTDKN5COQQ',
-                'Action' => 'ListMatchingProducts',
-                'SellerId' => 'A2GI94OS9KGZVF',
-                'MWSAuthToken' => 'amzn.mws.f8b1b1e5-f8df-3d8c-48ff-d8655ad92d86',
-                'SignatureVersion' => 2,
-                'Timestamp' => date(DATE_ISO8601, time()),
-                'Version' => '2011-10-01',
-                'Signature' => $sign,
-                'SignatureMethod' => 'HmacSHA256',
-                'MarketplaceId' => 'A1VC38T7YXB528',
-                'Query' => '0439708184 ',
+            $client = new AmazonMwsClient(
+                'AKIAJWROE4YTDKN5COQQ',
+                'l4CCqytm56ps5QFw7AFv347bKxqzJWK4xL2hrVmb',
+                'A2GI94OS9KGZVF',
+                ['A1VC38T7YXB528'],
+                'amzn.mws.f8b1b1e5-f8df-3d8c-48ff-d8655ad92d86',
+                'MCS/MwsClient',
+                '1.0',
+                'https://mws.amazonservices.jp'
+            );
+            $optionalParams = [
+                'Query'         => $itemId,
+                // 'Query'         => 'B078SY57F5',
+                // 'Query'         => 'B00RF2ZNI0',
+                // 'Query'         => 'B00FJV9ZW4',
+                // 'Query'         => 'B071NZD35X',
+                'MarketplaceId' => 'A1VC38T7YXB528'
             ];
-            // dd($sign);
-            // $body['Signature'] = $sign;
-            // $body['Signature'] = $signalture;
-            // $body['Timestamp'] = date('Y-m-d\Th:m:s\Z');
-            // $body['Timestamp'] = $timestamp;
-            // dd(date(DATE_ISO8601, time()));
-            // $body['Timestamp'] = date(DATE_ISO8601, time());
-            // $body['Timestamp'] = gmdate("Y-m-d\TH:i:s.\\0\\0\\0\\Z", time());
-            // $body['Timestamp'] = $time;
-            // dd($body);
-            // $body['Timestamp'] = $data['timestamp'];
-            // https://github.com/amzn/amazon-pay-sdk-php
-            // $body = null;
-            //dd($signalture);
-            // dd($body);
-            // dd($body);
-            $result             = $this->callApi(null, $body, $url, 'post', true);
-            $response['status'] = false;
-            if ($result['Ack'] == 'Failure') {
-                return response()->json($response);
-            }
-            $userId             = Auth::user()->id;
-            $settingData        = $this->setting->getSettingOfUser($userId);
-            $settingPolicyData  = $this->settingPolicy->getSettingPolicyOfUser($userId);
-            $data               = $this->formatDataEbayInfo($result, $settingData, $settingPolicyData);
-            $response['status'] = true;
-            $response['data']   = view('admin.product.component.item_ebay_info', compact('data'))->render();
-            return response()->json($response);
-                // call api amazon
+            $data = $client->send('ListMatchingProducts', '/Products/2011-10-01', $optionalParams);
+            dd($data);
         }
-        $isTypeAmazon = true;
+        // $isTypeAmazon = true;
         if (!count($arrayImage)) {
             return response()->json($response);
         }

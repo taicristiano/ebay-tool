@@ -31,12 +31,12 @@ class PostProductRequest extends Request
             'dtb_item.condition_des' => 'required',
             'dtb_item.price' => 'required',
         ];
-        foreach($data['dtb_item_specifics'] as $key => $item) {
+        foreach ($data['dtb_item_specifics'] as $key => $item) {
             $rules['dtb_item_specifics.' . $key . '.name'] = 'required';
             $rules['dtb_item_specifics.' . $key . '.value'] = 'required';
         }
         return $rules;
-    }    
+    }
 
     /**
      * message validate
@@ -51,7 +51,7 @@ class PostProductRequest extends Request
     }
 
     /**
-     * validate data 
+     * validate data
      * @param array
      * @return validator
      */

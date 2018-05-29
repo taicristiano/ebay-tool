@@ -94,16 +94,16 @@
                     </div>
                     <div class="form-group">
                         <label>
-                            {{ __('view.user.password') }} {!! !isset($user) ? '<span class="text-danger">(*)</span>': '' !!}
+                            {{ __('view.user.password') }} <span class="text-danger">(*)</span>
                         </label>
-                        {!! Form::password('password', ['class' => 'form-control']) !!}
+                        {!! Form::password('password', ['class' => 'form-control', 'placeholder' => isset($user) ? '********' : '']) !!}
                     	{!! $errors->first('password') ? '<p class="text-danger">'. $errors->first('password') .'</p>' : ''!!}
                     </div>
                     <div class="form-group">
                         <label>
-                            {{ __('view.user.password_confirmation') }} {!! !isset($user) ? '<span class="text-danger">(*)</span>': '' !!}
+                            {{ __('view.user.password_confirmation') }} <span class="text-danger">(*)</span>
                         </label>
-                        {!! Form::password('password_confirmation', ['class' => 'form-control']) !!}
+                        {!! Form::password('password_confirmation', ['class' => 'form-control', 'placeholder' => isset($user) ? '********' : '']) !!}
                     	{!! $errors->first('password_confirmation') ? '<p class="text-danger">'. $errors->first('password_confirmation') .'</p>' : ''!!}
                     </div>
                     <div class="form-group">

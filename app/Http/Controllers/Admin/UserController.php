@@ -72,10 +72,12 @@ class UserController extends AbstractController
             }
             return $this->render(compact('user', 'typeOptions', 'categoryOptions', 'typeGuestAdmin'));
         }
-        $data             = array_filter($req->only($this->user->getFieldList()));
-        $data['password'] = Hash::make(isset($data['password']) ? $data['password'] : User::DEFAULT_PASSWORD);
+        $data             = array_filter($req->only($this->user->getFieldList()));        
         if (!$userId) {
             $data['user_code'] = User::generateUserCode();
+        }
+        if (isset($data['password']) && $data['password']) {
+            $data['password'] = Hash::make($data['password']);
         }
         try {
             DB::beginTransaction();

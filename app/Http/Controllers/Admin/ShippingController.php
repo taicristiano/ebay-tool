@@ -23,11 +23,7 @@ class ShippingController extends AbstractController
      */
     public function index(Request $req)
     {
-        if ($req->user()->isSuperAdmin()) {
-            $shippings = $this->shipping->getShippingList(null, $withUser = true);
-        } else {
-            $shippings = $this->shipping->getShippingList($req->user()->id);
-        }
+        $shippings = $this->shipping->getShippingList($req->user()->id);
         return $this->render(compact('shippings'));
     }
 

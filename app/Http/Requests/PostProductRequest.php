@@ -24,7 +24,6 @@ class PostProductRequest extends Request
      */
     public static function rules($data)
     {
-        dd($data);
         $rules = [
             'dtb_item.item_name' => 'required',
             'dtb_item.condition_name' => 'required',

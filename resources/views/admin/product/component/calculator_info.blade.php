@@ -56,7 +56,7 @@
         </div>
         <div class="form-group form-group-custom">
             <label for="dtb_item[buy_price]">@lang('view.buy_price') <span class="text-danger">(*)</span></label>
-            {!! Form::text("dtb_item[buy_price]", old("dtb_item[buy_price]", isset($data['dtb_item']['buy_price']) ? $data['dtb_item']['buy_price'] : ''), ['class' => 'form-control', 'readonly' => true]) !!}
+            {!! Form::text("dtb_item[buy_price]", old("dtb_item[buy_price]", isset($data['dtb_item']['buy_price']) ? $data['dtb_item']['buy_price'] : ''), ['class' => 'form-control', 'id' => 'buy_price']) !!}
             {!! $errors->first("dtb_item[buy_price]") ? '
             <p class="text-danger">'. $errors->first("dtb_item[buy_price]") .'</p>
             ' : ''!!}

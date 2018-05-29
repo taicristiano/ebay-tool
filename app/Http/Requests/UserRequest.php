@@ -56,11 +56,11 @@ class UserRequest extends FormRequest
             'email'         => 'required|email|max:50|unique:dtb_user',
             'regist_limit'  => 'nullable|numeric|digits_between:1,10',
             'post_limit'    => 'nullable|numeric|digits_between:1,10',
-            'password'      => 'required|confirmed|max:50',
+            'password'      => 'required|confirmed|max:50|min:8',
             'memo'          => 'nullable|max:500',
         ];
         if ($req->id) {
-            $rules['password'] = 'nullable|confirmed|max:50';
+            $rules['password'] = 'nullable|confirmed|max:50|min:8';
             $rules['email']    = 'required|email|max:50|unique:dtb_user,id,' . $req->id;
         }
         return $rules;

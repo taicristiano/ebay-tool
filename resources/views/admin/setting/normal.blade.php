@@ -69,9 +69,8 @@
                             <p class="text-danger">'. $errors->first('gift_discount') .'</p>
                             ' : ''!!}
                             <label for="duration">@lang('view.duration') <span class="text-danger">(*)</span></label>
-                            <div class="form-group input-group">
+                            <div class="form-group">
                                 {!! Form::select("duration", $durationOption, old('duration', isset($setting->duration) ? $setting->duration : ''), ['class' => 'form-control', 'id' => 'duration']) !!}
-                                <span class="input-group-addon">@lang('view.day')</span>
                             </div>
                             {!! $errors->first('duration') ? '
                             <p class="text-danger">'. $errors->first('duration') .'</p>

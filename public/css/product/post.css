@@ -20,3 +20,7 @@ hr {
 .swal-footer {
     text-align: center !important;
 }
+
+.background-disable {
+	background: #eee !important;
+}

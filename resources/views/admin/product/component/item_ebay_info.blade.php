@@ -79,9 +79,12 @@
         </div>
         <p>@lang('view.sale_details')</p>
         <hr>
-        <div class="form-group form-group-custom">
+        <div class="form-group-custom">
             <label for="dtb_item[price]">@lang('view.sell_price') <span class="text-danger">(*)</span></label>
-            {!! Form::text("dtb_item[price]", old("dtb_item[price]", isset($data['dtb_item']['price']) ? $data['dtb_item']['price'] : ''), ['class' => 'form-control', 'id' => 'sell_price']) !!}
+            <div class="form-group input-group">
+                {!! Form::text("dtb_item[price]", old("dtb_item[price]", isset($data['dtb_item']['price']) ? $data['dtb_item']['price'] : ''), ['class' => 'form-control', 'id' => 'sell_price']) !!}
+                <span class="input-group-addon">@lang('view.usd')</span>
+            </div>
             {!! $errors->first("dtb_item[price]") ? '
             <p class="text-danger">'. $errors->first("dtb_item[price]") .'</p>
             ' : ''!!}

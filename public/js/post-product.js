@@ -131,52 +131,54 @@ jQuery(document).ready(function() {
         }
     });
 
-    $(document).on("change", "#material-quantity, #setting-shipping, #buy_price", function() {
-        $('body').addClass('loading-ajax');
-        type = $('.type:checked').val()
-        if (type == 1) {
-            var data = {
-                _token: token,
-                sell_price: $('#sell_price').val(),
-                buy_price: $('#buy_price').val(),
-                paypal_fee: $('#paypal-fee').val(),
-                ebay_fee: $('#ebay-fee').val(),
-                type: $('.type:checked').val(),
-            };
-        } else {
-            var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : 0;
-            var data = {
-                _token: token,
-                material_quantity: materialQuantity,
-                setting_shipping: $('#setting-shipping').val(),
-                commodity_weight: $('#commodity-weight').val(),
-                sell_price: $('#sell_price').val(),
-                buy_price: $('#buy_price').val(),
-                paypal_fee: $('#paypal-fee').val(),
-                ebay_fee: $('#ebay-fee').val(),
-                type: $('.type:checked').val(),
-            };
-        }
-        $.ajax({
-            url: updateProfit,
-            type: 'post',
-            dataType: 'json',
-            data: data,
-            success: function (data) {
-                if (data.status) {
-                    $('#error-material-quantity').addClass('display-none');
-                    $('#error-material-quantity').text('');
-                    $('#profit').val(data.profit);
-                    $('#ship_fee').val(data.ship_fee);
-                } else {
-                    $('#error-material-quantity').text(data.message_error.material_quantity);
-                    $('#error-material-quantity').removeClass('display-none');
-                }
-            },
-            complete: function () {
-                $('body').removeClass('loading-ajax');
+    $(document).on("change", "#material-quantity, #setting-shipping, #buy_price, #sell_price", function() {
+        if ($('#item-calculator-info').length) {
+            $('body').addClass('loading-ajax');
+            type = $('.type:checked').val()
+            if (type == 1) {
+                var data = {
+                    _token: token,
+                    sell_price: $('#sell_price').val(),
+                    buy_price: $('#buy_price').val(),
+                    paypal_fee: $('#paypal-fee').val(),
+                    ebay_fee: $('#ebay-fee').val(),
+                    type: $('.type:checked').val(),
+                };
+            } else {
+                var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : 0;
+                var data = {
+                    _token: token,
+                    material_quantity: materialQuantity,
+                    setting_shipping: $('#setting-shipping').val(),
+                    commodity_weight: $('#commodity-weight').val(),
+                    sell_price: $('#sell_price').val(),
+                    buy_price: $('#buy_price').val(),
+                    paypal_fee: $('#paypal-fee').val(),
+                    ebay_fee: $('#ebay-fee').val(),
+                    type: $('.type:checked').val(),
+                };
             }
-        });
+            $.ajax({
+                url: updateProfit,
+                type: 'post',
+                dataType: 'json',
+                data: data,
+                success: function (data) {
+                    if (data.status) {
+                        $('#error-material-quantity').addClass('display-none');
+                        $('#error-material-quantity').text('');
+                        $('#profit').val(data.profit);
+                        $('#ship_fee').val(data.ship_fee);
+                    } else {
+                        $('#error-material-quantity').text(data.message_error.material_quantity);
+                        $('#error-material-quantity').removeClass('display-none');
+                    }
+                },
+                complete: function () {
+                    $('body').removeClass('loading-ajax');
+                }
+            });
+        }
     });
 });
 

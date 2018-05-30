@@ -68,7 +68,7 @@
                                             <hr>
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.sell_price')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['price'] }}</label>
+                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['price'] }} @lang('view.usd')</label>
                                             </div>
                                             <p>@lang('view.setting_value')</p>
                                             <hr>
@@ -101,7 +101,7 @@
                                         <div class="box-header with-border">@lang('view.product_details')</div>
                                         <div class="box-body">
                                             @if(isset($data['dtb_item']['buy_price']))
-                                            <p>@lang('view.buy_price'): <span id="buy_price">{{ $data['dtb_item']['buy_price'] }}</span></p>
+                                            <p>@lang('view.buy_price'): <span id="buy_price">{{ $data['dtb_item']['buy_price'] }} @lang('view.man')</span></p>
                                             @endif
                                         </div>
                                         <div class="fileuploader fileuploader-theme-thumbnails">
@@ -133,8 +133,8 @@
                                                 <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['product_size'] }}</label>
                                             </div>
                                             <div class="form-group form-group-custom">
-                                                <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.commodity_weight')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['commodity_weight'] }}</label>
+                                                <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.commodity_weight') @lang('view.g')</label>
+                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['commodity_weight'] }} @lang('view.g')</label>
                                             </div>
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.material_quantity')</label>
@@ -146,24 +146,24 @@
                                             </div>
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.ship_fee')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['ship_fee'] }}</label>
+                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['ship_fee'] }} @lang('view.man')</label>
                                             </div>
                                             @endif
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.ebay_fee')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['ebay_fee'] }}</label>
+                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['ebay_fee'] }} @lang('view.man')</label>
                                             </div>
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.paypal_fee')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['paypal_fee'] }}</label>
+                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['paypal_fee'] }} @lang('view.man')</label>
                                             </div>
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.buy_price')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['buy_price'] }}</label>
+                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['buy_price'] }} @lang('view.man')</label>
                                             </div>
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.profit')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['profit'] }}</label>
+                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['profit'] }} @lang('view.man')</label>
                                             </div>
                                         </div>
                                     </div>

@@ -47,7 +47,7 @@
                             <label for="ex_rate_diff">@lang('view.paypal_fixed_fee') <span class="text-danger">(*)</span></label>
                             <div class="form-group input-group">
                                 {!! Form::text('paypal_fixed_fee', old('paypal_fixed_fee', isset($setting->paypal_fixed_fee) ? $setting->paypal_fixed_fee : ''), ['class' => 'form-control']) !!}
-                                <span class="input-group-addon">@lang('view.yen')</span>
+                                <span class="input-group-addon">@lang('view.man')</span>
                             </div>
                             {!! $errors->first('paypal_fixed_fee') ? '
                             <p class="text-danger">'. $errors->first('paypal_fixed_fee') .'</p>
@@ -55,7 +55,7 @@
                             <label for="ex_rate_diff">@lang('view.ex_rate_diff') <span class="text-danger">(*)</span></label>
                             <div class="form-group input-group">
                                 {!! Form::text('ex_rate_diff', old('ex_rate_diff', isset($setting->ex_rate_diff) ? $setting->ex_rate_diff : ''), ['class' => 'form-control']) !!}
-                                <span class="input-group-addon">@lang('view.yen')</span>
+                                <span class="input-group-addon">@lang('view.man')</span>
                             </div>
                             {!! $errors->first('ex_rate_diff') ? '
                             <p class="text-danger">'. $errors->first('ex_rate_diff') .'</p>

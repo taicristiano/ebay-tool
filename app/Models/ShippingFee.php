@@ -306,9 +306,15 @@ class ShippingFee extends AbstractModel
      */
     public function getShippingFeeByShippingId($shippingId, $totalWeigh)
     {
-        return $this->where('shipping_id', $shippingId)
+        $item = $this->where('shipping_id', $shippingId)
             ->where('weight', '>=', $totalWeigh)
             ->orderBy('weight', 'asc')
             ->first();
+        if (!$item) {
+            $item = $this->where('shipping_id', $shippingId)
+                ->orderBy('weight', 'desc')
+                ->first();
+        }
+        return $item;
     }
 }

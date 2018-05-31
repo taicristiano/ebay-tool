@@ -3,18 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use Log;
-use Goutte\Client;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 use App\Models\Item;
 use App\Http\Requests\UpdateProfitRequest;
+use App\Http\Requests\PostProductRequest;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends AbstractController
 {
     protected $product;
     protected $productService;
+    protected $keyProduct;
 
     public function __construct(
         ProductService $productService,
@@ -44,6 +44,7 @@ class ProductController extends AbstractController
         return view('admin.product.post', compact('data', 'originType'));
     }
 
+
     /**
      * post product confirm
      * @param  Request $request
@@ -52,7 +53,13 @@ class ProductController extends AbstractController
     public function postProductConfirm(Request $request)
     {
         try {
+            $response['status'] = false;
             $data = $request->all();
+            $postProductValidate = PostProductRequest::validateData($data);
+            if ($postProductValidate->fails()) {
+                $response['message_error'] = $postProductValidate->errors();
+                return response()->json($response);
+            }
             $dataSession = [];
             if (Session::has($this->keyProduct)) {
                 $dataSession = Session::get($this->keyProduct)[0];
@@ -87,10 +94,9 @@ class ProductController extends AbstractController
 
     /**
      * post product publish
-     * @param  Request $request
      * @return Illuminate\Http\Response
      */
-    public function postProductPublish(Request $request)
+    public function postProductPublish()
     {
         try {
             return $this->productService->postProductPublish();
@@ -173,10 +179,9 @@ class ProductController extends AbstractController
 
     /**
      * get image init
-     * @param  Request $request
      * @return Illuminate\Http\Response
      */
-    public function getImageInit(Request $request)
+    public function getImageInit()
     {
         try {
             $data = Session::get($this->keyProduct)[0];

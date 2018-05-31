@@ -124,4 +124,17 @@ class SettingShipping extends AbstractModel
         return $this->where('user_id', $userId)
             ->get();
     }
+
+    /**
+     * find setting shipping max size of user
+     * @param  interger $userId
+     * @return array object
+     */
+    public function findSettingShippingMaxSizeOfUser($userId)
+    {
+        return $this->where('user_id', $userId)
+            ->orderBy('side_max_size', 'desc')
+            ->orderBy('max_size', 'desc')
+            ->first();
+    }
 }

@@ -104,7 +104,7 @@ jQuery(document).ready(function() {
                 if (data.status) {
                     window.location.href = data.url;
                 } else {
-                    $('#item-ebay-invalid').removeClass('display-none');
+                    // $('#item-ebay-invalid').removeClass('display-none');
                 }
             },
             complete: function () {
@@ -131,39 +131,54 @@ jQuery(document).ready(function() {
         }
     });
 
-    $(document).on("change", "#material-quantity, #setting-shipping", function() {
-        var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : 0;
-        $('body').addClass('loading-ajax');
-        var data = {
-            _token: token,
-            material_quantity: materialQuantity,
-            setting_shipping: $('#setting-shipping').val(),
-            commodity_weight: $('#commodity-weight').val(),
-            sell_price: $('#sell_price').val(),
-            buy_price: $('#buy_price').text(),
-            paypal_fee: $('#paypal-fee').val(),
-            ebay_fee: $('#ebay-fee').val(),
-        };
-        $.ajax({
-            url: updateProfit,
-            type: 'post',
-            dataType: 'json',
-            data: data,
-            success: function (data) {
-                if (data.status) {
-                    $('#error-material-quantity').addClass('display-none');
-                    $('#error-material-quantity').text('');
-                    $('#profit').val(data.profit);
-                    $('#ship_fee').val(data.ship_fee);
-                } else {
-                    $('#error-material-quantity').text(data.message_error.material_quantity);
-                    $('#error-material-quantity').removeClass('display-none');
-                }
-            },
-            complete: function () {
-                $('body').removeClass('loading-ajax');
+    $(document).on("change", "#material-quantity, #setting-shipping, #buy_price, #sell_price", function() {
+        if ($('#item-calculator-info').length) {
+            $('body').addClass('loading-ajax');
+            type = $('.type:checked').val()
+            if (type == 1) {
+                var data = {
+                    _token: token,
+                    sell_price: $('#sell_price').val(),
+                    buy_price: $('#buy_price').val(),
+                    paypal_fee: $('#paypal-fee').val(),
+                    ebay_fee: $('#ebay-fee').val(),
+                    type: $('.type:checked').val(),
+                };
+            } else {
+                var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : 0;
+                var data = {
+                    _token: token,
+                    material_quantity: materialQuantity,
+                    setting_shipping: $('#setting-shipping').val(),
+                    commodity_weight: $('#commodity-weight').val(),
+                    sell_price: $('#sell_price').val(),
+                    buy_price: $('#buy_price').val(),
+                    paypal_fee: $('#paypal-fee').val(),
+                    ebay_fee: $('#ebay-fee').val(),
+                    type: $('.type:checked').val(),
+                };
             }
-        });
+            $.ajax({
+                url: updateProfit,
+                type: 'post',
+                dataType: 'json',
+                data: data,
+                success: function (data) {
+                    if (data.status) {
+                        $('#error-material-quantity').addClass('display-none');
+                        $('#error-material-quantity').text('');
+                        $('#profit').val(data.profit);
+                        $('#ship_fee').val(data.ship_fee);
+                    } else {
+                        $('#error-material-quantity').text(data.message_error.material_quantity);
+                        $('#error-material-quantity').removeClass('display-none');
+                    }
+                },
+                complete: function () {
+                    $('body').removeClass('loading-ajax');
+                }
+            });
+        }
     });
 });
 
@@ -201,33 +216,12 @@ function getYahooOrAmazonInfo(button)
     if (button.data('requestRunning')) {
         return;
     }
-    // var timestamp = dateFormat(new Date(), 'isoUtcDateTime');
-    // timestamp = urlEncode(timestamp);
     button.data('requestRunning', true);
-
-    var endpoint = "mws.amazonservices.jp";
-    var apiPath = '/Products/2011-10-01';
-    var stringToSign = "POST\n" + endpoint + "\n";
-    var timestamp = dateFormat(new Date(), 'isoUtcDateTime');
-    timestamp = urlEncode(timestamp);
-    stringToSign += apiPath + "\n";
-    stringToSign += 'AWSAccessKeyId=AKIAJWROE4YTDKN5COQQ&Action=ListMatchingProducts&MWSAuthToken=amzn.mws.f8b1b1e5-f8df-3d8c-48ff-d8655ad92d86&MarketplaceId=A1VC38T7YXB528&Query=0439708184&SellerId=A2GI94OS9KGZVF&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp='+timestamp+'&Version=2011-10-01"';
-    // var stringToSign = 'https://mws.amazonservices.jp/Products/2011-10-01';
-    var secretKey = 'l4CCqytm56ps5QFw7AFv347bKxqzJWK4xL2hrVmb';
-    var hmac = Crypto.HMAC(Crypto.SHA256, stringToSign, secretKey, { asString: false });
-
-    var b64hmac = hexstr2b64(hmac);
-    var b64hmac = urlEncode(b64hmac);
-    var j = b64hmac.length % 4;
-    for(var i=0;i<j;i++) b64hmac += '=';
-
     var token = window.Laravel.csrfToken;
     var data = {
         _token: token,
         item_id: $('#id_ebay_or_amazon').val(),
         type: $('.type:checked').val(),
-        timestamp: timestamp,
-        sign: urlEncode(b64hmac),
     };
     $.ajax({
         url: urlGetItemYahooOrAmazonInfo,
@@ -279,7 +273,7 @@ function getCalculateProfitInfo(button)
         height: $('#height').val(),
         width: $('#width').val(),
         sell_price: $('#sell_price').val(),
-        buy_price: $('#buy_price').text(),
+        buy_price: $('#buy_price_span').text(),
         category_id: $('#category_id').val(),
     };
     $.ajax({

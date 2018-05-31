@@ -75,7 +75,7 @@ return [
     'store_id' => '出店形式',
     'paypal_fee_rate' => '割合',
     'paypal_fixed_fee' => '固定値',
-    'yen' => '円',
+    'man' => '円',
     'ex_rate_diff' => '為替調整',
     'gift_discount' => 'ギフト件割引率',
     'duration' => '販売期間',
@@ -127,5 +127,6 @@ return [
     'mws_access_key' => 'MWSのアクセスキー',
     'mws_secret_key' => 'MWSの秘密キー',
     'condition_des' => '商品説明',
-    'none_policy' => 'None policy'
+    'none_policy' => 'None policy',
+    'usd' => '$'
 ];

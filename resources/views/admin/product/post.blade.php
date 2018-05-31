@@ -19,27 +19,52 @@
                 <div class="box box-success">
                     <div class="box-header with-border">@lang('view.post_product')</div>
                     <div class="box-body">
-                        <form class="form-inline text-center" id="filter-post" role="form" method="GET">
-                            {!! Form::text('item_id', !empty($data['item_id']) ? $data['item_id'] : '192375777401', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'item_id']) !!}
-                            <button class="btn btn-primary" type="button" id="btn-get-item-ebay-info"><i class="fa fa-info-circle"></i> {{ __('view.filter') }}</button>
-                            @php
-                                $typeCheck = 1;
-                                if (!empty($data['dtb_item']['type'])) {
-                                    $typeCheck = $data['dtb_item']['type'];
-                                }
-                            @endphp
-                            @foreach($originType as $key => $type)
-                            &emsp;&emsp;&emsp;&emsp;<label>
-                                <input type="radio" name="type" class="minimal type" {{$key == $typeCheck ? 'checked' :''}} value="{{$key}}">
-                                {{$type}}
-                            </label>
-                            @endforeach
-                            {{-- B00RF2ZNI0 --}}
-                            {{-- s583357763 --}}
-                            &emsp;&emsp;&emsp;&emsp;{!! Form::text('id_ebay_or_amazon', !empty($data['original_id']) ? $data['original_id'] : 'B01GUPMJMA', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
-                            <button class="btn btn-primary" type="button" id="btn-get-yahoo-or-amazon"><i class="fa fa-info-circle"></i> {{ __('view.image_acquisition') }}</button>
+                        <form role="form">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-4">
+                                    <div class="form-group">
+                                        <div class="col-xs-12 col-md-8">
+                                            {!! Form::text('item_id', !empty($data['item_id']) ? $data['item_id'] : '192375777401', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'item_id']) !!}
+                                            <p class="text-danger display-none invalid" id="item-ebay-invalid">@lang('view.item_not_found')</p>
+                                        </div>
+                                        <div class="col-xs-12 col-md-4">
+                                            <button class="btn btn-primary" type="button" id="btn-get-item-ebay-info"><i class="fa fa-info-circle"></i> {{ __('view.filter') }}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-4">
+                                    @php
+                                        $typeCheck = 1;
+                                        if (!empty($data['dtb_item']['type'])) {
+                                            $typeCheck = $data['dtb_item']['type'];
+                                        }
+                                    @endphp
+                                    <div class="form-group">
+                                        <div class="col-md-1">
+                                        </div>
+                                        @foreach($originType as $key => $type)
+                                        <div class="col-xs-6 col-md-5">
+                                            <input type="radio" name="type" class="minimal type" {{$key == $typeCheck ? 'checked' :''}} value="{{$key}}">
+                                            {{$type}}
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                {{-- B00RF2ZNI0 --}}
+                                {{-- s583357763 --}}
+                                <div class="col-xs-12 col-md-4">
+                                    <div class="form-group">
+                                        <div class="col-xs-12 col-md-8">
+                                            {!! Form::text('id_ebay_or_amazon', !empty($data['original_id']) ? $data['original_id'] : 'B01GUPMJMA', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
+                                            <p class="text-danger display-none invalid" id="item-yahoo-or-amazon-invalid">@lang('view.item_not_found')</p>
+                                        </div>
+                                        <div class="col-xs-12 col-md-4">
+                                            <button class="btn btn-primary" type="button" id="btn-get-yahoo-or-amazon"><i class="fa fa-info-circle"></i> {{ __('view.image_acquisition') }}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
-                        <p class="text-danger display-none" id="item-ebay-invalid">@lang('view.item_not_found')</p>
                         <form role="form" id="form-post" enctype="multipart/form-data" method="post" action="{{route('admin.product.post-product-confirm')}}">
                             @csrf
                             <div id="conten-ajax">

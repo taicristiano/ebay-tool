@@ -102,6 +102,8 @@ class ProductService extends CommonService
     public function formatDataEbayInfo($data, $settingItem, $settingPolicyData)
     {
         $exchangeRate = $this->exchangeRate->getExchangeRateLatest();
+        $userId       = Auth::user()->id;
+        $settingInfo  = $this->setting->getSettingOfUser($userId);
         // data dtb_item
         $result['dtb_item'] = [
             'item_name'      => $data['Item']['Title'],
@@ -109,7 +111,7 @@ class ProductService extends CommonService
             'category_name'  => $data['Item']['PrimaryCategoryName'],
             'condition_id'   => $data['Item']['ConditionID'],
             'condition_name' => $data['Item']['ConditionDisplayName'],
-            'price'          => $data['Item']['ConvertedCurrentPrice'],
+            'price'          => round($data['Item']['ConvertedCurrentPrice'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2),
             'duration'       => $settingItem->duration,
             'quantity'       => $settingItem->quantity,
         ];
@@ -172,7 +174,7 @@ class ProductService extends CommonService
                 $price = $crawler->text();
                 $arrayItem = explode("円", $price);
                 $price =  $arrayItem[0];
-                $price = (float) str_replace(',', '', $price);
+                $price = round((float) str_replace(',', '', $price), 2);
             }
 
             $crawler = $client->request('GET', $url);
@@ -190,9 +192,11 @@ class ProductService extends CommonService
                 $arrayImage[] = $item;
             });
         } else {
-            $isTypeAmazon    = true;
-            $exchangeRate    = $this->exchangeRate->getExchangeRateLatest();
-            $client = new AmazonMwsClient(
+            $isTypeAmazon = true;
+            $exchangeRate = $this->exchangeRate->getExchangeRateLatest();
+            $userId       = Auth::user()->id;
+            $settingInfo  = $this->setting->getSettingOfUser($userId);
+            $client       = new AmazonMwsClient(
                 'AKIAJWROE4YTDKN5COQQ',
                 'l4CCqytm56ps5QFw7AFv347bKxqzJWK4xL2hrVmb',
                 'A2GI94OS9KGZVF',
@@ -215,7 +219,7 @@ class ProductService extends CommonService
                 return response()->json($response);
             }
 
-            $arrayImage = [];
+            $arrayImage  = [];
             foreach ($data as $key => $item) {
                 if (!empty($item['ns2:SmallImage']['ns2:URL'])) {
                     $url = $item['ns2:SmallImage']['ns2:URL'];
@@ -237,8 +241,9 @@ class ProductService extends CommonService
                     $price = $item['ns2:ListPrice']['ns2:Amount'];
                     $priceType = $item['ns2:ListPrice']['ns2:CurrencyCode'];
                     if ($price && $priceType == "USD") {
-                        $price = $price * $exchangeRate->rate;
+                        $price = $price * ($exchangeRate->rate - $settingInfo->ex_rate_diff);
                     }
+                    $price = round((float) $price, 2);
                 }
                 if (!empty($item['ns2:PackageDimensions'])) {
                     $commodityWeight = !empty($item['ns2:PackageDimensions']['ns2:Weight']) ? $item['ns2:PackageDimensions']['ns2:Weight'] : 0;
@@ -368,14 +373,11 @@ class ProductService extends CommonService
         $stores                               = $this->mtbStore->getAllStore();
         $storeInfo                            = $this->formatStoreInfo($stores);
         $typeFee                              = $storeInfo[$storeIdOfUser];
-        $data['dtb_item']['ebay_fee']         = $input['sell_price'] * $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee / 100;
-        $data['dtb_item']['paypal_fee']       = $settingInfo->paypal_fee_rate  * $input['sell_price'] / 100;
+        $data['dtb_item']['ebay_fee']         = round($input['sell_price'] * $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee / 100, 2);
+        $data['dtb_item']['paypal_fee']       = round($settingInfo->paypal_fee_rate  * $input['sell_price'] / 100, 2);
         $data['dtb_item']['buy_price']        = $input['buy_price'];
-        $exchangeRate                         = $this->exchangeRate->getExchangeRateLatest();
         // dd((float)$input['sell_price'], $data['dtb_item']['ebay_fee'], $data['dtb_item']['paypal_fee'], $data['dtb_item']['ship_fee'], $exchangeRate->rate, $settingInfo->ex_rate_diff, (float)$data['dtb_item']['buy_price'], $settingInfo->gift_discount);
-        $data['dtb_item']['profit']           = round(((float)$input['sell_price'] - $data['dtb_item']['ebay_fee'] - $data['dtb_item']['paypal_fee']) * ($exchangeRate->rate - $settingInfo->ex_rate_diff)- $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'] * $settingInfo->gift_discount / 100, 2);
-        $data['dtb_item']['ebay_fee'] = round($data['dtb_item']['ebay_fee'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
-        $data['dtb_item']['paypal_fee'] = round($data['dtb_item']['paypal_fee'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
+        $data['dtb_item']['profit']           = round((float)$input['sell_price'] - $data['dtb_item']['ebay_fee'] - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'] * $settingInfo->gift_discount / 100, 2);
     }
 
     /**
@@ -396,10 +398,8 @@ class ProductService extends CommonService
         $data['dtb_item']['ebay_fee']         = $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee / 100;
         $data['dtb_item']['paypal_fee']       = $settingInfo->paypal_fee_rate  * $input['sell_price'] / 100;
         $data['dtb_item']['buy_price']        = $input['buy_price'];
-        $exchangeRate                         = $this->exchangeRate->getExchangeRateLatest();
-        $data['dtb_item']['profit']           = round(((float)$input['sell_price'] - $data['dtb_item']['ebay_fee'] - $data['dtb_item']['paypal_fee']) * ($exchangeRate->rate - $settingInfo->ex_rate_diff) - (float)$data['dtb_item']['buy_price'], 2);
-        $data['dtb_item']['ebay_fee'] = round($data['dtb_item']['ebay_fee'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
-        $data['dtb_item']['paypal_fee'] = round($data['dtb_item']['paypal_fee'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
+        // $exchangeRate                         = $this->exchangeRate->getExchangeRateLatest();
+        $data['dtb_item']['profit']           = round((float)$input['sell_price'] - $data['dtb_item']['ebay_fee'] - $data['dtb_item']['paypal_fee'] - (float)$data['dtb_item']['buy_price'], 2);
     }
 
     /**
@@ -410,10 +410,7 @@ class ProductService extends CommonService
     public function updateProfit($data)
     {
         if ($data['type'] == 1) {
-            $exchangeRate       = $this->exchangeRate->getExchangeRateLatest();
-            $userId             = Auth::user()->id;
-            $settingInfo        = $this->setting->getSettingOfUser($userId);
-            $result['profit']   = round((float) $data['sell_price'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff) - $data['ebay_fee'] - $data['paypal_fee']  - (float) $data['buy_price'], 2);
+            $result['profit']   = round((float) $data['sell_price'] - $data['ebay_fee'] - $data['paypal_fee']  - (float) $data['buy_price'], 2);
         } else {
             $totalWeigh         = $data['commodity_weight'] + $data['material_quantity'];
             $shippingFee        = $this->shippingFee->getShippingFeeByShippingId((int) $data['setting_shipping'], $totalWeigh);
@@ -423,10 +420,9 @@ class ProductService extends CommonService
                 return response()->json($result);
             }
             $result['ship_fee'] = $shippingFee->ship_fee;
-            $exchangeRate       = $this->exchangeRate->getExchangeRateLatest();
             $userId             = Auth::user()->id;
             $settingInfo        = $this->setting->getSettingOfUser($userId);
-            $result['profit']   = round((float) $data['sell_price'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff) - $data['ebay_fee'] - $data['paypal_fee'] - $result['ship_fee'] - (float) $data['buy_price'] * $settingInfo->gift_discount / 100, 2);
+            $result['profit']   = round((float) $data['sell_price'] - $data['ebay_fee'] - $data['paypal_fee'] - $result['ship_fee'] - (float) $data['buy_price'] * $settingInfo->gift_discount / 100, 2);
         }
         $result['status']   = true;
         return response()->json($result);
@@ -468,8 +464,8 @@ class ProductService extends CommonService
                 $data['file_name_' . $i]   = array_pop($fileString);
                 array_push($dataImageNew, $data['file_name_' . $i]);
             } else {
-                $data['url_preview_' . $i] = $this->getBase64Image($file);
                 $data['file_name_' . $i]   = $this->uploadFile($file, $this->pathUpload);
+                $data['url_preview_' . $i] = asset($this->pathStorageFile . $data['file_name_' . $i]);
             }
             unset($data['files_upload_' . $i]);
         }

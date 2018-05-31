@@ -44,22 +44,29 @@
                             {!! $errors->first('paypal_fee_rate') ? '
                             <p class="text-danger">'. $errors->first('paypal_fee_rate') .'</p>
                             ' : ''!!}
-                            <label for="ex_rate_diff">@lang('view.paypal_fixed_fee') <span class="text-danger">(*)</span></label>
-                            <div class="form-group input-group">
-                                {!! Form::text('paypal_fixed_fee', old('paypal_fixed_fee', isset($setting->paypal_fixed_fee) ? $setting->paypal_fixed_fee : ''), ['class' => 'form-control']) !!}
-                                <span class="input-group-addon">@lang('view.man')</span>
+                            <label for="ex_rate_diff">@lang('view.paypal_fee')</span></label>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6 col-xs-6 padding-left-30">
+                                    <label for="ex_rate_diff">@lang('view.paypal_fixed_fee') <span class="text-danger">(*)</span></label>
+                                    <div class="form-group input-group">
+                                        {!! Form::text('paypal_fixed_fee', old('paypal_fixed_fee', isset($setting->paypal_fixed_fee) ? $setting->paypal_fixed_fee : ''), ['class' => 'form-control']) !!}
+                                        <span class="input-group-addon">@lang('view.man')</span>
+                                    </div>
+                                    {!! $errors->first('paypal_fixed_fee') ? '
+                                    <p class="text-danger">'. $errors->first('paypal_fixed_fee') .'</p>
+                                    ' : ''!!}
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                    <label for="ex_rate_diff">@lang('view.ex_rate_diff') <span class="text-danger">(*)</span></label>
+                                    <div class="form-group input-group">
+                                        {!! Form::text('ex_rate_diff', old('ex_rate_diff', isset($setting->ex_rate_diff) ? $setting->ex_rate_diff : ''), ['class' => 'form-control']) !!}
+                                        <span class="input-group-addon">@lang('view.man')</span>
+                                    </div>
+                                    {!! $errors->first('ex_rate_diff') ? '
+                                    <p class="text-danger">'. $errors->first('ex_rate_diff') .'</p>
+                                    ' : ''!!}
+                                </div>
                             </div>
-                            {!! $errors->first('paypal_fixed_fee') ? '
-                            <p class="text-danger">'. $errors->first('paypal_fixed_fee') .'</p>
-                            ' : ''!!}
-                            <label for="ex_rate_diff">@lang('view.ex_rate_diff') <span class="text-danger">(*)</span></label>
-                            <div class="form-group input-group">
-                                {!! Form::text('ex_rate_diff', old('ex_rate_diff', isset($setting->ex_rate_diff) ? $setting->ex_rate_diff : ''), ['class' => 'form-control']) !!}
-                                <span class="input-group-addon">@lang('view.man')</span>
-                            </div>
-                            {!! $errors->first('ex_rate_diff') ? '
-                            <p class="text-danger">'. $errors->first('ex_rate_diff') .'</p>
-                            ' : ''!!}
                             <label for="gift_discount">@lang('view.gift_discount') <span class="text-danger">(*)</span></label>
                             <div class="form-group input-group">
                                 {!! Form::text('gift_discount', old('gift_discount', isset($setting->gift_discount) ? $setting->gift_discount : ''), ['class' => 'form-control']) !!}

@@ -170,7 +170,9 @@ class ProductService extends CommonService
             $crawler = $crawler->filterXPath('//*[@id="l-sub"]/div[1]/ul/li[2]/div/dl/dd')->first();
             if ($crawler->count()) {
                 $price = $crawler->text();
-                $price = (float) str_replace(',', '.', explode("円", $price)[0]);
+                $arrayItem = explode("円", $price);
+                $price =  $arrayItem[0];
+                $price = (float) str_replace(',', '', $price);
             }
 
             $crawler = $client->request('GET', $url);

@@ -74,7 +74,7 @@
             </li>
             @endcan
             @can('setting')
-            <li class="treeview @if($isActiveMenuSetting)active menu-open @endif" id="admin.setting|admin.shipping">
+            <li class="treeview @if($isActiveMenuSetting)active menu-open @endif" id="admin.setting|admin.shipping|admin.template">
                 <a href="#">
                     <i class="fa fa-gears"></i>
                     <span>{{ __('side_bar.setting') }}</span>
@@ -85,6 +85,7 @@
                 <ul class="treeview-menu" style="padding-left: 20px">
                     <li><a href="{{ route('admin.shipping.index') }}"><i class="fa fa-cog"></i>{{ __('side_bar.shipping') }}</a></li>
                     <li @if($urlCurrent == $urlSettingNormal) class="active" @endif><a href="{{ $urlSettingNormal }}"><i class="fa fa-list-ul"></i>{{ __('side_bar.normal_setting') }}</a></li>
+                    <li><a href="{{ route('admin.template.index') }}"><i class="fa fa-file-text-o"></i>{{ __('side_bar.template') }}</a></li>
                 </ul>
             </li>
             @endcan

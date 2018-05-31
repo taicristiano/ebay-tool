@@ -13,4 +13,8 @@ return [
     'error_while_upload'     => 'Error while upload',
     'update_setting_success' => 'Updated setting successfully',
     'update_setting_error'   => 'Update setting error',
+
+    'deleted_template_success'   => 'Deleted template successfully.',
+    'created_template_success'   => 'Created template successfully.',
+    'updated_template_success'   => 'Updated template successfully.',
 ];

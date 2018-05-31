@@ -61,7 +61,7 @@ class User extends Authenticatable
      */
     protected $filter = [
         'type',
-        'user_name',
+        'search',
     ];
 
     /**
@@ -219,8 +219,10 @@ class User extends Authenticatable
         if (isset($filter['type'])) {
             $result = $result->where('type', $filter['type']);
         }
-        if (isset($filter['user_name'])) {
-            $result = $result->where('user_name', 'LIKE', '%' . $filter['user_name'] . '%');
+        if (isset($filter['search'])) {
+            $result = $result
+                ->where('user_name', 'LIKE', '%' . $filter['search'] . '%')
+                ->orWhere('user_code', 'LIKE', '%' . $filter['search'] . '%');
         }
         return $result->paginate()->appends($filter);
     }

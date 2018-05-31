@@ -68,7 +68,7 @@
                                             <hr>
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.sell_price')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['price'] }} @lang('view.usd')</label>
+                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['price'] }} @lang('view.man')</label>
                                             </div>
                                             <p>@lang('view.setting_value')</p>
                                             <hr>

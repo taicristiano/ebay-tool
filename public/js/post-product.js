@@ -27,6 +27,7 @@ jQuery(document).ready(function() {
                 if (data.status) {
                     $('#conten-ajax .ebay-info').html(data.data);
                     numberSpecificItem = $('.specific-item').length - 1;
+                    $('#item-ebay-invalid').addClass('display-none');
                 } else {
                     $('#conten-ajax .ebay-info').html('');
                     $('#conten-ajax .calculator-info').html('');
@@ -230,6 +231,7 @@ function getYahooOrAmazonInfo(button)
         data: data,
         success: function (data) {
             if (data.status) {
+                $('#item-yahoo-or-amazon-invalid').addClass('display-none');
                 $('#conten-ajax .yahoo-or-amazon-info').html(data.data);
                 fnInitFIlerImage(data.image);
                 var isShowCalculate = $('#item-calculator-info').length;
@@ -244,7 +246,7 @@ function getYahooOrAmazonInfo(button)
             } else {
                 $('#conten-ajax .yahoo-or-amazon-info').html('');
                 $('#conten-ajax .calculator-info').html('');
-                $('#item-ebay-invalid').removeClass('display-none');
+                $('#item-yahoo-or-amazon-invalid').removeClass('display-none');
             }
             toggleBtnSlove();
         },

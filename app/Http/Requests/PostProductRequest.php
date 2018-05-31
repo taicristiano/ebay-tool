@@ -34,7 +34,7 @@ class PostProductRequest extends Request
             $rules['dtb_item_specifics.' . $key . '.name'] = 'required';
             $rules['dtb_item_specifics.' . $key . '.value'] = 'required';
         }
-        return $rules;
+        return [];
     }
 
     /**

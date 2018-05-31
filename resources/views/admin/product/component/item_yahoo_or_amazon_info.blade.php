@@ -3,7 +3,7 @@
     <div class="box-body">
         @if (!empty($data['dtb_item']['buy_price']))
         <p>
-            @lang('view.buy_price'): <span id="buy_price_span">{{ $data['dtb_item']['buy_price'] }} @lang('view.man')</span>
+            @lang('view.buy_price'): <span id="buy_price_span">{{ $data['dtb_item']['buy_price'] }}</span> @lang('view.man')
         </p>
         @else
         <span id="buy_price_span" class="display-none">0</span>

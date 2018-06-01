@@ -46,7 +46,7 @@ Route::group([
     Route::group([
         'prefix' => 'shipping',
         'as'     => 'shipping.',
-        'middleware' => 'can:user_manager',
+        'middleware' => 'can:setting',
     ], function () {
         Route::get('/', 'ShippingController@index')->name('index');
         Route::get('/create', 'ShippingController@create')->name('create');
@@ -60,7 +60,7 @@ Route::group([
     Route::group([
         'prefix' => 'shipping/{shippingId}/fee',
         'as'     => 'shipping_fee.',
-        'middleware' => 'can:user_manager',
+        'middleware' => 'can:setting',
     ], function () {
         Route::get('/', 'ShippingFeeController@index')->name('index');
         Route::get('/create', 'ShippingFeeController@create')->name('create');
@@ -94,5 +94,19 @@ Route::group([
         Route::post('calculator-profit', 'ProductController@calculatorProfit')->name('calculator-profit');
         Route::post('update-profit', 'ProductController@updateProfit')->name('update-profit');
         Route::get('get-image-init', 'ProductController@getImageInit')->name('get-image-init');
+    });
+
+    // setting template
+    Route::group([
+        'prefix' => 'template',
+        'as'     => 'template.',
+        'middleware' => 'can:setting',
+    ], function () {
+        Route::get('/', 'TemplateController@index')->name('index');
+        Route::get('/create', 'TemplateController@create')->name('create');
+        Route::post('/create', 'TemplateController@create')->name('create');
+        Route::get('/update/{templateId}', 'TemplateController@create')->name('update');
+        Route::post('/update/{templateId}', 'TemplateController@create')->name('update');
+        Route::delete('/delete/{templateId}', 'TemplateController@delete')->name('delete');
     });
 });

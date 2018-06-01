@@ -52,6 +52,7 @@ return [
         'memo'                  => 'メモ',
         'authorization'         => 'Authorization',
         'placeholder_user_name' => 'Enter user_name',
+        'placeholder_search'    => 'Enter user_name or user_code',
         'user_code'             => '会員番号',
     ],
     'shipping'                 => [
@@ -68,6 +69,15 @@ return [
         'weight'          => '重量(g)',
         'ship_fee'        => '送料(円)',
         'created_at'      => '登録日',
+    ],
+    'template'                 => [
+        'title'      => 'タイトル',
+        'created_at' => '登録日',
+        'updated_at' => '更新日',
+        'content'    => '内容',
+        'submit'     => '登録',
+        'create'     => 'Create template',
+        'update'     => 'Update template',
     ],
     'get_ebay_access_token' => 'Ebayアクセストークン取得',
     'link_to_ebay' => 'Ebayに連携する',

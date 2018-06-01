@@ -37,10 +37,3 @@
     </section>
     @endsection
 </div>
-@section('head')
-<link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('adminlte/plugins/datepicker/datepicker3.css') }}">
-@endsection
-@section('script')
-<script src="{{ asset('adminlte/plugins/select2/select2.min.js') }}"></script>
-@endsection

@@ -17,7 +17,7 @@
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <form class="form-inline" id="filter-post" role="form" method="GET">
                         {!! Form::select("type", $typeOptions, old('type'), ['class' => 'form-control', 'id' => 'select-type']) !!}
-                        {!! Form::text('user_name', old('user_name'), ['class' => 'form-control', 'placeholder' => __('view.user.placeholder_user_name')]) !!}
+                        {!! Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => __('view.user.placeholder_search')]) !!}
                         <button class="btn btn-primary"><i class="fa fa-search"></i> {{ __('view.filter') }}</button>
                         <a href="{{ route('admin.user.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i>{{ __('view.create') }}</a>
                     </form>

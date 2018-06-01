@@ -116,21 +116,27 @@ return [
             'confirmed' => 'パスワードは統一しません。',
             'min'       => 'パスワードは:min英数字で入力してください。',
         ],
-        'shipping_name' => [
-            'required' => '発送方法を入力してください。'
+        'shipping_name'         => [
+            'required' => '発送方法を入力してください。',
         ],
-        'max_size' => [
-            'required' => '全辺合計を入力してください。'
+        'max_size'              => [
+            'required' => '全辺合計を入力してください。',
         ],
-        'side_max_size' => [
-            'required' => '一辺最長を入力してください。'
+        'side_max_size'         => [
+            'required' => '一辺最長を入力してください。',
         ],
-        'weight' => [
+        'weight'                => [
             'required' => '重量を入力してください。',
         ],
-        'ship_fee' => [
+        'ship_fee'              => [
             'required' => '送料を入力してください。',
-        ]
+        ],
+        'title'                 => [
+            'required' => 'タイトルを入力してください。',
+        ],
+        'content'               => [
+            'required' => '内容を入力してください。',
+        ],
     ],
 
     /*
@@ -146,24 +152,24 @@ return [
 
     'attributes'           => [],
 
-    'nomar-setting' => [
-        'the_paypal_fee_rate_field_is_required' => 'Paypalの手数料率を入力してください。',
-        'the_paypal_fee_rate_field_is_must_be_from_1_to_100' => 'Paypalの手数料は1から100まで入力してください。',
-        'the_paypal_fixed_fee_field_is_required' => 'Paypalの手数料の固定費を入力してください。',
-        'the_paypal_fixed_fee_field_must_be_an_integer' => 'Paypalの手数料の固定費は整数で入力してください。',
+    'nomar-setting'        => [
+        'the_paypal_fee_rate_field_is_required'                       => 'Paypalの手数料率を入力してください。',
+        'the_paypal_fee_rate_field_is_must_be_from_1_to_100'          => 'Paypalの手数料は1から100まで入力してください。',
+        'the_paypal_fixed_fee_field_is_required'                      => 'Paypalの手数料の固定費を入力してください。',
+        'the_paypal_fixed_fee_field_must_be_an_integer'               => 'Paypalの手数料の固定費は整数で入力してください。',
         'the_paypal_fixed_fee_field_must_be_grate_than_or_equal_zero' => 'Paypalの手数料の固定費は0以上で入力してください。',
-        'the_ex_rate_diff_field_is_required' => 'Paypalの為替調整を入力してください。',
-        'the_ex_rate_diff_field_must_be_an_integer' => 'Paypalの為替調整は整数で入力してください。',
-        'the_gift_discount_field_is_required' => 'Amazonのギフト件割引率を入力してください。',
-        'the_gift_discount_field_must_be_an_integer' => 'Amazonのギフト件割引率は整数で入力してください。',
-        'the_gift_discount_field_is_must_be_from_1_to_100' => 'Amazonのギフト件割引率は1から100まで入力してください。',
-        'the_quantity_field_is_required' => '個数を入力してください。',
-        'the_quantity_field_must_be_an_integer' => '個数は整数で入力してください。',
-        'the_quantity_field_is_must_be_greate_than_zero' => '個数は0以上で入力してください。',
-        'the_seller_id_field_is_required' => 'MWSの出品者IDを入力してください。',
-        'the_mws_auth_token_field_is_required' => 'MWS認証トークンを入力してください。',
-        'the_mws_access_key_field_is_required' => 'MWSのアクセスキーを入力してください。',
-        'the_mws_secret_key_field_is_required' => 'MWSの秘密キーを入力してください。',
-    ]
+        'the_ex_rate_diff_field_is_required'                          => 'Paypalの為替調整を入力してください。',
+        'the_ex_rate_diff_field_must_be_an_integer'                   => 'Paypalの為替調整は整数で入力してください。',
+        'the_gift_discount_field_is_required'                         => 'Amazonのギフト件割引率を入力してください。',
+        'the_gift_discount_field_must_be_an_integer'                  => 'Amazonのギフト件割引率は整数で入力してください。',
+        'the_gift_discount_field_is_must_be_from_1_to_100'            => 'Amazonのギフト件割引率は1から100まで入力してください。',
+        'the_quantity_field_is_required'                              => '個数を入力してください。',
+        'the_quantity_field_must_be_an_integer'                       => '個数は整数で入力してください。',
+        'the_quantity_field_is_must_be_greate_than_zero'              => '個数は0以上で入力してください。',
+        'the_seller_id_field_is_required'                             => 'MWSの出品者IDを入力してください。',
+        'the_mws_auth_token_field_is_required'                        => 'MWS認証トークンを入力してください。',
+        'the_mws_access_key_field_is_required'                        => 'MWSのアクセスキーを入力してください。',
+        'the_mws_secret_key_field_is_required'                        => 'MWSの秘密キーを入力してください。',
+    ],
 
 ];

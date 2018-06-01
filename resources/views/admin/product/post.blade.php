@@ -43,7 +43,7 @@
                                         <div class="col-md-1">
                                         </div>
                                         @foreach($originType as $key => $type)
-                                        <div class="col-xs-6 col-md-4">
+                                        <div class="col-xs-6 col-md-5">
                                             <input type="radio" name="type" class="minimal type" {{$key == $typeCheck ? 'checked' :''}} value="{{$key}}">
                                             {{$type}}
                                         </div>

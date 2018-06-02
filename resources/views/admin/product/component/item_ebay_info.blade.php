@@ -4,17 +4,12 @@
         <div class="form-group form-group-custom">
             <label for="dtb_item[item_name]">@lang('view.product_name') <span class="text-danger">(*)</span></label>
             {!! Form::text("dtb_item[item_name]", old("dtb_item[item_name]", isset($data['dtb_item']['item_name']) ? $data['dtb_item']['item_name'] : ''), ['class' => 'form-control']) !!}
-            {!! $errors->first("dtb_item[item_name]") ? '
-            <p class="text-danger">'. $errors->first("dtb_item[item_name]") .'</p>
-            ' : ''!!}
+            <p class="error-validate text-danger display-nones error-dtb_item.item_name"></p>
         </div>
         <div class="form-group form-group-custom">
             {!! Form::hidden("dtb_item[category_id]", isset($data['dtb_item']['category_id']) ? $data['dtb_item']['category_id'] : '', ['id' => 'category_id']) !!}
             <label for="dtb_item[category_name]">@lang('view.category') <span class="text-danger">(*)</span></label>
             {!! Form::text("dtb_item[category_name]", old("dtb_item['category_name']", isset($data['dtb_item']['category_name']) ? $data['dtb_item']['category_name'] : ''), ['class' => 'form-control', 'readonly' => true]) !!}
-            {!! $errors->first("dtb_item[category_name]") ? '
-            <p class="text-danger">'. $errors->first("dtb_item[category_name]") .'</p>
-            ' : ''!!}
         </div>
         <div class="form-group form-group-custom">
             <label for="dtb_item[item_name]">@lang('view.JAN/UPC') <span class="text-danger">(*)</span></label>
@@ -27,16 +22,12 @@
             {!! Form::hidden("dtb_item[condition_id]", isset($data['dtb_item']['condition_id']) ? $data['dtb_item']['condition_id'] : '') !!}
             <label for="dtb_item[condition_name]">@lang('view.product_name') <span class="text-danger">(*)</span></label>
             {!! Form::text("dtb_item[condition_name]", old("dtb_item[condition_name]", isset($data['dtb_item']['condition_name']) ? $data['dtb_item']['condition_name'] : ''), ['class' => 'form-control']) !!}
-            {!! $errors->first("dtb_item[condition_name]") ? '
-            <p class="text-danger">'. $errors->first("dtb_item[condition_name]") .'</p>
-            ' : ''!!}
+            <p class="error-validate text-danger display-nones error-dtb_item.condition_name"></p>
         </div>
         <div class="form-group form-group-custom">
-            <label for="dtb_item[condition_des]">@lang('view.product_name') <span class="text-danger">(*)</span></label>
+            <label for="dtb_item[condition_des]">@lang('view.condition_des') <span class="text-danger">(*)</span></label>
             {{ Form::textarea('dtb_item[condition_des]', old("dtb_item[condition_des]", isset($data['dtb_item']['condition_des']) ? $data['dtb_item']['condition_des'] : ''), ['size' => '30x5', 'class' => 'form-control']) }}
-            {!! $errors->first("dtb_item[condition_des]") ? '
-            <p class="text-danger">'. $errors->first("dtb_item[condition_des]") .'</p>
-            ' : ''!!}
+            <p class="error-validate text-danger display-nones error-dtb_item.condition_des"></p>
         </div>
         <p>@lang('view.specifications')</p>
         <hr>
@@ -46,6 +37,7 @@
                 <div class="form-group">
                     {!! Form::text("dtb_item_specifics[$key][name]", old("dtb_item_specifics[$key][name]", isset($data['dtb_item_specifics'][$key]['name']) ? $data['dtb_item_specifics'][$key]['name'] : ''), ['class' => 'specific-name form-control']) !!}
                 </div>
+                <p class="error-validate text-danger display-nones error-dtb_item_specifics.{{$key}}.name">222</p>
             </div>
             <div class="col-md-6 col-sm-6 col-xs-6">
                 <div class="form-group input-group">
@@ -54,6 +46,7 @@
                         <a class="delete-specific"><i class="btn btn-danger fa fa-trash btn-fa"></i></a>
                     </span>
                 </div>
+                <p class="error-validate text-danger display-nones error-dtb_item_specifics.{{$key}}.value">22222</p>
             </div>
         </div>
         @endforeach
@@ -66,6 +59,7 @@
                     <div class="form-group">
                         <input class="form-control specific-name" name="" type="text">
                     </div>
+                    <p class="error-validate text-danger display-nones error-dtb_item.item_name"></p>
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-6">
                     <div class="form-group input-group">
@@ -74,6 +68,7 @@
                             <a class="delete-specific"><i class="btn btn-danger fa fa-trash btn-fa"></i></a>
                         </span>
                     </div>
+                    <p class="error-validate text-danger display-nones error-dtb_item.item_name"></p>
                 </div>
             </div>
         </div>

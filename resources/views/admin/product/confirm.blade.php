@@ -20,15 +20,15 @@
                         <div class="box-header with-border">@lang('view.confirm')</div>
                         <div class="box-body">
                             <div class="form-group">
-                                <div class="col-md-6 col-sm-6 col-xs-6">
-                                    <label class="col-md-3 col-sm-3 col-xs-3">@lang('view.item_id')</label>
-                                    <label class="col-md-9 col-sm-9 col-xs-9">{{ $data['dtb_item']['item_id'] }}</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <label class="col-md-3 col-sm-3 col-xs-6">@lang('view.item_id')</label>
+                                    <label class="col-md-9 col-sm-9 col-xs-6">{{ $data['dtb_item']['item_id'] }}</label>
                                 </div>
-                                <div class="col-md-6 col-sm-6 col-xs-6">
-                                    <label class="col-md-3 col-sm-3 col-xs-3">
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <label class="col-md-3 col-sm-3 col-xs-6">
                                     {{ $data['istTypeAmazon'] ? __('view.amazon') : __('view.yahoo_auction') }}
                                     </label>
-                                    <label class="col-md-9 col-sm-9 col-xs-9">{{ $data['dtb_item']['original_id'] }}</label>
+                                    <label class="col-md-9 col-sm-9 col-xs-6">{{ $data['dtb_item']['original_id'] }}</label>
                                 </div>
                             </div>
                             <div id="conten-ajax">
@@ -52,46 +52,55 @@
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.condition_name')</label>
                                                 <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['condition_name'] }}</label>
                                             </div>
-                                             <div class="form-group form-group-custom">
+                                            <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.condition_des')</label>
                                                 <label class="col-md-6 col-sm-6 col-xs-6">{!! nl2br($data['dtb_item']['condition_des']) !!}</label>
                                             </div>
-                                            <p>@lang('view.specifications')</p>
-                                            <hr>
-                                            @foreach($data['dtb_item_specifics'] as $key => $value)
-                                            <div class="form-group">
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item_specifics'][$key]['name'] }}</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item_specifics'][$key]['value'] }}</label>
+                                            <div class="box box-success">
+                                                <div class="box-header with-border">@lang('view.specifications')</div>
+                                                <div class="box-body">
+                                                    @foreach($data['dtb_item_specifics'] as $key => $value)
+                                                    <div class="form-group">
+                                                        <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item_specifics'][$key]['name'] }}</label>
+                                                        <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item_specifics'][$key]['value'] }}</label>
+                                                    </div>
+                                                    @endforeach
+                                                </div>
                                             </div>
-                                            @endforeach
-                                            <p>@lang('view.sale_details')</p>
-                                            <hr>
-                                            <div class="form-group form-group-custom">
-                                                <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.sell_price')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['price'] }} @lang('view.man')</label>
+                                            <div class="box box-success">
+                                                <div class="box-header with-border">@lang('view.sale_details')</div>
+                                                <div class="box-body">
+                                                    <div class="form-group form-group-custom">
+                                                        <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.sell_price')</label>
+                                                        <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['price'] }} @lang('view.man')</label>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <p>@lang('view.setting_value')</p>
-                                            <hr>
-                                            <div class="form-group form-group-custom">
-                                                <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.sale_period')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['duration'] }}</label>
-                                            </div>
+                                            <div class="box box-success">
+                                                <div class="box-header with-border">@lang('view.setting_value')</div>
+                                                <div class="box-body">
+                                                    <div class="form-group form-group-custom">
+                                                        <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.sale_period')</label>
+                                                        <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['duration'] }}</label>
+                                                    </div>
 
-                                            <div class="form-group form-group-custom">
-                                                <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.quantity')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['quantity'] }}</label>
-                                            </div>
-                                            <div class="form-group form-group-custom">
-                                                <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.shipping_policy')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['shipping_policy_name'] }}</label>
-                                            </div>
-                                            <div class="form-group form-group-custom">
-                                                <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.payment_policy')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['payment_policy_name'] }}</label>
-                                            </div>
-                                            <div class="form-group form-group-custom">
-                                                <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.return_policy')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['return_policy_name'] }}</label>
+                                                    <div class="form-group form-group-custom">
+                                                        <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.quantity')</label>
+                                                        <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['quantity'] }}</label>
+                                                    </div>
+                                                    <div class="form-group form-group-custom">
+                                                        <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.shipping_policy')</label>
+                                                        <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['shipping_policy_name'] }}</label>
+                                                    </div>
+                                                    <div class="form-group form-group-custom">
+                                                        <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.payment_policy')</label>
+                                                        <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['payment_policy_name'] }}</label>
+                                                    </div>
+                                                    <div class="form-group form-group-custom">
+                                                        <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.return_policy')</label>
+                                                        <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['return_policy_name'] }}</label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

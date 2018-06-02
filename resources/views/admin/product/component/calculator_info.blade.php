@@ -5,9 +5,7 @@
         <div class="form-group form-group-custom">
             <label for="dtb_item[product_size]">@lang('view.product_size') <span class="text-danger">(*)</span></label>
             {!! Form::text("dtb_item[product_size]", old("dtb_item[product_size]", isset($data['dtb_item']['product_size']) ? $data['dtb_item']['product_size'] : ''), ['class' => 'form-control product_size']) !!}
-            {!! $errors->first("dtb_item[product_size]") ? '
-            <p class="text-danger">'. $errors->first("dtb_item[product_size]") .'</p>
-            ' : ''!!}
+            <p class="text-danger display-none">wwww</p>
         </div>
         <div class="specific-itemssss">
             <div class="col-md-6 col-sm-6 col-xs-6">

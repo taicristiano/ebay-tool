@@ -28,13 +28,15 @@ class PostProductRequest extends Request
             'dtb_item.item_name' => 'required',
             'dtb_item.condition_name' => 'required',
             'dtb_item.condition_des' => 'required',
-            'dtb_item.price' => 'required',
+            'dtb_item.price' => 'required|numeric',
+            'dtb_item.buy_price' => 'required|numeric',
+            'dtb_item.product_size' => 'required',
         ];
         foreach ($data['dtb_item_specifics'] as $key => $item) {
             $rules['dtb_item_specifics.' . $key . '.name'] = 'required';
             $rules['dtb_item_specifics.' . $key . '.value'] = 'required';
         }
-        return [];
+        return $rules;
     }
 
     /**

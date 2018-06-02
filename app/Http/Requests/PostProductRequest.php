@@ -25,16 +25,25 @@ class PostProductRequest extends Request
     public static function rules($data)
     {
         $rules = [
-            'dtb_item.item_name' => 'required',
+            'dtb_item.item_name'      => 'required',
             'dtb_item.condition_name' => 'required',
-            'dtb_item.condition_des' => 'required',
-            'dtb_item.price' => 'required|numeric',
-            'dtb_item.buy_price' => 'required|numeric',
-            'dtb_item.product_size' => 'required',
+            'dtb_item.condition_des'  => 'required',
+            'dtb_item.price'          => 'required|numeric',
+            'dtb_item.buy_price'      => 'required|numeric',
         ];
-        foreach ($data['dtb_item_specifics'] as $key => $item) {
-            $rules['dtb_item_specifics.' . $key . '.name'] = 'required';
-            $rules['dtb_item_specifics.' . $key . '.value'] = 'required';
+        if ($data['dtb_item']['type'] == 2) {
+            $rules['dtb_item.product_size']      = 'required';
+            if (!empty($data['dtb_item[material_quantity]'])) {
+                $rules['dtb_item.material_quantity'] = 'numeric';
+            }
+        }
+        if (!empty($data['dtb_item_specifics'])) {
+            foreach ($data['dtb_item_specifics'] as $key => $item) {
+                $rules['dtb_item_specifics.' . $key . '.name'] = 'required';
+                $rules['dtb_item_specifics.' . $key . '.value'] = 'required';
+            }
+        } else {
+            $rules['dtb_item_specifics'] = 'required';
         }
         return $rules;
     }

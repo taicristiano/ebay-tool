@@ -158,7 +158,7 @@ class ProductService extends CommonService
         $itemId             = $data['item_id'];
         $type               = $data['type'];
         $size               = null;
-        $price              = null;
+        $price              = 0;
         $commodityWeight    = 0;
         $length             = 0;
         $height             = 0;
@@ -708,5 +708,14 @@ class ProductService extends CommonService
     {
         $userId = Auth::user()->id;
         return $this->settingPolicy->getSettingPolicyOfUser($userId) ? true : false;
+    }
+
+    public function formatMessageError($mesageError)
+    {
+        $arrayError = [];
+        foreach ($mesageError as $key => $value) {
+            $arrayError[str_replace('.', '_', $key)] = $value[0];
+        }
+        return $arrayError;
     }
 }

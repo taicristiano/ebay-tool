@@ -57,7 +57,8 @@ class ProductController extends AbstractController
             $data = $request->all();
             $postProductValidate = PostProductRequest::validateData($data);
             if ($postProductValidate->fails()) {
-                $response['message_error'] = $postProductValidate->errors();
+                $mesageError = $postProductValidate->errors()->messages();
+                $response['message_error'] = $this->productService->formatMessageError($mesageError);
                 return response()->json($response);
             }
             $dataSession = [];
@@ -146,11 +147,19 @@ class ProductController extends AbstractController
      */
     public function calculatorProfit(Request $request)
     {
+        $response['status'] = false;
         try {
-            return $this->productService->calculatorProfit($request->all());
+            $data = $request->all();
+            $updateProfitValidate = UpdateProfitRequest::validateData($data);
+            if ($updateProfitValidate->fails()) {
+                $mesageError = $updateProfitValidate->errors()->messages();
+                $response['message_error'] = $this->productService->formatMessageError($mesageError);
+                return response()->json($response);
+            }
+
+            return $this->productService->calculatorProfit($data);
         } catch (Exception $ex) {
             Log::error($ex);
-            $response['status'] = false;
             return response()->json($response);
         }
     }
@@ -167,7 +176,8 @@ class ProductController extends AbstractController
             $data = $request->all();
             $updateProfitValidate = UpdateProfitRequest::validateData($data);
             if ($updateProfitValidate->fails()) {
-                $response['message_error'] = $updateProfitValidate->errors();
+                $mesageError = $updateProfitValidate->errors()->messages();
+                $response['message_error'] = $this->productService->formatMessageError($mesageError);
                 return response()->json($response);
             }
             return $this->productService->updateProfit($data);

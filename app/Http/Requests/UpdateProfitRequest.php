@@ -25,7 +25,9 @@ class UpdateProfitRequest extends Request
     public static function rules($data)
     {
         return [
-            'material_quantity' => 'integer|greate_than_or_equal_zero',
+            'material_quantity' => 'numeric',
+            'sell_price' => 'required|numeric',
+            'buy_price' => 'required|numeric',
         ];
     }
 

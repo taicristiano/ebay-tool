@@ -163,6 +163,6 @@ class UserController extends AbstractController
     public function fetch(Request $req)
     {
         $results = $this->user->fetch($req);
-        return response()->json($this->user->fetch($req));
+        return response()->json($results);
     }
 }

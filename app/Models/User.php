@@ -290,8 +290,6 @@ class User extends Authenticatable
      */
     public function fetch($req)
     {
-        $page   = $req->page ? $req->page : 1;
-        $limit  = $req->skip;
         $result = $this
             ->select('id', 'user_name as text')
             ->where('id', 'LIKE', "%$req->search%")

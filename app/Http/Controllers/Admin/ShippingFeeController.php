@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\ShippingFeeRequest;
 use App\Models\SettingShipping;
 use App\Models\ShippingFee;
-use Illuminate\Http\Request;
 
 class ShippingFeeController extends AbstractController
 {

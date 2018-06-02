@@ -544,6 +544,11 @@ class ProductService extends CommonService
         return null;
     }
 
+    /**
+     * format data page confirm
+     * @param  array $data
+     * @return array
+     */
     public function formatDataPageConfirm($data)
     {
         $userId = Auth::user()->id;
@@ -558,6 +563,11 @@ class ProductService extends CommonService
         return $data;
     }
 
+    /**
+     * format data page product
+     * @param  array $data
+     * @return array
+     */
     public function formatDataPageProduct($data)
     {
         $data['duration']['option']      = $this->product->getDurationOption();
@@ -583,10 +593,15 @@ class ProductService extends CommonService
             'payment'  => $paymentType,
             'return'   => $returnType
         ];
-        
+
         return $data;
     }
 
+    /**
+     * get image init
+     * @param  array $data
+     * @return Illuminate\Http\Response
+     */
     public function getImageInit($data)
     {
         $arrayImage = [];
@@ -607,6 +622,12 @@ class ProductService extends CommonService
         return response()->json($result);
     }
 
+    /**
+     * get policy name by id
+     * @param  integer $id
+     * @param  array $settingPolicyData
+     * @return string
+     */
     public function getPoliciNameById($id, $settingPolicyData)
     {
         foreach ($settingPolicyData as $key => $policy) {
@@ -617,6 +638,10 @@ class ProductService extends CommonService
         return;
     }
 
+    /**
+     * post prodcut publish
+     * @return Illuminate\Http\Response
+     */
     public function postProductPublish()
     {
         try {
@@ -652,7 +677,7 @@ class ProductService extends CommonService
 
             // insert item image
             $this->insertItemImage($data, $itemId);
-            
+
             // post to ebay
             DB::commit();
             Session::forget($this->keyProduct);
@@ -677,6 +702,12 @@ class ProductService extends CommonService
         return $input;
     }
 
+    /**
+     * insert item image
+     * @param  array $data
+     * @param  integer $productId
+     * @return none
+     */
     public function insertItemImage($data, $productId)
     {
         $numberFile = $data['number_file'];
@@ -710,6 +741,11 @@ class ProductService extends CommonService
         return $this->settingPolicy->getSettingPolicyOfUser($userId) ? true : false;
     }
 
+    /**
+     * format message error
+     * @param  array $mesageError
+     * @return array
+     */
     public function formatMessageError($mesageError)
     {
         $arrayError = [];

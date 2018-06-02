@@ -114,7 +114,7 @@ jQuery(document).ready(function() {
                         || messageError.dtb_item_condition_name
                         ) {
                         $('html, body').animate({
-                            scrollTop: $("#condition_des").offset().top
+                            scrollTop: $("#item_name").offset().top
                         }, 3000);
                     } else {
                         if (messageError.dtb_item_price) {

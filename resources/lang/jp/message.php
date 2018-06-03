@@ -2,7 +2,7 @@
 
 return [
     'no_data'                  => 'No data.',
-    'delete_confirm'           => 'Do you want to delete?',
+    'delete_confirm'           => 'このテンプレートを削除しますか？',
     'no_thing'                 => '---',
 
     'deleted_user_success'     => 'ユーザーが削除されました。',
@@ -23,6 +23,6 @@ return [
     'denied_cancelation_user'  => '※このアカウントは解約済です。再度ご確認ください。',
 
     'deleted_shipping_success' => 'Deleted shipping successfully.',
-    'created_shipping_success' => 'Created shipping successfully.',
-    'updated_shipping_success' => 'Updated shipping successfully.',
+    'created_shipping_success' => 'テンプレートを登録されました。',
+    'updated_shipping_success' => 'テンプレートを編集されました。',
 ];

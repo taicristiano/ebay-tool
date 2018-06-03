@@ -138,4 +138,5 @@ return [
     'condition_des' => '商品説明',
     'none_policy' => 'None policy',
     'usd' => '$',
+    'item_state' => '商品状態'
 ];

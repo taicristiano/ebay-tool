@@ -36,17 +36,19 @@
                                 <p class="text-danger">'. $errors->first('store_id') .'</p>
                                 ' : ''!!}
                             </div>
-                            <label for="paypal_fee_rate">@lang('view.paypal_fee_rate') <span class="text-danger">(*)</span></label>
-                            <div class="form-group input-group">
-                                {!! Form::text('paypal_fee_rate', old('paypal_fee_rate', isset($setting->paypal_fee_rate) ? $setting->paypal_fee_rate : ''), ['class' => 'form-control']) !!}
-                                <span class="input-group-addon">％</span>
+                            <div class="form-group {{ $errors->first('paypal_fee_rate') ? 'has-error' : '' }}">
+                                <label for="paypal_fee_rate">@lang('view.paypal_fee_rate') <span class="text-danger">(*)</span></label>
+                                <div class="form-group input-group">
+                                    {!! Form::text('paypal_fee_rate', old('paypal_fee_rate', isset($setting->paypal_fee_rate) ? $setting->paypal_fee_rate : ''), ['class' => 'form-control']) !!}
+                                    <span class="input-group-addon">％</span>
+                                </div>
+                                {!! $errors->first('paypal_fee_rate') ? '
+                                <p class="text-danger">'. $errors->first('paypal_fee_rate') .'</p>
+                                ' : ''!!}
                             </div>
-                            {!! $errors->first('paypal_fee_rate') ? '
-                            <p class="text-danger">'. $errors->first('paypal_fee_rate') .'</p>
-                            ' : ''!!}
                             <label for="ex_rate_diff">@lang('view.paypal_fee')</span></label>
                             <div class="row">
-                                <div class="col-md-6 col-sm-6 col-xs-6 padding-left-30">
+                                <div class="col-md-6 col-sm-6 col-xs-6 padding-left-30 {{ $errors->first('paypal_fixed_fee') ? 'has-error' : '' }}">
                                     <label for="ex_rate_diff">@lang('view.paypal_fixed_fee') <span class="text-danger">(*)</span></label>
                                     <div class="form-group input-group">
                                         {!! Form::text('paypal_fixed_fee', old('paypal_fixed_fee', isset($setting->paypal_fixed_fee) ? $setting->paypal_fixed_fee : ''), ['class' => 'form-control']) !!}
@@ -56,9 +58,9 @@
                                     <p class="text-danger">'. $errors->first('paypal_fixed_fee') .'</p>
                                     ' : ''!!}
                                 </div>
-                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                <div class="col-md-6 col-sm-6 col-xs-6 {{ $errors->first('ex_rate_diff') ? 'has-error' : '' }}">
                                     <label for="ex_rate_diff">@lang('view.ex_rate_diff') <span class="text-danger">(*)</span></label>
-                                    <div class="form-group input-group">
+                                    <div class="form-group {{ $errors->first('paypal_fee_rate') ? 'has-error' : '' }} input-group">
                                         {!! Form::text('ex_rate_diff', old('ex_rate_diff', isset($setting->ex_rate_diff) ? $setting->ex_rate_diff : ''), ['class' => 'form-control']) !!}
                                         <span class="input-group-addon">@lang('view.man')</span>
                                     </div>
@@ -67,50 +69,52 @@
                                     ' : ''!!}
                                 </div>
                             </div>
-                            <label for="gift_discount">@lang('view.gift_discount') <span class="text-danger">(*)</span></label>
-                            <div class="form-group input-group">
-                                {!! Form::text('gift_discount', old('gift_discount', isset($setting->gift_discount) ? $setting->gift_discount : ''), ['class' => 'form-control']) !!}
-                                <span class="input-group-addon">%</span>
+                            <div class="form-group {{ $errors->first('gift_discount') ? 'has-error' : '' }}">
+                                <label for="gift_discount">@lang('view.gift_discount') <span class="text-danger">(*)</span></label>
+                                <div class="form-group input-group">
+                                    {!! Form::text('gift_discount', old('gift_discount', isset($setting->gift_discount) ? $setting->gift_discount : ''), ['class' => 'form-control']) !!}
+                                    <span class="input-group-addon">%</span>
+                                </div>
+                                {!! $errors->first('gift_discount') ? '
+                                <p class="text-danger">'. $errors->first('gift_discount') .'</p>
+                                ' : ''!!}
                             </div>
-                            {!! $errors->first('gift_discount') ? '
-                            <p class="text-danger">'. $errors->first('gift_discount') .'</p>
-                            ' : ''!!}
                             <label for="duration">@lang('view.duration') <span class="text-danger">(*)</span></label>
-                            <div class="form-group">
+                            <div class="form-group {{ $errors->first('duration') ? 'has-error' : '' }}">
                                 {!! Form::select("duration", $durationOption, old('duration', isset($setting->duration) ? $setting->duration : ''), ['class' => 'form-control', 'id' => 'duration']) !!}
                             </div>
                             {!! $errors->first('duration') ? '
                             <p class="text-danger">'. $errors->first('duration') .'</p>
                             ' : ''!!}
-                            <div class="form-group">
+                            <div class="form-group {{ $errors->first('quantity') ? 'has-error' : '' }}">
                                 <label for="quantity">@lang('view.quantity') <span class="text-danger">(*)</span></label>
                                 {!! Form::text('quantity', old('quantity', isset($setting->quantity) ? $setting->quantity : ''), ['class' => 'form-control']) !!}
                                 {!! $errors->first('quantity') ? '
                                 <p class="text-danger">'. $errors->first('quantity') .'</p>
                                 ' : ''!!}
                             </div>
-                            <div class="form-group">
+                            <div class="form-group {{ $errors->first('seller_id') ? 'has-error' : '' }}">
                                 <label for="seller_id">@lang('view.seller_id') <span class="text-danger">(*)</span></label>
                                 {!! Form::text('seller_id', old('seller_id', isset($setting->seller_id) ? $setting->seller_id : ''), ['class' => 'form-control']) !!}
                                 {!! $errors->first('seller_id') ? '
                                 <p class="text-danger">'. $errors->first('seller_id') .'</p>
                                 ' : ''!!}
                             </div>
-                            <div class="form-group">
+                            <div class="form-group {{ $errors->first('mws_auth_token') ? 'has-error' : '' }}">
                                 <label for="mws_auth_token">@lang('view.mws_auth_token') <span class="text-danger">(*)</span></label>
                                 {!! Form::text('mws_auth_token', old('mws_auth_token', isset($setting->mws_auth_token) ? $setting->mws_auth_token : ''), ['class' => 'form-control']) !!}
                                 {!! $errors->first('mws_auth_token') ? '
                                 <p class="text-danger">'. $errors->first('mws_auth_token') .'</p>
                                 ' : ''!!}
                             </div>
-                            <div class="form-group">
+                            <div class="form-group {{ $errors->first('mws_access_key') ? 'has-error' : '' }}">
                                 <label for="mws_access_key">@lang('view.mws_access_key') <span class="text-danger">(*)</span></label>
                                 {!! Form::text('mws_access_key', old('mws_access_key', isset($setting->mws_access_key) ? $setting->mws_access_key : ''), ['class' => 'form-control']) !!}
                                 {!! $errors->first('mws_access_key') ? '
                                 <p class="text-danger">'. $errors->first('mws_access_key') .'</p>
                                 ' : ''!!}
                             </div>
-                            <div class="form-group">
+                            <div class="form-group {{ $errors->first('mws_secret_key') ? 'has-error' : '' }}">
                                 <label for="mws_secret_key">@lang('view.mws_secret_key') <span class="text-danger">(*)</span></label>
                                 {!! Form::text('mws_secret_key', old('mws_secret_key', isset($setting->mws_secret_key) ? $setting->mws_secret_key : ''), ['class' => 'form-control']) !!}
                                 {!! $errors->first('mws_secret_key') ? '

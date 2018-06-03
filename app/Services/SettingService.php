@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Services\CommonService;
-use Illuminate\Support\Facades\Session;
 use Auth;
 
 class SettingService extends CommonService

@@ -17,7 +17,7 @@
         </div>
         <div class="form-group form-group-custom">
             {!! Form::hidden("dtb_item[condition_id]", isset($data['dtb_item']['condition_id']) ? $data['dtb_item']['condition_id'] : '') !!}
-            <label for="dtb_item[condition_name]">@lang('view.product_name') <span class="text-danger">(*)</span></label>
+            <label for="dtb_item[condition_name]">@lang('view.item_state') <span class="text-danger">(*)</span></label>
             {!! Form::text("dtb_item[condition_name]", isset($data['dtb_item']['condition_name']) ? $data['dtb_item']['condition_name'] : '', ['class' => 'form-control', 'id' => 'condition_name']) !!}
             <p class="error-validate text-danger display-nones error-dtb_item_condition_name"></p>
         </div>

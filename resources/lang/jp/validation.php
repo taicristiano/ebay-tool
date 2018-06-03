@@ -172,4 +172,19 @@ return [
         'the_mws_secret_key_field_is_required'                        => 'MWSの秘密キーを入力してください。',
     ],
 
+    'post-product' => [
+        'the_item_name_field_is_required'            => 'the_item_name_field_is_required',
+        'the_condition_name_field_is_required'       => 'the_condition_name_field_is_required',
+        'the_condition_des_field_is_required'        => 'the_condition_des_field_is_required',
+        'the_price_field_is_required'                => 'the_price_field_is_required',
+        'the_price_field_must_be_number'             => 'the_price_field_must_be_number',
+        'the_buy_price_field_is_required'            => 'the_buy_price_field_is_required',
+        'the_buy_price_must_be_number'               => 'the_buy_price_must_be_number',
+        'the_product_size_is_required'               => 'the_product_size_is_required',
+        'the_material_quantity_field_is_required'    => 'the_material_quantity_field_is_required',
+        'the_item_specifics_name_field_is_required'  => 'the_item_specifics_name_field_is_required',
+        'the_item_specifics_value_field_is_required' => 'the_item_specifics_value_field_is_required',
+        'the_item_specifics_field_is_required'       => 'the_item_specifics_field_is_required',
+        'the_item_name_field_is_required'            => 'the_item_name_field_is_required',
+    ]
 ];

@@ -79,7 +79,7 @@
                                     @endif
                                 </div>
                                 <div class="{{!empty($data) ? '' : 'display-none'}} margin-20" id="profit-calculation">
-                                    <button type="button" class="btn btn-primary" id="btn-calculator-profit"><i class="fa fa-calculator fa-fw"></i> @lang('view.product_submission')</button>
+                                    <button type="button" class="btn btn-primary" id="btn-calculator-profit"><i class="fa fa-calculator fa-fw"></i> @lang('view.benefit_calculation')</button>
                                 </div>
                                 <div class="calculator-info">
                                     @if(!empty($data))
@@ -91,7 +91,7 @@
                     </div>
                     <div class="box-footer {{!empty($data) ? '' : 'display-none'}}" id="post-product">
                         <div class="form-group text-center col-sm-4 col-sm-offset-4">
-                            <button type="button" class="btn btn-block btn-primary btn-lg" id="save"><i class="fa fa-floppy-o fa-fw"></i> @lang('view.benefit_calculation')</button>
+                            <button type="button" class="btn btn-block btn-primary btn-lg" id="save"><i class="fa fa-floppy-o fa-fw"></i> @lang('view.product_submission')</button>
                         </div>
                     </div>
                 </div>

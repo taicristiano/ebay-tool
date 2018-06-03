@@ -71,3 +71,18 @@ body.loading-ajax .modal-loading {
 .padding-left-30 {
     padding-left: 30px;
 }
+.has-error label {
+    color: #dd4b39;
+}
+
+.has-error .input-group-addon {
+    border-color: #dd4b39;
+}
+
+.has-error .form-control {
+    border-color: #dd4b39 !important;
+    box-shadow: none !important;
+}
+.has-error .form-group {
+    margin-bottom: 0px !important;
+}

@@ -74,4 +74,34 @@ class Item extends AbstractModel
             self::VALUE_DURATION_30_DAY => self::NAME_DURATION_30_DAY,
         ];
     }
+
+    /**
+     * get condition id list
+     * @return array
+     */
+    public function getConditionIdList()
+    {
+        return [
+            1000 => 'New',
+            1500 => 'New other (see details)',
+            1750 => 'New with defects',
+            2000 => 'Manufacturer refurbished',
+            2500 => 'Seller refurbished',
+            3000 => 'Used',
+            4000 => 'Very Good',
+            5000 => 'Good',
+            6000 => 'Acceptable',
+            7000 => 'For parts or not working',
+        ];
+    }
+
+    /**
+     * get conditionNameById
+     * @param  integer $conditionId
+     * @return string
+     */
+    public function getConditionNameById($conditionId)
+    {
+        return $this->getConditionIdList()[$conditionId];
+    }
 }

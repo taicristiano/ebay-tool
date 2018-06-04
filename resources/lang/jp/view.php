@@ -116,7 +116,7 @@ return [
     'payment_policy' => 'Paymentポリシー',
     'return_policy' => 'Returnポリシー',
     'buy_price' => '即決価格',
-    'product_size' => '商品サイズ',
+    'product_size' => '商品サイズ (高(cm) X 幅(cm) X 長(cm))',
     'commodity_weight' => '商品重量',
     'material_quantity' => '梱包資材量',
     'setting_shipping_option' => '発送方法',

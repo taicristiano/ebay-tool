@@ -86,9 +86,10 @@ class ProductService extends CommonService
         $userId             = Auth::user()->id;
         $settingData        = $this->setting->getSettingOfUser($userId);
         $settingPolicyData  = $this->settingPolicy->getSettingPolicyOfUser($userId);
+        $conditionIdList = $this->product->getConditionIdList();
         $data               = $this->formatDataEbayInfo($result, $settingData, $settingPolicyData);
         $response['status'] = true;
-        $response['data']   = view('admin.product.component.item_ebay_info', compact('data'))->render();
+        $response['data']   = view('admin.product.component.item_ebay_info', compact('data', 'conditionIdList'))->render();
         return response()->json($response);
     }
 
@@ -157,7 +158,7 @@ class ProductService extends CommonService
     {
         $itemId             = $data['item_id'];
         $type               = $data['type'];
-        $size               = null;
+        $productSize               = null;
         $price              = 0;
         $commodityWeight    = 0;
         $length             = 0;
@@ -233,9 +234,6 @@ class ProductService extends CommonService
                     ];
                     $arrayImage[] = $itemImage;
                 }
-                if (!empty($item['ns2:Size'])) {
-                    $size .= $item['ns2:Size'] . ' ';
-                }
 
                 if (!empty($item['ns2:ListPrice']['ns2:Amount'])) {
                     $price = $item['ns2:ListPrice']['ns2:Amount'];
@@ -250,6 +248,7 @@ class ProductService extends CommonService
                     $length          = !empty($item['ns2:PackageDimensions']['ns2:Length']) ? $item['ns2:PackageDimensions']['ns2:Length'] : 0;
                     $height          = !empty($item['ns2:PackageDimensions']['ns2:Height']) ? $item['ns2:PackageDimensions']['ns2:Height'] : 0;
                     $width           = !empty($item['ns2:PackageDimensions']['ns2:Width']) ? $item['ns2:PackageDimensions']['ns2:Width'] : 0;
+                    $productSize = round($height * 2.54, 2) . 'x' . round($width * 2.54, 2) . 'x' . round($length * 2.54, 2);
                 }
             }
         }
@@ -275,11 +274,11 @@ class ProductService extends CommonService
         Session::forget($this->keyImageFromApi);
         Session::push($this->keyImageFromApi, $arrayImageFormApi);
 
-        $data['dtb_item']['product_size']     = $size;
+        $data['dtb_item']['product_size']     = $productSize;
         $data['dtb_item']['commodity_weight'] = round($commodityWeight * 453.59237, 2);
-        $data['dtb_item']['length']           = round($length * 2.54, 2);
-        $data['dtb_item']['height']           = round($height * 2.54, 2);
-        $data['dtb_item']['width']            = round($width * 2.54, 2);
+        // $data['dtb_item']['length']           = $length;
+        // $data['dtb_item']['height']           = $height;
+        // $data['dtb_item']['width']            = $width;
         $data['dtb_item']['buy_price']        = $price;
         $response['is_type_amazon']           = $isTypeAmazon;
         $response['status']                   = true;
@@ -313,16 +312,17 @@ class ProductService extends CommonService
      */
     public function getSettingShippingOfUser($input)
     {
-        $length                = $input['length'];
-        $height                = $input['height'];
-        $width                 = $input['width'];
-        $sumOfromAmazon        = $length + $height + $width;
+        $arraySize = explode('x', strtolower($input['product_size']));
+        $height                = $arraySize[0];
+        $width                 = $arraySize[1];
+        $length                = $arraySize[2];
+        $sizeOfProduct         = $length + $height + $width;
         $userId                = Auth::user()->id;
         $settingShipping       = $this->settingShipping->getSettingShippingOfUser($userId);
         $settingShippingOption = [];
         foreach ($settingShipping as $key => $item) {
             $sideMaxSize = $item->side_max_size;
-            if ($sumOfromAmazon <= $item->max_size &&
+            if ($sizeOfProduct <= $item->max_size &&
                 $height < $sideMaxSize &&
                 $length <= $sideMaxSize &&
                 $width <= $sideMaxSize
@@ -364,9 +364,18 @@ class ProductService extends CommonService
         $data['dtb_item']['commodity_weight'] = $input['commodity_weight'];
         $settingShippingOption                = $this->getSettingShippingOfUser($input);
         $data['setting_shipping_option']      = $settingShippingOption;
+        $optionSelected                       = $input['setting_shipping'];
         $shippingId                           = array_keys($settingShippingOption);
-        $shippingFee                          = $this->shippingFee->getShippingFeeByShippingId($shippingId[0], $input['commodity_weight']);
-        $data['dtb_item']['ship_fee']         = $shippingFee->ship_fee;
+        if (!isset($settingShippingOption[$optionSelected])) {
+            $optionSelected = $shippingId[0];
+        }
+        $data['setting_shipping_selected'] = $optionSelected;
+        if (!$input['ship_fee']) {
+            $shippingFee                  = $this->shippingFee->getShippingFeeByShippingId($shippingId[0], $input['commodity_weight']);
+            $data['dtb_item']['ship_fee'] = $shippingFee->ship_fee;
+        } else {
+            $data['dtb_item']['ship_fee'] = $input['ship_fee'];
+        }
         $userId                               = Auth::user()->id;
         $settingInfo                          = $this->setting->getSettingOfUser($userId);
         $storeIdOfUser                        = $settingInfo->store_id;
@@ -376,7 +385,6 @@ class ProductService extends CommonService
         $data['dtb_item']['ebay_fee']         = round($input['sell_price'] * $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee / 100, 2);
         $data['dtb_item']['paypal_fee']       = round($settingInfo->paypal_fee_rate  * $input['sell_price'] / 100, 2);
         $data['dtb_item']['buy_price']        = $input['buy_price'];
-        // dd((float)$input['sell_price'], $data['dtb_item']['ebay_fee'], $data['dtb_item']['paypal_fee'], $data['dtb_item']['ship_fee'], $exchangeRate->rate, $settingInfo->ex_rate_diff, (float)$data['dtb_item']['buy_price'], $settingInfo->gift_discount);
         $data['dtb_item']['profit']           = round((float)$input['sell_price'] - $data['dtb_item']['ebay_fee'] - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'] * $settingInfo->gift_discount / 100, 2);
     }
 
@@ -394,11 +402,9 @@ class ProductService extends CommonService
         $stores                               = $this->mtbStore->getAllStore();
         $storeInfo                            = $this->formatStoreInfo($stores);
         $typeFee                              = $storeInfo[$storeIdOfUser];
-
-        $data['dtb_item']['ebay_fee']         = $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee / 100;
-        $data['dtb_item']['paypal_fee']       = $settingInfo->paypal_fee_rate  * $input['sell_price'] / 100;
+        $data['dtb_item']['ebay_fee']         = round($input['sell_price'] * $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee / 100, 2);
+        $data['dtb_item']['paypal_fee']       = round($settingInfo->paypal_fee_rate  * $input['sell_price'] / 100, 2);
         $data['dtb_item']['buy_price']        = $input['buy_price'];
-        // $exchangeRate                         = $this->exchangeRate->getExchangeRateLatest();
         $data['dtb_item']['profit']           = round((float)$input['sell_price'] - $data['dtb_item']['ebay_fee'] - $data['dtb_item']['paypal_fee'] - (float)$data['dtb_item']['buy_price'], 2);
     }
 
@@ -560,6 +566,7 @@ class ProductService extends CommonService
         if (isset($data['dtb_item']['setting_shipping_option'])) {
             $data['dtb_item']['setting_shipping_option'] = $this->settingShipping->findById($data['dtb_item']['setting_shipping_option'])->shipping_name;
         }
+        $data['dtb_item']['condition_name'] = $this->product->getConditionNameById($data['dtb_item']['condition_id']);
         return $data;
     }
 
@@ -658,7 +665,7 @@ class ProductService extends CommonService
                 'category_name'       => $data['dtb_item']['category_name'],
                 'condition_des'       => $data['dtb_item']['condition_des'],
                 'condition_id'        => $data['dtb_item']['condition_id'],
-                'condition_name'      => $data['dtb_item']['condition_name'],
+                // 'condition_name'      => $data['dtb_item']['condition_name'],
                 'price'               => $data['dtb_item']['price'],
                 'duration'            => $data['dtb_item']['duration'],
                 'quantity'            => $data['dtb_item']['quantity'],

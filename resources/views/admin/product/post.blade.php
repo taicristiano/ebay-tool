@@ -105,14 +105,12 @@
 <script src="{{asset('lib/jquery-upload/js/jquery.fileuploader.js')}}"></script>
 <script src="{{asset('lib/jquery-upload/js/custom.js')}}"></script>
 <script src="{{asset('adminlte/plugins/iCheck/icheck.min.js')}}"></script>
-<script src="https://images-fe.ssl-images-amazon.com/images/G/09/mwsportal/scratchpad/scratchpad.lib.3party._CB181116593_.js"></script>
 <script src="{{ asset('js/post-product.js') }}"></script>
 <script>
     var urlGetItemEbayInfo = "{{ route('admin.product.api-get-item-ebay-info') }}";
     var urlGetItemYahooOrAmazonInfo = "{{ route('admin.product.api-get-item-yahoo-or-amazon-info') }}";
     var urlCalculatorProfit = "{{ route('admin.product.calculator-profit') }}";
     var urlPostProductConfirm = "{{ route('admin.product.post-product-confirm') }}";
-    var updateProfit = "{{ route('admin.product.update-profit') }}";
     // $('input[type="radio"].minimal').iCheck({
         // radioClass: 'iradio_minimal-blue'
     // });

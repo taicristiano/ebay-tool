@@ -103,7 +103,6 @@ class ProductController extends AbstractController
         try {
             return $this->productService->postProductPublish();
         } catch (Exception $ex) {
-            dd($ex);
             Log::error($ex);
             $response['status'] = false;
             return response()->json($response);
@@ -120,6 +119,7 @@ class ProductController extends AbstractController
         try {
             return $this->productService->apiGetItemEbayInfo($request->item_id);
         } catch (Exception $ex) {
+            Log::error($ex);
             $response['status'] = false;
             return response()->json($response);
         }

@@ -158,7 +158,7 @@ class ProductService extends CommonService
     {
         $itemId             = $data['item_id'];
         $type               = $data['type'];
-        $productSize               = null;
+        $productSize        = null;
         $price              = 0;
         $commodityWeight    = 0;
         $length             = 0;

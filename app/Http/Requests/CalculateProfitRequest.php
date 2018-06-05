@@ -25,12 +25,14 @@ class CalculateProfitRequest extends Request
     public static function rules($data)
     {
         $rules = [
-            'sell_price'        => 'required|numeric',
-            'buy_price'         => 'required|numeric',
+            'sell_price' => 'required|numeric|greate_than_zero',
         ];
-        if ($data['type'] == 2) {
-            $rules['material_quantity'] = 'numeric';
-            $rules['product_size'] = 'required';
+        if ($data['is_update']) {
+            $rules['buy_price'] = 'required|numeric|greate_than_zero';
+            if ($data['type'] == 2) {
+                $rules['material_quantity'] = 'material_quantity';
+                $rules['product_size'] = 'product_size';
+            }
         }
         return $rules;
     }

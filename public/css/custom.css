@@ -86,3 +86,21 @@ body.loading-ajax .modal-loading {
 .has-error .form-group {
     margin-bottom: 0px !important;
 }
+
+.select2-selection {
+    height: 34px !important;
+    border-radius: 0px !important;
+    border-color: #d2d6de !important;
+}
+.select2-container .select2-selection--single .select2-selection__rendered {
+    padding-left: 0px !important;
+}
+
+.select2-selection:focus {
+    border-color: #3c8dbc !important;
+    box-shadow: none;
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    border-color: #3c8dbc !important;
+}

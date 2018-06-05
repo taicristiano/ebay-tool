@@ -6,6 +6,7 @@ use Log;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 use App\Models\Item;
+use App\Models\CategoryFee;
 use App\Http\Requests\CalculateProfitRequest;
 use App\Http\Requests\PostProductRequest;
 use Illuminate\Support\Facades\Session;
@@ -13,15 +14,18 @@ use Illuminate\Support\Facades\Session;
 class ProductController extends AbstractController
 {
     protected $product;
+    protected $category;
     protected $productService;
     protected $keyProduct;
 
     public function __construct(
         ProductService $productService,
-        Item $product
+        Item $product,
+        CategoryFee $category
     ) {
         $this->productService = $productService;
         $this->product = $product;
+        $this->category = $category;
         $this->keyProduct = Item::SESSION_KEY_PRODUCT_INFO;
     }
 
@@ -182,5 +186,17 @@ class ProductController extends AbstractController
             $response['status'] = false;
             return response()->json($response);
         }
+    }
+
+    /**
+     * search category
+     * @param  Request $request
+     * @return json
+     */
+    public function searchCategory(Request $request)
+    {
+        $data = $request->all();
+        $data = $this->category->search($data);
+        return response()->json($data);
     }
 }

@@ -94,6 +94,7 @@ Route::group([
         Route::post('calculator-profit', 'ProductController@calculatorProfit')->name('calculator-profit');
         Route::post('update-profit', 'ProductController@updateProfit')->name('update-profit');
         Route::get('get-image-init', 'ProductController@getImageInit')->name('get-image-init');
+        Route::get('search-category', 'ProductController@searchCategory')->name('search-category');
     });
 
     // setting template

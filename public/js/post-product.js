@@ -293,7 +293,7 @@ function getCalculateProfitInfo()
 {
     $('body').addClass('loading-ajax');
     isShowCalculate = $('#item-calculator-info').length;
-    var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : 0;
+    var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : null;
     var token = window.Laravel.csrfToken;
     var type = $('.type:checked').val();
     var data = {
@@ -315,15 +315,15 @@ function getCalculateProfitInfo()
         dataType: 'json',
         data: data,
         success: function (data) {
+            $('#error-material-quantity').text('');
+            $('.error-dtb_item_price').text('');
+            $('.error-dtb_item_buy_price').text('');
+            $('.error-dtb_item_product_size').text('');
+            $('.error-dtb_item_price').parent().removeClass('has-error');
+            $('.error-dtb_item_buy_price').parent().removeClass('has-error');
+            $('.error-dtb_item_product_size').parent().removeClass('has-error');
+            $('#error-material-quantity').parent().removeClass('has-error');
             if (data.status) {
-                $('#error-material-quantity').text('');
-                $('.error-dtb_item_price').text('');
-                $('.error-dtb_item_buy_price').text('');
-                $('.error-dtb_item_product_size').text('');
-                $('.error-dtb_item_price').parent().removeClass('has-error');
-                $('.error-dtb_item_buy_price').parent().removeClass('has-error');
-                $('.error-dtb_item_product_size').parent().removeClass('has-error');
-                $('#error-material-quantity').parent().removeClass('has-error');
                 $('#conten-ajax .calculator-info').html(data.data);
             } else {
                 messageError = data.message_error;

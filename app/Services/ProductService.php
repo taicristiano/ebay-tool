@@ -663,7 +663,7 @@ class ProductService extends CommonService
                 'item_name'           => $data['dtb_item']['item_name'],
                 'category_id'         => $data['dtb_item']['category_id'],
                 'category_name'       => $data['dtb_item']['category_name'],
-                'condition_des'       => $data['dtb_item']['condition_des'],
+                // 'condition_des'       => $data['dtb_item']['condition_des'],
                 'condition_id'        => $data['dtb_item']['condition_id'],
                 // 'condition_name'      => $data['dtb_item']['condition_name'],
                 'price'               => $data['dtb_item']['price'],

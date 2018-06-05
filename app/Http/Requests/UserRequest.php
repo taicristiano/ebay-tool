@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Authorization;
 use App\Models\User;
 use Auth;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UserRequest extends FormRequest
 {
@@ -30,16 +32,35 @@ class UserRequest extends FormRequest
             return [];
         }
         $rules = [
-            'user_name'    => 'required|max:50',
-            'name_kana'    => 'required|max:50',
-            'tel'          => 'nullable|max:15',
-            'start_date'   => 'nullable|date',
-            'ebay_account' => 'required|max:50',
-            'email'        => 'required|email|max:50|unique:dtb_user',
-            'password'     => 'required|confirmed|max:50',
+            'type'          => [
+                'required',
+                Rule::in([
+                    User::TYPE_NORMAL_USER,
+                    User::TYPE_SUPER_ADMIN,
+                    User::TYPE_GUEST_ADMIN,
+                    User::TYPE_CANCELATION_USER,
+                ]),
+            ],
+            'category'      => 'array',
+            'category.*'    => Rule::in([
+                Authorization::YAHOO_AUCTION_INFO,
+                Authorization::AMAZONE_INFO,
+                Authorization::MONITORING_PRODUCT,
+            ]),
+            'user_name'     => 'required|max:50',
+            'name_kana'     => 'required|max:50',
+            'introducer_id' => 'nullable|exists:' . (new User)->getTable() . ',id',
+            'ebay_account'  => 'required|max:50',
+            'start_date'    => 'nullable|date',
+            'tel'           => 'nullable|max:15',
+            'email'         => 'required|email|max:50|unique:dtb_user',
+            'regist_limit'  => 'nullable|numeric|digits_between:1,10',
+            'post_limit'    => 'nullable|numeric|digits_between:1,10',
+            'password'      => 'required|confirmed|max:50|min:8',
+            'memo'          => 'nullable|max:500',
         ];
         if ($req->id) {
-            $rules['password'] = 'nullable|confirmed|max:50';
+            $rules['password'] = 'nullable|confirmed|max:50|min:8';
             $rules['email']    = 'required|email|max:50|unique:dtb_user,id,' . $req->id;
         }
         return $rules;

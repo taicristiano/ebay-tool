@@ -4,41 +4,31 @@ namespace App\Models;
 
 class Item extends AbstractModel
 {
-	/**
+    /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'dtb_product';
+    protected $table = 'dtb_item';
 
     protected $guarded = [];
 
-    const NAME_DURATION_1_DAY = '1日間';
     const NAME_DURATION_3_DAY = '3日間';
     const NAME_DURATION_5_DAY = '5日間';
     const NAME_DURATION_7_DAY = '7日間';
     const NAME_DURATION_10_DAY = '10日間';
-    const NAME_DURATION_14_DAY = '14日間';
-    const NAME_DURATION_21_DAY = '21日間';
     const NAME_DURATION_30_DAY = '30日間';
-    const NAME_DURATION_60_DAY = '60日間';
-    const NAME_DURATION_90_DAY = '90日間';
-    const NAME_DURATION_120_DAY = '120日間';
 
-    const VALUE_DURATION_1_DAY = 'Days_1';
     const VALUE_DURATION_3_DAY = 'Days_3';
     const VALUE_DURATION_5_DAY = 'Days_5';
     const VALUE_DURATION_7_DAY = 'Days_7';
     const VALUE_DURATION_10_DAY = 'Days_10';
-    const VALUE_DURATION_14_DAY = 'Days_14';
-    const VALUE_DURATION_21_DAY = 'Days_21';
     const VALUE_DURATION_30_DAY = 'Days_30';
-    const VALUE_DURATION_60_DAY = 'Days_60';
-    const VALUE_DURATION_90_DAY = 'Days_90';
-    const VALUE_DURATION_120_DAY = 'Days_120';
 
     const ORIGIN_TYPE_YAHOO_AUCTION = 1;
     const ORIGIN_TYPE_AMAZON = 2;
+
+    const SESSION_KEY_PRODUCT_INFO = 'product-info';
 
     /**
      * get origin type yahoo auction
@@ -77,17 +67,41 @@ class Item extends AbstractModel
     public function getDurationOption()
     {
         return [
-            self::VALUE_DURATION_1_DAY => self::NAME_DURATION_1_DAY,
             self::VALUE_DURATION_3_DAY => self::NAME_DURATION_3_DAY,
             self::VALUE_DURATION_5_DAY => self::NAME_DURATION_5_DAY,
             self::VALUE_DURATION_7_DAY => self::NAME_DURATION_7_DAY,
             self::VALUE_DURATION_10_DAY => self::NAME_DURATION_10_DAY,
-            self::VALUE_DURATION_14_DAY => self::NAME_DURATION_14_DAY,
-            self::VALUE_DURATION_21_DAY => self::NAME_DURATION_21_DAY,
             self::VALUE_DURATION_30_DAY => self::NAME_DURATION_30_DAY,
-            self::VALUE_DURATION_60_DAY => self::NAME_DURATION_60_DAY,
-            self::VALUE_DURATION_90_DAY => self::NAME_DURATION_90_DAY,
-            self::VALUE_DURATION_120_DAY => self::NAME_DURATION_120_DAY,
         ];
+    }
+
+    /**
+     * get condition id list
+     * @return array
+     */
+    public function getConditionIdList()
+    {
+        return [
+            1000 => 'New',
+            1500 => 'New other (see details)',
+            1750 => 'New with defects',
+            2000 => 'Manufacturer refurbished',
+            2500 => 'Seller refurbished',
+            3000 => 'Used',
+            4000 => 'Very Good',
+            5000 => 'Good',
+            6000 => 'Acceptable',
+            7000 => 'For parts or not working',
+        ];
+    }
+
+    /**
+     * get conditionNameById
+     * @param  integer $conditionId
+     * @return string
+     */
+    public function getConditionNameById($conditionId)
+    {
+        return $this->getConditionIdList()[$conditionId];
     }
 }

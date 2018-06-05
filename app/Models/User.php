@@ -26,6 +26,24 @@ class User extends Authenticatable
      */
     protected $table = 'dtb_user';
 
+    /**
+     * field list
+     * @var array
+     */
+    protected $fillable = [
+        'type',
+        'user_code',
+        'user_name',
+        'name_kana',
+        'introducer_id',
+        'ebay_account',
+        'start_date',
+        'tel',
+        'email',
+        'password',
+        'memo',
+    ];
+
     protected $guarded = [];
 
     /**
@@ -43,7 +61,7 @@ class User extends Authenticatable
      */
     protected $filter = [
         'type',
-        'user_name',
+        'search',
     ];
 
     /**
@@ -201,8 +219,10 @@ class User extends Authenticatable
         if (isset($filter['type'])) {
             $result = $result->where('type', $filter['type']);
         }
-        if (isset($filter['user_name'])) {
-            $result = $result->where('user_name', 'LIKE', '%' . $filter['user_name'] . '%');
+        if (isset($filter['search'])) {
+            $result = $result
+                ->where('user_name', 'LIKE', '%' . $filter['search'] . '%')
+                ->orWhere('user_code', 'LIKE', '%' . $filter['search'] . '%');
         }
         return $result->paginate()->appends($filter);
     }
@@ -239,7 +259,7 @@ class User extends Authenticatable
                 'tel',
                 'user_code',
                 'email',
-                'memo'
+                'memo',
             ];
             $condition = $this->select($fieldSelect);
         }
@@ -270,8 +290,6 @@ class User extends Authenticatable
      */
     public function fetch($req)
     {
-        $page   = $req->page ? $req->page : 1;
-        $limit  = $req->skip;
         $result = $this
             ->select('id', 'user_name as text')
             ->where('id', 'LIKE', "%$req->search%")
@@ -306,5 +324,17 @@ class User extends Authenticatable
             return $yearMonth . str_repeat('0', (3 - strlen($lastIndex))) . $lastIndex;
         }
         return $yearMonth . '001';
+    }
+
+    /**
+     * update by id
+     * @param  integer $id
+     * @param  array $data
+     * @return boolean
+     */
+    public function updateById($id, $data)
+    {
+        return $this->where('id', $id)
+            ->update($data);
     }
 }

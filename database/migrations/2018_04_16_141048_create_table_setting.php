@@ -23,8 +23,12 @@ class CreateTableSetting extends Migration
             $table->float('paypal_fixed_fee', 11, 2)->default(40);
             $table->smallInteger('ex_rate_diff')->default(0);
             $table->smallInteger('gift_discount')->default(100);
-            $table->smallInteger('duration')->default(30);
+            $table->string('duration', 10)->default('Days_30');
             $table->smallInteger('quantity')->default(1);
+            $table->string('seller_id', 20)->nullable();
+            $table->string('mws_auth_token', 80)->nullable();
+            $table->string('mws_access_key', 80)->nullable();
+            $table->string('mws_secret_key', 80)->nullable();
             $table->boolean('del_flg')->default(false);
             $table->timestamps();
         });

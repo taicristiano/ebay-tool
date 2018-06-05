@@ -4,7 +4,7 @@ namespace App\Models;
 
 class MtbStore extends AbstractModel
 {
-	/**
+    /**
      * The database table used by the model.
      *
      * @var string
@@ -19,7 +19,7 @@ class MtbStore extends AbstractModel
      */
     public function getAllStore()
     {
-    	return $this->select('id', 'name')
-    		->get();
+        return $this->select('id', 'name')
+            ->get();
     }
 }

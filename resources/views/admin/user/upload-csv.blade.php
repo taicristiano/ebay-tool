@@ -1,7 +1,10 @@
 @extends('layouts.default')
+@section('title')
+{{ __('view.create_many') }}
+@endsection
 @section('content')
 <div class="content-wrapper">
-    @include('layouts.component.header-content', ['text' => __('view.upload_csv')])
+    @include('layouts.component.header-content', ['text' => __('view.create_many')])
     <!-- Main content -->
     <section class="content">
         <div class="row">
@@ -24,7 +27,7 @@
                                     </div>
                                 </span>
                             </div>
-                            <button class="btn btn-primary" type="submit"><i class="fa fa-upload"></i> {{ __('view.csv_upload') }}</button>
+                            <button class="btn btn-primary" type="submit"><i class="fa fa-upload"></i> {{ __('view.create_many') }}</button>
                             <div class="col-xs-12 col-md-8 col-md-offset-1 error">{{ $errors->first('file_csv') }}</div>
                         <!-- /.box -->
                         </form>

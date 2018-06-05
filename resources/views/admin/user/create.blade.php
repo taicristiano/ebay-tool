@@ -1,25 +1,10 @@
 @extends('layouts.default')
+@section('title')
+{{ __('view.user.' . (isset($user) ? 'create_title' : 'create_title')) }}
+@endsection
 @section('content')
 <div class="content-wrapper">
-    <section class="content-header">
-        <h1>
-            {{ __('view.user.' . (isset($user) ? 'create_title' : 'create_title')) }}
-        </h1>
-        <ol class="breadcrumb">
-            <li>
-                <a href="#">
-                    <i class="fa fa-dashboard">
-                    </i>
-                    Home
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    {{ __('side_bar.user_manager') }}
-                </a>
-            </li>
-        </ol>
-    </section>
+    @include('layouts.component.header-content', ['text' => __('view.user.' . (isset($user) ? 'create_title' : 'create_title'))])
     <!-- Main content -->
     <section class="content">
         <!-- Default box -->
@@ -73,7 +58,10 @@
                         <label>
                             {{ __('view.user.start_date') }}
                         </label>
-                        {!! Form::text('start_date', old('start_date', isset($user) ? $user->start_date : ''), ['class' => 'form-control', 'id' => 'input-start-date']) !!}
+                        @php
+                        $startDate = old('start_date', isset($user) ? $user->start_date : '');
+                        @endphp
+                        {!! Form::text('start_date', $startDate ? date('Y/m/d', strtotime($startDate)) : '', ['class' => 'form-control', 'id' => 'input-start-date']) !!}
                         {!! $errors->first('start_date') ? '<p class="text-danger">'. $errors->first('start_date') .'</p>' : ''!!}
                     </div>
                     <div class="form-group">
@@ -106,16 +94,16 @@
                     </div>
                     <div class="form-group">
                         <label>
-                            {{ __('view.user.password') }} {!! !isset($user) ? '<span class="text-danger">(*)</span>': '' !!}
+                            {{ __('view.user.password') }} <span class="text-danger">(*)</span>
                         </label>
-                        {!! Form::password('password', ['class' => 'form-control']) !!}
+                        {!! Form::password('password', ['class' => 'form-control', 'placeholder' => isset($user) ? '********' : '']) !!}
                     	{!! $errors->first('password') ? '<p class="text-danger">'. $errors->first('password') .'</p>' : ''!!}
                     </div>
                     <div class="form-group">
                         <label>
-                            {{ __('view.user.password_confirmation') }} {!! !isset($user) ? '<span class="text-danger">(*)</span>': '' !!}
+                            {{ __('view.user.password_confirmation') }} <span class="text-danger">(*)</span>
                         </label>
-                        {!! Form::password('password_confirmation', ['class' => 'form-control']) !!}
+                        {!! Form::password('password_confirmation', ['class' => 'form-control', 'placeholder' => isset($user) ? '********' : '']) !!}
                     	{!! $errors->first('password_confirmation') ? '<p class="text-danger">'. $errors->first('password_confirmation') .'</p>' : ''!!}
                     </div>
                     <div class="form-group">

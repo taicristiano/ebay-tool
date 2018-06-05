@@ -1,27 +1,13 @@
 @extends('layouts.default')
+@section('title')
+{{ __('side_bar.user_manager') }}
+@endsection
 @section('content')
 <div class="content-wrapper">
-<!-- Content Header (Page header) -->
-    <section class="content-header">
-        <h1>
-            {{ __('side_bar.user_manager') }}
-        </h1>
-        <ol class="breadcrumb">
-            <li>
-                <a href="#">
-                    <i class="fa fa-dashboard">
-                    </i>
-                    Home
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    {{ __('side_bar.user_manager') }}
-                </a>
-            </li>    </ol>
-    </section>
+    @include('layouts.component.header-content', ['text' => __('side_bar.user_manager')])
     <!-- Main content -->
     <section class="content">
+        @include('layouts.component.alert')
         <!-- Default box -->
         <div class="box">
             <div class="box-header">
@@ -31,7 +17,7 @@
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <form class="form-inline" id="filter-post" role="form" method="GET">
                         {!! Form::select("type", $typeOptions, old('type'), ['class' => 'form-control', 'id' => 'select-type']) !!}
-                        {!! Form::text('user_name', old('user_name'), ['class' => 'form-control', 'placeholder' => __('view.user.placeholder_user_name')]) !!}
+                        {!! Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => __('view.user.placeholder_search')]) !!}
                         <button class="btn btn-primary"><i class="fa fa-search"></i> {{ __('view.filter') }}</button>
                         <a href="{{ route('admin.user.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i>{{ __('view.create') }}</a>
                     </form>

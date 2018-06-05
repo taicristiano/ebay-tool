@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableProduct extends Migration
+class CreateTableItem extends Migration
 {
     /**
      * Run the migrations.
@@ -15,8 +15,8 @@ class CreateTableProduct extends Migration
     {
         Schema::create('dtb_item', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('original_id');
-            $table->integer('item_id');
+            $table->string('original_id', 20);
+            $table->string('item_id', 20);
             $table->smallInteger('original_type');
             $table->string('item_name', 200)->nullable();
             $table->string('category_id', 20)->nullable();
@@ -24,6 +24,7 @@ class CreateTableProduct extends Migration
             $table->string('jan_upc', 20)->nullable();
             $table->string('condition_id', 20)->nullable();
             $table->string('condition_name', 200)->nullable();
+            $table->text('condition_des')->nullable();
             $table->double('price', 10, 2)->nullable();
             $table->string('duration', 10)->nullable();
             $table->smallInteger('quantity')->nullable();

@@ -29,6 +29,11 @@
                         <strong>{{ $errors->first('email') }}</strong>
                     </span>
                 @endif
+                @if ($errors->login->first())
+                    <span class="help-block error">
+                        <strong>{{ $errors->login->first() }}</strong>
+                    </span>
+                @endif
             </div>
             <div class="login-footer">
                 <button type="submit" class="btn btn-primary">{{ __('login.Login') }}</button>

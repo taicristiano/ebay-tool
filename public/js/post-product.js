@@ -1,54 +1,37 @@
+var token = window.Laravel.csrfToken;
+var isChangeItemId = false;
+var isChangeEbayOrAmazon = false;
+
 jQuery(document).ready(function() {
-    numberSpecificItem = 0;
-    var token = window.Laravel.csrfToken;
     if ($('#item-yaohoo-or-amazon-content').length) {
-        $.get(urlGetImageInit, function(data, status){
+        $.get(urlGetImageInit, function(data, status) {
             if (data.status) {
                 fnInitFIlerImage(data.images);
             }
         });
     }
     $(document).on("click", "#btn-get-item-ebay-info", function() {
-        $('body').addClass('loading-ajax');
-        var button = $(this)
-        if (button.data('requestRunning')) {
-            return;
+        getItemEbayInfo();
+    });
+
+    $(document).on("change", "#item_id", function() {
+        if ($('#item-ebay-content').length || isChangeItemId) {
+            isChangeItemId = true;
+            getItemEbayInfo();
         }
-        button.data('requestRunning', true);
-        var data = {
-            _token: token,
-            item_id: $('#item_id').val(),
-        };
-        $.ajax({
-            url: urlGetItemEbayInfo,
-            type: 'post',
-            dataType: 'json',
-            data: data,
-            success: function (data) {
-                if (data.status) {
-                    $('#conten-ajax .ebay-info').html(data.data);
-                    numberSpecificItem = $('.specific-item').length - 1;
-                } else {
-                    $('#conten-ajax .ebay-info').html('');
-                    $('#conten-ajax .calculator-info').html('');
-                    $('#item-ebay-invalid').removeClass('display-none');
-                }
-                toggleBtnSlove();
-            },
-            complete: function () {
-                button.data('requestRunning', false);
-                $('body').removeClass('loading-ajax');
-            }
-        });
     });
 
     $(document).on("click", "#add-specific", function() {
         if (numberSpecificItem == 20) {
             $('#div-add-specific').addClass('display-none');
         }
-        var specificItemAdd = $('#specific-item-none .specific-item');
-        specificItemAdd.find('.specific-name').attr('name', "dtb_item_specifics[" + numberSpecificItem + "]['name']");
-        specificItemAdd.find('.specific-value').attr('name', "dtb_item_specifics[" + numberSpecificItem + "]['value']");
+        var specificItemAdd = $('#specific-item-none div');
+        specificItemAdd.find('.specific-name').attr('name', "dtb_item_specifics[" + numberSpecificItem + "][name]");
+        specificItemAdd.find('.specific-value').attr('name', "dtb_item_specifics[" + numberSpecificItem + "][value]");
+        specificItemAdd.find('.error-name span').removeClass();
+        specificItemAdd.find('.error-name span').addClass('error-dtb_item_specifics_' + numberSpecificItem + '_name');
+        specificItemAdd.find('.error-value span').removeClass();
+        specificItemAdd.find('.error-value span').addClass('error-dtb_item_specifics_' + numberSpecificItem + '_value');
         $('#div-add-specific').before($('#specific-item-none').html());
         numberSpecificItem++;
         specificItemAdd.find('.specific-name').removeAttr('name');
@@ -56,6 +39,7 @@ jQuery(document).ready(function() {
         if (numberSpecificItem == 20) {
             $('#div-add-specific').addClass('display-none');
         }
+        resetSpecificiItemNone();
     });
 
     $(document).on("click", ".delete-specific", function() {
@@ -67,10 +51,15 @@ jQuery(document).ready(function() {
             }
             $('.specific-item').each(function(index) {
                 if (index < numberSpecificItem) {
-                    $(this).find('.specific-name').attr('name', "dtb_item_specifics[" + index + "]['name']");
-                    $(this).find('.specific-value').attr('name', "dtb_item_specifics[" + index + "]['value']");
+                    $(this).find('.specific-name').attr('name', "dtb_item_specifics[" + index + "][name]");
+                    $(this).find('.specific-value').attr('name', "dtb_item_specifics[" + index + "][value]");
+                    $(this).find('.error-name span').removeClass();
+                    $(this).find('.error-name span').addClass('error-dtb_item_specifics_' + index + '_name');
+                    $(this).find('.error-value span').removeClass();
+                    $(this).find('.error-value span').addClass('error-dtb_item_specifics_' + index + '_value');
                 }
             });
+            resetSpecificiItemNone();
         }
     });
 
@@ -84,29 +73,21 @@ jQuery(document).ready(function() {
         var fd = new FormData($('#form-post')[0]);
         var error = false;
         fd.append('_token', token);
-        var data = $('#form-post').serializeArray();
         var api = $.fileuploader.getInstance('#files');
         var files = [];
         var fileUpload = api.getFiles();
+        // fd.append('dtb_item[item_name]', $('#item_name').val());
+        // fd.append('dtb_item[condition_name]', $('#condition_name').val());
+        // fd.append('dtb_item[price]', $('#sell_price').val());
+        // fd.append('dtb_item[product_size]', $('#product_size').val());
+        // fd.append('dtb_item[buy_price]', $('#buy_price').val());
         fd.append('dtb_item[original_id]', $('#id_ebay_or_amazon').val());
         fd.append('dtb_item[item_id]', $('#item_id').val());
         fd.append('dtb_item[type]', $('.type:checked').val());
         $.each(fileUpload, function (index, value) {
-            // files.push(value.file);
             fd.append('files_upload_' + index, value.file);
-            // data.push({name: 'files_upload_' + index, value: value.file});
         });
-        // var listImage = $('.fileuploader-item-image image');
-        // $.each(fileUpload, function (index, value) {
-        //     console.log(value.reader.src);
-        //     // files.push(value.file);
-        //     fd.append('url_preview_' + index, value.reader.src);
-        //     // data.push({name: 'files_upload_' + index, value: value.file});
-        // });
         fd.append('number_file', fileUpload.length);
-        data.push({name: 'number_file', value: fileUpload.length});
-        // data.files_upload = files;
-        console.log(fd);
         $.ajax({
             url: urlPostProductConfirm,
             type: 'post',
@@ -118,7 +99,30 @@ jQuery(document).ready(function() {
                 if (data.status) {
                     window.location.href = data.url;
                 } else {
-                    $('#item-ebay-invalid').removeClass('display-none');
+                    $('p.error-validate').text('');
+                    $('.error-validate-specifics span').text('');
+                    $('.error-validate').parent().removeClass('has-error');
+                    $('.error-validate-specifics').parent().removeClass('has-error');
+                    messageError = data.message_error;
+                    jQuery.each(messageError, function(index, value) {
+                        $('.error-' + index).text(value);
+                        $('span.error-' + index).parent().parent().addClass('has-error');
+                        $('p.error-' + index).parent().addClass('has-error');
+                    });
+                    if (messageError.dtb_item_condition_des
+                        || messageError.dtb_item_item_name
+                        || messageError.dtb_item_condition_name
+                        ) {
+                        $('html, body').animate({
+                            scrollTop: $("#item_name").offset().top
+                        }, 3000);
+                    } else {
+                        if (messageError.dtb_item_price) {
+                            $('html, body').animate({
+                                scrollTop: $("#sell_price").offset().top
+                            }, 3000);
+                        }
+                    }
                 }
             },
             complete: function () {
@@ -129,64 +133,62 @@ jQuery(document).ready(function() {
     });
 
     $(document).on("click", "#btn-get-yahoo-or-amazon", function() {
-        getYahooOrAmazonInfo($(this))
+        getYahooOrAmazonInfo($(this));
     });
 
     $(document).on("click", "#btn-calculator-profit",function() {
-        getCalculateProfitInfo($(this));
+        getCalculateProfitInfo();
     });
 
-    $('.type').on('ifChanged', function(event){
+    // $('.type').on('ifChanged', function(event) {
+    // $('.type').change(function() {
+    $(document).on("change", ".type, #id_ebay_or_amazon", function() {
         var isShowYaohoo = $('#item-yaohoo-or-amazon-content').length;
-        var isShowCalculate = $('#item-calculator-info').length;
-        if (isShowYaohoo) {
+        // var isShowCalculate = $('#item-calculator-info').length;
+        if (isShowYaohoo || isChangeEbayOrAmazon) {
+            isChangeEbayOrAmazon = true;
             getYahooOrAmazonInfo($("#btn-get-yahoo-or-amazon"));
-            // if (isShowCalculate) {
-            //     getCalculateProfitInfo($('#btn-calculator-profit'));
-            // }
         }
     });
 
-    $(document).on("change", "#material-quantity, #setting-shipping", function() {
-        var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : 0;
-        // if (materialQuantity !== parseInt(materialQuantity, 10)) {
-        //     $('#error-material-quantity').removeClass('display-none');
-        //     return;
-        // }
-        $('body').addClass('loading-ajax');
-        var data = {
-            _token: token,
-            material_quantity: materialQuantity,
-            setting_shipping: $('#setting-shipping').val(),
-            commodity_weight: $('#commodity-weight').val(),
-            sell_price: $('#sell_price').val(),
-            buy_price: $('#buy_price').text(),
-            paypal_fee: $('#paypal-fee').val(),
-            ebay_fee: $('#ebay-fee').val(),
-        };
-        $.ajax({
-            url: updateProfit,
-            type: 'post',
-            dataType: 'json',
-            data: data,
-            success: function (data) {
-                if (data.status) {
-                    $('#error-material-quantity').addClass('display-none');
-                    $('#error-material-quantity').text('');
-                    $('#profit').val(data.profit);
-                    $('#ship_fee').val(data.ship_fee);
-                } else {
-                    $('#error-material-quantity').text(data.message_error.material_quantity);
-                    $('#error-material-quantity').removeClass('display-none');
-                }
-            },
-            complete: function () {
-                $('body').removeClass('loading-ajax');
-            }
-        });
+    $(document).on("change", "#material-quantity, #setting-shipping, #buy_price, #sell_price, #product_size", function() {
+        if ($('#item-calculator-info').length) {
+            getCalculateProfitInfo();
+        }
     });
 });
 
+function getItemEbayInfo()
+{
+    $('body').addClass('loading-ajax');
+    var data = {
+        _token: token,
+        item_id: $('#item_id').val(),
+    };
+    $.ajax({
+        url: urlGetItemEbayInfo,
+        type: 'post',
+        dataType: 'json',
+        data: data,
+        success: function (data) {
+            if (data.status) {
+                $('#conten-ajax .ebay-info').html(data.data);
+                numberSpecificItem = $('.specific-item').length - 1;
+                $('#item-ebay-invalid').addClass('display-none');
+                $('#item-ebay-invalid').parent().parent().removeClass('has-error');
+            } else {
+                $('#conten-ajax .ebay-info').html('');
+                $('#conten-ajax .calculator-info').html('');
+                $('#item-ebay-invalid').removeClass('display-none');
+                $('#item-ebay-invalid').parent().parent().addClass('has-error');
+            }
+            toggleBtnSlove();
+        },
+        complete: function () {
+            $('body').removeClass('loading-ajax');
+        }
+    });
+}
 function toggleBtnSlove()
 {
     var isShowEbay = $('#item-ebay-content').length;
@@ -205,6 +207,16 @@ function toggleBtnSlove()
     }
 }
 
+function urlEncode(str)
+{
+    str = encodeURIComponent(str);
+    str = str.replace(/\*/g, '%2A');
+    str = str.replace(/\(/g, '%28');
+    str = str.replace(/\)/g, '%29');
+    str = str.replace(/'/g, '%27');
+    str = str.replace(/\!/g, '%21');
+    return str;
+}
 function getYahooOrAmazonInfo(button)
 {
     $('body').addClass('loading-ajax');
@@ -225,11 +237,13 @@ function getYahooOrAmazonInfo(button)
         data: data,
         success: function (data) {
             if (data.status) {
+                $('#item-yahoo-or-amazon-invalid').addClass('display-none');
+                $('#item-yahoo-or-amazon-invalid').parent().parent().removeClass('has-error');
                 $('#conten-ajax .yahoo-or-amazon-info').html(data.data);
                 fnInitFIlerImage(data.image);
                 var isShowCalculate = $('#item-calculator-info').length;
                 if (isShowCalculate) {
-                    getCalculateProfitInfo($('#btn-calculator-profit'));
+                    getCalculateProfitInfo();
                 }
                 if ($('#item-ebay-content').length) {
                     $('html, body').animate({
@@ -239,7 +253,8 @@ function getYahooOrAmazonInfo(button)
             } else {
                 $('#conten-ajax .yahoo-or-amazon-info').html('');
                 $('#conten-ajax .calculator-info').html('');
-                $('#item-ebay-invalid').removeClass('display-none');
+                $('#item-yahoo-or-amazon-invalid').removeClass('display-none');
+                $('#item-yahoo-or-amazon-invalid').parent().parent().addClass('has-error');
             }
             toggleBtnSlove();
         },
@@ -250,26 +265,25 @@ function getYahooOrAmazonInfo(button)
     });
 }
 
-function getCalculateProfitInfo(button)
+function getCalculateProfitInfo()
 {
     $('body').addClass('loading-ajax');
-    if (button.data('requestRunning')) {
-        return;
-    }
-    button.data('requestRunning', true);
+    isShowCalculate = $('#item-calculator-info').length;
+    var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : 0;
     var token = window.Laravel.csrfToken;
     var type = $('.type:checked').val();
     var data = {
         _token: token,
+        is_update: isShowCalculate,
+        material_quantity: materialQuantity,
         type: type,
-        product_size: $('#product_size').val(),
+        product_size: isShowCalculate ? $('#product_size').val() : $('#product_size_hidden').val(),
         commodity_weight: $('#commodity_weight').val(),
-        length: $('#length').val(),
-        height: $('#height').val(),
-        width: $('#width').val(),
         sell_price: $('#sell_price').val(),
-        buy_price: $('#buy_price').text(),
+        buy_price: isShowCalculate ? $('#buy_price').val() : $('#buy_price_span').text(),
         category_id: $('#category_id').val(),
+        ship_fee: isShowCalculate ?  $('#ship_fee').val() : '',
+        setting_shipping: isShowCalculate ? $('#setting-shipping').val() : '',
     };
     $.ajax({
         url: urlCalculatorProfit,
@@ -278,25 +292,52 @@ function getCalculateProfitInfo(button)
         data: data,
         success: function (data) {
             if (data.status) {
+                $('#error-material-quantity').text('');
+                $('.error-dtb_item_price').text('');
+                $('.error-dtb_item_buy_price').text('');
+                $('.error-dtb_item_product_size').text('');
+                $('.error-dtb_item_price').parent().removeClass('has-error');
+                $('.error-dtb_item_buy_price').parent().removeClass('has-error');
+                $('.error-dtb_item_product_size').parent().removeClass('has-error');
+                $('#error-material-quantity').parent().removeClass('has-error');
                 $('#conten-ajax .calculator-info').html(data.data);
-                // if ($('.product_size').length) {
-                //     $('.product_size').val(dataAmazon.product_size);
-                //     $('.commodity_weight').val(dataAmazon.commodity_weight);
-                // }
-                // fnInitFIlerImage(data.image);
-                // toggleBtnSlove();
-                // $('html, body').animate({
-                //     scrollTop: $("#conten-ajax .calculator-info").offset().top
-                // }, 3000);
             } else {
-                $('#conten-ajax .calculator-info').html('');
-                // $('#item-ebay-invalid').removeClass('display-none');
+                messageError = data.message_error;
+                if(messageError.material_quantity) {
+                    $('#error-material-quantity').text(messageError.material_quantity);
+                    $('#error-material-quantity').parent().addClass('has-error');
+                }
+                if(messageError.buy_price) {
+                    $('.error-dtb_item_buy_price').text(messageError.buy_price);
+                    $('.error-dtb_item_buy_price').parent().addClass('has-error');
+                }
+                if(messageError.sell_price) {
+                    $('.error-dtb_item_price').text(messageError.sell_price);
+                    $('.error-dtb_item_price').parent().addClass('has-error');
+                }
+                if(messageError.product_size) {
+                    $('.error-dtb_item_product_size').text(messageError.product_size);
+                    $('.error-dtb_item_product_size').parent().addClass('has-error');
+                }
+                // // if (!isShowCalculate) {
+                //     $('html, body').animate({
+                //         scrollTop: $("#sell_price").offset().top
+                //     }, 3000);                        
+                // // }
             }
             toggleBtnSlove();
         },
         complete: function () {
-            button.data('requestRunning', false);
             $('body').removeClass('loading-ajax');
         }
     });
+}
+
+function resetSpecificiItemNone()
+{
+    var specificItemNone = $('#specific-item-none div');
+    specificItemNone.find('.specific-name').removeAttr('name');
+    specificItemNone.find('.specific-value').removeAttr('name');
+    specificItemNone.find('.error-name span').removeClass();
+    specificItemNone.find('.error-value span').removeClass();
 }

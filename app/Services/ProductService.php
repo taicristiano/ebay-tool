@@ -18,7 +18,10 @@ use App\Models\MtbStore;
 use App\Models\MtbExchangeRate;
 use App\Models\ItemSpecific;
 use App\Models\ItemImage;
-use Illuminate\Http\UploadedFile;
+use App\Services\SignatureAmazon;
+use DB;
+use Log;
+use App\Services\AmazonMwsClient;
 
 class ProductService extends CommonService
 {
@@ -32,6 +35,11 @@ class ProductService extends CommonService
     protected $exchangeRate;
     protected $itemSpecific;
     protected $itemImage;
+    protected $keyProduct;
+    protected $keyImageFromApi;
+    protected $pathUpload;
+    protected $fullpathUpload;
+    protected $pathStorageFile;
 
     public function __construct(
         Setting $setting,
@@ -55,6 +63,11 @@ class ProductService extends CommonService
         $this->exchangeRate    = $exchangeRate;
         $this->itemSpecific    = $itemSpecific;
         $this->itemImage       = $itemImage;
+        $this->keyProduct      = Item::SESSION_KEY_PRODUCT_INFO;
+        $this->keyImageFromApi = ItemImage::SESSION_KEY_IMAGE_FROM_API;
+        $this->pathUpload      = $this->itemImage->getPathUploadFile();
+        $this->fullpathUpload  = $this->itemImage->getFullPathUploadFile();
+        $this->pathStorageFile = $this->itemImage->getPathStorageFile();
     }
 
     /**
@@ -73,9 +86,10 @@ class ProductService extends CommonService
         $userId             = Auth::user()->id;
         $settingData        = $this->setting->getSettingOfUser($userId);
         $settingPolicyData  = $this->settingPolicy->getSettingPolicyOfUser($userId);
+        $conditionIdList = $this->product->getConditionIdList();
         $data               = $this->formatDataEbayInfo($result, $settingData, $settingPolicyData);
         $response['status'] = true;
-        $response['data']   = view('admin.product.component.item_ebay_info', compact('data'))->render();
+        $response['data']   = view('admin.product.component.item_ebay_info', compact('data', 'conditionIdList'))->render();
         return response()->json($response);
     }
 
@@ -88,6 +102,9 @@ class ProductService extends CommonService
      */
     public function formatDataEbayInfo($data, $settingItem, $settingPolicyData)
     {
+        $exchangeRate = $this->exchangeRate->getExchangeRateLatest();
+        $userId       = Auth::user()->id;
+        $settingInfo  = $this->setting->getSettingOfUser($userId);
         // data dtb_item
         $result['dtb_item'] = [
             'item_name'      => $data['Item']['Title'],
@@ -95,21 +112,18 @@ class ProductService extends CommonService
             'category_name'  => $data['Item']['PrimaryCategoryName'],
             'condition_id'   => $data['Item']['ConditionID'],
             'condition_name' => $data['Item']['ConditionDisplayName'],
-            'price'          => $data['Item']['ConvertedCurrentPrice'],
+            'price'          => round($data['Item']['ConvertedCurrentPrice'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2),
+            'duration'       => $settingItem->duration,
+            'quantity'       => $settingItem->quantity,
         ];
 
         //data dtb_item_specifics
         $result['dtb_item_specifics'] = [];
         foreach ($data['Item']['ItemSpecifics']['NameValueList'] as $specific) {
-            $item['name']  = $specific['Name'];
-            $item['value'] = $specific['Value'];
+            $item['name']                   = $specific['Name'];
+            $item['value']                  = $specific['Value'];
             $result['dtb_item_specifics'][] = $item;
         }
-
-        //data dtb_setting
-        $settingData['duration'] = $settingItem->duration;
-        $settingData['quantity'] = $settingItem->quantity;
-        $result['dtb_setting']   = $settingData;
 
         //data dtb_setting_policies
         $shippingType = [];
@@ -130,7 +144,6 @@ class ProductService extends CommonService
             'return'   => $returnType
         ];
         $result['duration']['option'] = $this->product->getDurationOption();
-        $result['duration']['value']  = Item::VALUE_DURATION_30_DAY;
 
         return $result;
     }
@@ -141,71 +154,137 @@ class ProductService extends CommonService
      * @param  integer $type
      * @return Illuminate\Http\Response
      */
-    public function apiGetItemYahooOrAmazonInfo($itemId, $type)
+    public function apiGetItemYahooOrAmazonInfo($data)
     {
+        $itemId             = $data['item_id'];
+        $type               = $data['type'];
+        $productSize        = null;
+        $price              = 0;
+        $commodityWeight    = 0;
+        $length             = 0;
+        $height             = 0;
+        $width              = 0;
         $response['status'] = false;
-        // if ($type == $this->product->getOriginTypeYahooAuction()) {
-        //     $isTypeAmazon = true;
+        if ($type == $this->product->getOriginTypeYahooAuction()) {
+            $isTypeAmazon = false;
             $url     = config('api_info.api_yahoo_action_info') . $itemId;
             $client  = new Client();
             $crawler = $client->request('GET', $url);
             $crawler = $crawler->filterXPath('//*[@id="l-sub"]/div[1]/ul/li[2]/div/dl/dd')->first();
-            $price   = null;
             if ($crawler->count()) {
                 $price = $crawler->text();
+                $arrayItem = explode("円", $price);
+                $price =  $arrayItem[0];
+                $price = round((float) str_replace(',', '', $price), 2);
             }
 
             $crawler = $client->request('GET', $url);
             $arrayImage = [];
-            $index = 0;
-            $crawler->filterXPath('//*[@id="l-main"]/div/div[1]/div[1]/ul/li/div/img')->each(function ($node) use (&$arrayImage, $index) {
-                $index++;
+            $crawler->filterXPath('//*[@id="l-main"]/div/div[1]/div[1]/ul/li/div/img')->each(function ($node) use (&$arrayImage) {
                 $url = $node->attr('src');
                 $arrayItem = explode(".", $url);
                 $type = array_pop($arrayItem);
                 $item = [
-                    'name' => '',
-                    'type' => 'image/' . $type,
+                    'name'      => '',
+                    'type'      => 'image/' . $type,
                     'extension' => $type,
-                    'file' => $url,
+                    'file'      => $url,
                 ];
-                // $client  = new Client();
-                // $client->getClient()->get($url, ['save_to' => $index . '.' . $type,
-                //     'headers'=>[ 'Referer' => $url]
-                // ]);
                 $arrayImage[] = $item;
             });
-            // Storage::makeDirectory(storage_path('app/public/upload/item-images', 0755, true, true));
-            // foreach ($arrayImage as $key => $item) {
-            //     $client  = new Client();
-            //     $client->getClient()->get($item['file'], [
-            //         'save_to' => storage_path('app/public/upload/item-images/' . $itemId . '_' . $key . '.' . $item['extension']),
-            //         'headers'=> [ 'Referer' => $item['file']]
-            //     ]);
-            // }
-            // dd($arrayImage);
-        // } else {
-        //     $isTypeAmazon = true;
-        //     // call api amazon
-        // }
-        $isTypeAmazon = true;
+        } else {
+            $isTypeAmazon = true;
+            $exchangeRate = $this->exchangeRate->getExchangeRateLatest();
+            $userId       = Auth::user()->id;
+            $settingInfo  = $this->setting->getSettingOfUser($userId);
+            $client       = new AmazonMwsClient(
+                'AKIAJWROE4YTDKN5COQQ',
+                'l4CCqytm56ps5QFw7AFv347bKxqzJWK4xL2hrVmb',
+                'A2GI94OS9KGZVF',
+                ['A1VC38T7YXB528'],
+                'amzn.mws.f8b1b1e5-f8df-3d8c-48ff-d8655ad92d86',
+                'MCS/MwsClient',
+                '1.0',
+                'https://mws.amazonservices.jp'
+            );
+            $optionalParams = [
+                'Query'         => $itemId,
+                // 'Query'         => 'B078SY57F5',
+                // 'Query'         => 'B00RF2ZNI0',
+                // 'Query'         => 'B00FJV9ZW4',
+                // 'Query'         => 'B071NZD35X',
+                'MarketplaceId' => 'A1VC38T7YXB528'
+            ];
+            $data = $client->send('ListMatchingProducts', '/Products/2011-10-01', $optionalParams);
+            if (!count($data)) {
+                return response()->json($response);
+            }
+
+            $arrayImage  = [];
+            foreach ($data as $key => $item) {
+                if (!empty($item['ns2:SmallImage']['ns2:URL'])) {
+                    $url = $item['ns2:SmallImage']['ns2:URL'];
+                    $arrayItem = explode(".", $url);
+                    $type = array_pop($arrayItem);
+                    $itemImage = [
+                        'name'      => '',
+                        'type'      => 'image/' . $type,
+                        'extension' => $type,
+                        'file'      => $url,
+                    ];
+                    $arrayImage[] = $itemImage;
+                }
+
+                if (!empty($item['ns2:ListPrice']['ns2:Amount'])) {
+                    $price = $item['ns2:ListPrice']['ns2:Amount'];
+                    $priceType = $item['ns2:ListPrice']['ns2:CurrencyCode'];
+                    if ($price && $priceType == "USD") {
+                        $price = $price * ($exchangeRate->rate - $settingInfo->ex_rate_diff);
+                    }
+                    $price = round((float) $price, 2);
+                }
+                if (!empty($item['ns2:PackageDimensions'])) {
+                    $commodityWeight = !empty($item['ns2:PackageDimensions']['ns2:Weight']) ? $item['ns2:PackageDimensions']['ns2:Weight'] : 0;
+                    $length          = !empty($item['ns2:PackageDimensions']['ns2:Length']) ? $item['ns2:PackageDimensions']['ns2:Length'] : 0;
+                    $height          = !empty($item['ns2:PackageDimensions']['ns2:Height']) ? $item['ns2:PackageDimensions']['ns2:Height'] : 0;
+                    $width           = !empty($item['ns2:PackageDimensions']['ns2:Width']) ? $item['ns2:PackageDimensions']['ns2:Width'] : 0;
+                    $productSize = round($height * 2.54, 2) . 'x' . round($width * 2.54, 2) . 'x' . round($length * 2.54, 2);
+                }
+            }
+        }
+
         if (!count($arrayImage)) {
             return response()->json($response);
         }
-        if ($isTypeAmazon) {
-            $data['dtb_item']['product_size'] = 'M';
-            $data['dtb_item']['commodity_weight'] = 950;
-            $data['dtb_item']['length'] = 11;
-            $data['dtb_item']['height'] = 11;
-            $data['dtb_item']['width'] = 11;
-        }
-        $data['dtb_item']['buy_price'] = $price;
-        $response['is_type_amazon'] = $isTypeAmazon;
-        $response['status'] = true;
-        $response['image'] = $arrayImage;
-        $response['data'] = view('admin.product.component.item_yahoo_or_amazon_info', compact('data', 'arrayImage'))->render();
-        return response()->json($response);
 
+        $arrayImageFormApi = [];
+        Storage::makeDirectory($this->pathUpload);
+        foreach ($arrayImage as $key => &$item) {
+            if (!Storage::disk(env('FILESYSTEM_DRIVER'))->exists($this->pathUpload . $itemId . '_' . $key . '.' . $item['extension'])) {
+                $client  = new Client();
+                $client->getClient()->get($item['file'], [
+                    'save_to' => storage_path($this->fullpathUpload . $itemId . '_' . $key . '.' . $item['extension']),
+                    'headers'=> [ 'Referer' => $item['file']]
+                ]);
+            }
+            $item['file'] = asset($this->pathStorageFile . $itemId . '_' . $key . '.' . $item['extension']);
+            array_push($arrayImageFormApi, $itemId . '_' . $key . '.' . $item['extension']);
+        }
+
+        Session::forget($this->keyImageFromApi);
+        Session::push($this->keyImageFromApi, $arrayImageFormApi);
+
+        $data['dtb_item']['product_size']     = $productSize;
+        $data['dtb_item']['commodity_weight'] = round($commodityWeight * 453.59237, 2);
+        // $data['dtb_item']['length']           = $length;
+        // $data['dtb_item']['height']           = $height;
+        // $data['dtb_item']['width']            = $width;
+        $data['dtb_item']['buy_price']        = $price;
+        $response['is_type_amazon']           = $isTypeAmazon;
+        $response['status']                   = true;
+        $response['image']                    = $arrayImage;
+        $response['data']                     = view('admin.product.component.item_yahoo_or_amazon_info', compact('data', 'arrayImage'))->render();
+        return response()->json($response);
     }
 
     /**
@@ -218,6 +297,8 @@ class ProductService extends CommonService
         $data['istTypeAmazon'] = $input['type'] == $this->product->getOriginTypeAmazon() ? true : false;
         if ($data['istTypeAmazon']) {
             $this->calculatorProfitTypeAmazon($data, $input);
+        } else {
+            $this->calculatorProfitTypeYahoo($data, $input);
         }
         $response['status'] = true;
         $response['data']   = view('admin.product.component.calculator_info', compact('data'))->render();
@@ -231,22 +312,27 @@ class ProductService extends CommonService
      */
     public function getSettingShippingOfUser($input)
     {
-        $length                = $input['length'];
-        $height                = $input['height'];
-        $width                 = $input['width'];
-        $sumOfromAmazon        = $length + $height + $width;
+        $arraySize = explode('x', strtolower($input['product_size']));
+        $height                = $arraySize[0];
+        $width                 = $arraySize[1];
+        $length                = $arraySize[2];
+        $sizeOfProduct         = $length + $height + $width;
         $userId                = Auth::user()->id;
         $settingShipping       = $this->settingShipping->getSettingShippingOfUser($userId);
         $settingShippingOption = [];
         foreach ($settingShipping as $key => $item) {
             $sideMaxSize = $item->side_max_size;
-            if ($sumOfromAmazon <= $item->max_size &&
+            if ($sizeOfProduct <= $item->max_size &&
                 $height < $sideMaxSize &&
                 $length <= $sideMaxSize &&
                 $width <= $sideMaxSize
             ) {
                 $settingShippingOption[$item->id] = $item->shipping_name;
             }
+        }
+        if (!$settingShippingOption) {
+            $settingShipping = $this->settingShipping->findSettingShippingMaxSizeOfUser($userId);
+            $settingShippingOption[$settingShipping->id] = $settingShipping->shipping_name;
         }
         return $settingShippingOption;
     }
@@ -278,20 +364,48 @@ class ProductService extends CommonService
         $data['dtb_item']['commodity_weight'] = $input['commodity_weight'];
         $settingShippingOption                = $this->getSettingShippingOfUser($input);
         $data['setting_shipping_option']      = $settingShippingOption;
+        $optionSelected                       = $input['setting_shipping'];
         $shippingId                           = array_keys($settingShippingOption);
-        $shippingFee                          = $this->shippingFee->getShippingFeeByShippingId($shippingId[0], $input['commodity_weight']);
-        $data['dtb_item']['ship_fee']         = $shippingFee->ship_fee;
+        if (!isset($settingShippingOption[$optionSelected])) {
+            $optionSelected = $shippingId[0];
+        }
+        $data['setting_shipping_selected'] = $optionSelected;
+        if (!$input['ship_fee']) {
+            $shippingFee                  = $this->shippingFee->getShippingFeeByShippingId($shippingId[0], $input['commodity_weight']);
+            $data['dtb_item']['ship_fee'] = $shippingFee->ship_fee;
+        } else {
+            $data['dtb_item']['ship_fee'] = $input['ship_fee'];
+        }
         $userId                               = Auth::user()->id;
         $settingInfo                          = $this->setting->getSettingOfUser($userId);
         $storeIdOfUser                        = $settingInfo->store_id;
         $stores                               = $this->mtbStore->getAllStore();
         $storeInfo                            = $this->formatStoreInfo($stores);
         $typeFee                              = $storeInfo[$storeIdOfUser];
-        $data['dtb_item']['ebay_fee']         = $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee;
-        $data['dtb_item']['paypal_fee']       = $settingInfo->paypal_fee_rate  * $input['sell_price'] / 100;
+        $data['dtb_item']['ebay_fee']         = round($input['sell_price'] * $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee / 100, 2);
+        $data['dtb_item']['paypal_fee']       = round($settingInfo->paypal_fee_rate  * $input['sell_price'] / 100, 2);
         $data['dtb_item']['buy_price']        = $input['buy_price'];
-        $exchangeRate                         = $this->exchangeRate->getExchangeRateLatest();
-        $data['dtb_item']['profit']           = round(((float)$input['sell_price'] - $data['dtb_item']['ebay_fee'] - $data['dtb_item']['paypal_fee']- $data['dtb_item']['ship_fee']) * ($exchangeRate->rate - $settingInfo->ex_rate_diff) - (float) str_replace(',', '.', explode("円", $data['dtb_item']['buy_price'])[0]) * $settingInfo->gift_discount, 2);
+        $data['dtb_item']['profit']           = round((float)$input['sell_price'] - $data['dtb_item']['ebay_fee'] - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'] * $settingInfo->gift_discount / 100, 2);
+    }
+
+    /**
+     * calculator profit type yahoo
+     * @param  array &$data
+     * @param  array $input
+     * @return none
+     */
+    public function calculatorProfitTypeYahoo(&$data, $input)
+    {
+        $userId                               = Auth::user()->id;
+        $settingInfo                          = $this->setting->getSettingOfUser($userId);
+        $storeIdOfUser                        = $settingInfo->store_id;
+        $stores                               = $this->mtbStore->getAllStore();
+        $storeInfo                            = $this->formatStoreInfo($stores);
+        $typeFee                              = $storeInfo[$storeIdOfUser];
+        $data['dtb_item']['ebay_fee']         = round($input['sell_price'] * $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee / 100, 2);
+        $data['dtb_item']['paypal_fee']       = round($settingInfo->paypal_fee_rate  * $input['sell_price'] / 100, 2);
+        $data['dtb_item']['buy_price']        = $input['buy_price'];
+        $data['dtb_item']['profit']           = round((float)$input['sell_price'] - $data['dtb_item']['ebay_fee'] - $data['dtb_item']['paypal_fee'] - (float)$data['dtb_item']['buy_price'], 2);
     }
 
     /**
@@ -301,61 +415,23 @@ class ProductService extends CommonService
      */
     public function updateProfit($data)
     {
-        $totalWeigh         = $data['commodity_weight'] + $data['material_quantity'];
-        $shippingFee        = $this->shippingFee->getShippingFeeByShippingId((int) $data['setting_shipping'], $totalWeigh);
-        if (!$shippingFee) {
-            $result['status'] = false;
-            $result['message_error']['material_quantity'] = 'Too large';
-            return response()->json($result);
+        if ($data['type'] == 1) {
+            $result['profit']   = round((float) $data['sell_price'] - $data['ebay_fee'] - $data['paypal_fee']  - (float) $data['buy_price'], 2);
+        } else {
+            $totalWeigh         = $data['commodity_weight'] + $data['material_quantity'];
+            $shippingFee        = $this->shippingFee->getShippingFeeByShippingId((int) $data['setting_shipping'], $totalWeigh);
+            if (!$shippingFee) {
+                $result['status'] = false;
+                $result['message_error']['material_quantity'] = 'Too large';
+                return response()->json($result);
+            }
+            $result['ship_fee'] = $shippingFee->ship_fee;
+            $userId             = Auth::user()->id;
+            $settingInfo        = $this->setting->getSettingOfUser($userId);
+            $result['profit']   = round((float) $data['sell_price'] - $data['ebay_fee'] - $data['paypal_fee'] - $result['ship_fee'] - (float) $data['buy_price'] * $settingInfo->gift_discount / 100, 2);
         }
-        $result['ship_fee'] = $shippingFee->ship_fee;
-        $exchangeRate       = $this->exchangeRate->getExchangeRateLatest();
-        $userId             = Auth::user()->id;
-        $settingInfo        = $this->setting->getSettingOfUser($userId);
-        $result['profit']   = round(((float)$data['sell_price'] - $data['ebay_fee'] - $data['paypal_fee']- $result['ship_fee']) * ($exchangeRate->rate - $settingInfo->ex_rate_diff) - (float) str_replace(',', '.', explode("円", $data['buy_price'])[0]) * $settingInfo->gift_discount, 2);
         $result['status']   = true;
         return response()->json($result);
-    }
-
-    public function postProduct($data)
-    {
-        $dateNow = date('Y-m-d H:i:s');
-        $data['item']['created_at'] = $dateNow;
-        $data['item']['updated_at'] = $dateNow;
-        $productId = $this->product->insertGetId($data['item']);
-        $dataItemSpecifics = $this->formatDataItemSpecifics($data['dtb_item_specifics'], $productId);
-        $this->itemSpecific->insert($dataItemSpecifics);
-        $this->insertItemImage($data);
-    }
-    
-    public function formatDataItemSpecifics(&$input, $productId)
-    {
-        $dateNow = date('Y-m-d H:i:s');
-        foreach ($input as $key => &$item) {
-            $item['created_at'] = $dateNow;
-            $item['updated_at'] = $dateNow;
-            $item['item_id'] = $productId;
-        }
-        return $input;
-    }
-
-    public function insertItemImage($data, $productId)
-    {
-        $numberFile = $input['number_file'];
-        $dateNow = date('Y-m-d H:i:s');
-        for ($i = 0; $i < $numberFile; $i++) {
-            if (!is_string($data['files_upload_' . $i])) {
-                $this->uploadFile($data['files_upload_' . $i], 'public/upload/item-images');
-            }
-            $itemImageId = $this->itemImage->insertGetId([
-                'item_id' => $productId,
-                'url_image' => is_string($data['files_upload_' . $i]) ? $data['files_upload_' . $i] : '',
-                'created_at' => $dateNow,
-                'updated_at' => $dateNow
-            ]);
-            $itemImageString = $productId . '_' . $itemImageId . '_' . date('ymd_his');
-            $this->itemImage->updateItemImageById($itemImageId, ['item_image' => $itemImageString]);
-        }
     }
 
     /**
@@ -363,68 +439,61 @@ class ProductService extends CommonService
      * @param  array $data
      * @return array
      */
-    public function formatDataInsertProductConfirm($data)
+    public function formatDataInsertProductConfirm($data, $dataSession)
     {
         unset($data['_token']);
         unset($data['fileuploader-list-files']);
         unset($data['files']);
+        $data['istTypeAmazon'] = $data['dtb_item']['type'] == $this->product->getOriginTypeAmazon() ? true : false;
+        $dataImageOld = [];
+        if ($dataSession) {
+            for ($i = 0; $i < $dataSession['number_file']; $i++) {
+                array_push($dataImageOld, $dataSession['file_name_' . $i]);
+            }
+        }
+
+        if (Session::has($this->keyImageFromApi)) {
+            $imageFromApi = Session::get($this->keyImageFromApi)[0];
+            Session::forget($this->keyImageFromApi);
+            foreach ($imageFromApi as $key => $item) {
+                if (!in_array($item, $dataImageOld)) {
+                    array_push($dataImageOld, $item);
+                }
+            }
+        }
+        $dataImageNew = [];
         for ($i = 0; $i < $data['number_file']; $i++) {
             $file = $data['files_upload_' . $i];
             if (is_string($file)) {
                 $data['url_preview_' . $i] = $file;
-                $data['file_name_' . $i] = $file;
+                $fileString                = explode("/", $file);
+                $data['file_name_' . $i]   = array_pop($fileString);
+                array_push($dataImageNew, $data['file_name_' . $i]);
             } else {
-                $data['url_preview_' . $i] = $this->getBase64Image($file);
-                $data['file_name_' . $i] = $this->uploadFile($file, 'public/upload/item-images');
-                // $data['file_' . $i] = [
-                //     'test' => false,
-                //     'originalName' => $file->getClientOriginalName(),
-                //     'mimeType' => $file->getClientMimeType(),
-                //     'size' => $file->getClientSize(),
-                //     'path' => $file->getPathname(),
-                // ];
-                // $data['file_name_' . $i] = $data['files_upload_' . $i];
+                $data['file_name_' . $i]   = $this->uploadFile($file, $this->pathUpload);
+                $data['url_preview_' . $i] = asset($this->pathStorageFile . $data['file_name_' . $i]);
             }
             unset($data['files_upload_' . $i]);
         }
-        // if (!is_string($data['files_upload_7'])) {
-        //     $file = $data['files_upload_7'];
-        //     $data['file_7'] = [
-        //         'test' => false,
-        //         'originalName' => $file->getClientOriginalName(),
-        //         'mimeType' => $file->getClientMimeType(),
-        //         'size' => $file->getClientSize(),
-        //         'path' => $file->getPathname(),
-        //     ];
-        //     // $data['file_new'] = new UploadedFile(
-        //     //     $data['file_7']['path'],
-        //     //     $data['file_7']['originalName'],
-        //     //     $data['file_7']['mimeType'],
-        //     //     $data['file_7']['size']
-        //     // );
-        //     unset($data['files_upload_7']);
-        //     // $data['files_upload_7'] = (array) $data['files_upload_7'];
-        // }
+
+        $imageDelete = array_diff($dataImageOld, $dataImageNew);
+        foreach ($imageDelete as $key => $item) {
+            Storage::delete($this->pathUpload . $item);
+        }
         return $data;
     }
 
+    /**
+     * get base 64 image
+     * @param  image $image
+     * @return string
+     */
     public function getBase64Image($image)
     {
         $path = $image->getPathname();
         $type = explode("/", $image->getClientMimeType())[1];
         $file = file_get_contents($path);
         return 'data:image/' . $type . ';base64,' . base64_encode($file);
-    }
-
-    public function uploadTesst($input)
-    {
-        $file = new UploadedFile(
-            $input['path'],
-            $input['originalName'],
-            $input['mimeType'],
-            $input['size']
-        );
-        $this->uploadFile($file, 'public/upload/item-images');
     }
 
     /**
@@ -438,11 +507,11 @@ class ProductService extends CommonService
      * @return string
      */
     public static function uploadFile(
-        $file, 
-        $path, 
+        $file,
+        $path,
         $rename = true,
-        $allowType = [], 
-        $maxSize = null, 
+        $allowType = [],
+        $maxSize = null,
         array $config = []
     ) {
         if ($file->isValid()) {
@@ -481,16 +550,35 @@ class ProductService extends CommonService
         return null;
     }
 
+    /**
+     * format data page confirm
+     * @param  array $data
+     * @return array
+     */
     public function formatDataPageConfirm($data)
     {
+        $userId = Auth::user()->id;
+        $settingPolicyData = $this->settingPolicy->getSettingPolicyOfUser($userId);
+        $data['dtb_item']['duration']             = $this->product->getDurationOption()[$data['dtb_item']['duration']];
+        $data['dtb_item']['shipping_policy_name'] = $this->getPoliciNameById(!empty($data['dtb_item']['shipping_policy_id']) ? $data['dtb_item']['shipping_policy_id'] : '', $settingPolicyData);
+        $data['dtb_item']['payment_policy_name']  = $this->getPoliciNameById(!empty($data['dtb_item']['payment_policy_id']) ? $data['dtb_item']['payment_policy_id'] : '', $settingPolicyData);
+        $data['dtb_item']['return_policy_name']   = $this->getPoliciNameById(!empty($data['dtb_item']['return_policy_id']) ? $data['dtb_item']['return_policy_id'] : '', $settingPolicyData);
+        if (isset($data['dtb_item']['setting_shipping_option'])) {
+            $data['dtb_item']['setting_shipping_option'] = $this->settingShipping->findById($data['dtb_item']['setting_shipping_option'])->shipping_name;
+        }
+        $data['dtb_item']['condition_name'] = $this->product->getConditionNameById($data['dtb_item']['condition_id']);
         return $data;
     }
 
+    /**
+     * format data page product
+     * @param  array $data
+     * @return array
+     */
     public function formatDataPageProduct($data)
     {
         $data['duration']['option']      = $this->product->getDurationOption();
         $data['duration']['value']       = $data['dtb_item']['duration'];
-        $data['istTypeAmazon']           = $data['dtb_item']['type'] == $this->product->getOriginTypeAmazon() ? true : false;
         $settingShippingOption           = $this->getSettingShippingOfUser($data['dtb_item']);
         $data['setting_shipping_option'] = $settingShippingOption;
         $shippingType                    = [];
@@ -512,24 +600,15 @@ class ProductService extends CommonService
             'payment'  => $paymentType,
             'return'   => $returnType
         ];
-        $arrayImage = [];
-        for ($i = 0; $i < $data['number_file']; $i++) {
-            $url = $data['file_name_' . $i];
-            $arrayItem = explode(".", $url);
-            $type = array_pop($arrayItem);
-            $item = [
-                'name' => '',
-                'type' => 'image/' . $type,
-                'extension' => $type,
-                'file' => $data['url_preview_' . $i],
-            ];
-            $arrayImage[] = $item;
-        }
-        $data['image'] = json_encode($arrayImage);
-        // dd($data['image']);
+
         return $data;
     }
 
+    /**
+     * get image init
+     * @param  array $data
+     * @return Illuminate\Http\Response
+     */
     public function getImageInit($data)
     {
         $arrayImage = [];
@@ -538,15 +617,148 @@ class ProductService extends CommonService
             $arrayItem = explode(".", $url);
             $type = array_pop($arrayItem);
             $item = [
-                'name' => '',
-                'type' => 'image/' . $type,
+                'name'      => '',
+                'type'      => 'image/' . $type,
                 'extension' => $type,
-                'file' => $data['url_preview_' . $i],
+                'file'      => $data['url_preview_' . $i],
             ];
             $arrayImage[] = $item;
         }
         $result['status'] = true;
         $result['images']   = $arrayImage;
         return response()->json($result);
+    }
+
+    /**
+     * get policy name by id
+     * @param  integer $id
+     * @param  array $settingPolicyData
+     * @return string
+     */
+    public function getPoliciNameById($id, $settingPolicyData)
+    {
+        foreach ($settingPolicyData as $key => $policy) {
+            if ($policy->id == $id) {
+                return $policy->policy_name;
+            }
+        }
+        return;
+    }
+
+    /**
+     * post prodcut publish
+     * @return Illuminate\Http\Response
+     */
+    public function postProductPublish()
+    {
+        try {
+            DB::beginTransaction();
+            $data = Session::get($this->keyProduct)[0];
+            // insert item
+            $dateNow = date('Y-m-d H:i:s');
+            $dataItem = [
+                'original_id'         => $data['dtb_item']['original_id'],
+                'item_id'             => $data['dtb_item']['item_id'],
+                'original_type'       => $data['dtb_item']['type'],
+                'item_name'           => $data['dtb_item']['item_name'],
+                'category_id'         => $data['dtb_item']['category_id'],
+                'category_name'       => $data['dtb_item']['category_name'],
+                'condition_des'       => $data['dtb_item']['condition_des'],
+                'condition_id'        => $data['dtb_item']['condition_id'],
+                // 'condition_name'      => $data['dtb_item']['condition_name'],
+                'price'               => $data['dtb_item']['price'],
+                'duration'            => $data['dtb_item']['duration'],
+                'quantity'            => $data['dtb_item']['quantity'],
+                'shipping_policy_id'  => $data['dtb_item']['shipping_policy_id'],
+                'payment_policy_id'   => $data['dtb_item']['payment_policy_id'],
+                // 'return_policy_id' => $data['dtb_item']['return_policy_id'],
+                'ship_fee'            => isset($data['dtb_item']['ship_fee']) ? $data['dtb_item']['ship_fee'] : 0,
+                'created_at'          => $dateNow,
+                'updated_at'          => $dateNow,
+            ];
+            $itemId = $this->product->insertGetId($dataItem);
+
+            // insert item_specifics
+            $dataItemSpecifics = $this->formatDataItemSpecifics($data['dtb_item_specifics'], $itemId);
+            $this->itemSpecific->insert($dataItemSpecifics);
+
+            // insert item image
+            $this->insertItemImage($data, $itemId);
+
+            // post to ebay
+            DB::commit();
+            Session::forget($this->keyProduct);
+            $response['status'] = true;
+            return response()->json($response);
+        } catch (Exception $ex) {
+            DB::rollback();
+            Log::error($ex);
+            $response['status'] = false;
+            return response()->json($response);
+        }
+    }
+
+    public function formatDataItemSpecifics($input, $productId)
+    {
+        $dateNow = date('Y-m-d H:i:s');
+        foreach ($input as $key => &$item) {
+            $item['created_at'] = $dateNow;
+            $item['updated_at'] = $dateNow;
+            $item['item_id']    = $productId;
+        }
+        return $input;
+    }
+
+    /**
+     * insert item image
+     * @param  array $data
+     * @param  integer $productId
+     * @return none
+     */
+    public function insertItemImage($data, $productId)
+    {
+        $numberFile = $data['number_file'];
+        $dateNow = date('Y-m-d H:i:s');
+        for ($i = 0; $i < $numberFile; $i++) {
+            $itemImageId = $this->itemImage->insertGetId([
+                'item_id'    => $productId,
+                'item_image' => $data['file_name_' . $i],
+                'created_at' => $dateNow,
+                'updated_at' => $dateNow
+            ]);
+            $arrayItem       = explode(".", $data['file_name_' . $i]);
+            $extension       = array_pop($arrayItem);
+            $itemImageString = $productId . '_' . $itemImageId . '_' . date('ymd_his') . '.' . $extension;
+            $this->itemImage->updateItemImageById($itemImageId, ['item_image' => $itemImageString]);
+            $this->pathUpload = $this->itemImage->getPathUploadFile();
+            if (Storage::disk(env('FILESYSTEM_DRIVER'))->exists($this->pathUpload . $data['file_name_' . $i])) {
+                Storage::move($this->pathUpload . $data['file_name_' . $i], $this->pathUpload . $itemImageString);
+            }
+        }
+    }
+
+
+    /**
+     * check has setting policy data
+     * @return boolean
+     */
+    public function checkHasSettingPolicyData()
+    {
+        $userId = Auth::user()->id;
+        return $this->settingPolicy->getSettingPolicyOfUser($userId) ? true : false;
+    }
+
+    /**
+     * format message error
+     * @param  array $mesageError
+     * @return array
+     */
+    public function formatMessageError($mesageError)
+    {
+        $arrayError = [];
+        foreach ($mesageError as $key => $value) {
+            $arrayError[str_replace('.', '_', $key)] = $value[0];
+        }
+        return $arrayError;
     }
 }

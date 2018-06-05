@@ -13,7 +13,11 @@ class ItemImage extends AbstractModel
 
     protected $guarded = [];
 
-    const PATH_UPLOAD_FILE = 'public/upload/item-images';
+    const PATH_UPLOAD_FILE = 'upload/item-images/';
+    const FULL_PATH_UPLOAD_FILE = 'app/public/upload/item-images/';
+    const PATH_STORAGE_FILE = 'storage/upload/item-images/';
+
+    const SESSION_KEY_IMAGE_FROM_API = 'image-from-api';
 
     /**
      * update item image by id
@@ -34,5 +38,23 @@ class ItemImage extends AbstractModel
     public function getPathUploadFile()
     {
         return self::PATH_UPLOAD_FILE;
+    }
+
+    /**
+     * get full upload file
+     * @return string
+     */
+    public function getFullPathUploadFile()
+    {
+        return self::FULL_PATH_UPLOAD_FILE;
+    }
+
+    /**
+     * get path storage file
+     * @return string
+     */
+    public function getPathStorageFile()
+    {
+        return self::PATH_STORAGE_FILE;
     }
 }

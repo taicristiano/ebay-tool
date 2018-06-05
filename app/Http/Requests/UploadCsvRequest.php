@@ -27,7 +27,7 @@ class UploadCsvRequest extends Request
         return [
             'file_csv' => 'required|mimes:csv,txt',
         ];
-    }    
+    }
 
     /**
      * message validate

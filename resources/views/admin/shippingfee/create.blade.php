@@ -1,0 +1,39 @@
+@extends('layouts.default')
+@section('title')
+{{ __('view.shipping.' . (isset($shipping) ? 'update_fee' : 'create_fee')) }}
+@endsection
+@section('content')
+<div class="content-wrapper">
+    @include('layouts.component.header-content', ['text' => __('view.shipping.' . (isset($shippingFee) ? 'update_fee' : 'create_fee'))])
+    <!-- Main content -->
+    <section class="content">
+        <!-- Default box -->
+        <div class="row">
+            <form action="{{ isset($shippingFee) ? route('admin.shipping_fee.update', [$shipping->id, $shippingFee->id]) : route('admin.shipping_fee.create', $shipping->id) }}" class="col-xs-12 col-md-8 col-md-offset-2" method="POST" role="form">
+            	@csrf
+                <div class="col-xs-12 box">
+                	<div class="form-group">
+                        <label>
+                            {{ __('view.shipping.weight') }} <span class="text-danger">(*)</span>
+                        </label>
+                        {!! Form::text('weight', old('weight', isset($shippingFee) ? $shippingFee->weight : ''), ['class' => 'form-control']) !!}
+                        {!! $errors->first('weight') ? '<p class="text-danger">'. $errors->first('weight') .'</p>' : ''!!}
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            {{ __('view.shipping.ship_fee') }} <span class="text-danger">(*)</span>
+                        </label>
+                        {!! Form::text('ship_fee', old('ship_fee', isset($shippingFee) ? $shippingFee->ship_fee : ''), ['class' => 'form-control']) !!}
+                        {!! $errors->first('ship_fee') ? '<p class="text-danger">'. $errors->first('ship_fee') .'</p>' : ''!!}
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">
+                            {{ __('view.shipping.submit') }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    @endsection
+</div>

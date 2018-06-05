@@ -6,7 +6,7 @@ use Log;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 use App\Models\Item;
-use App\Http\Requests\UpdateProfitRequest;
+use App\Http\Requests\CalculateProfitRequest;
 use App\Http\Requests\PostProductRequest;
 use Illuminate\Support\Facades\Session;
 
@@ -40,8 +40,9 @@ class ProductController extends AbstractController
         if (Session::has($this->keyProduct)) {
             $data = $this->productService->formatDataPageProduct(Session::get($this->keyProduct)[0]);
         }
+        $conditionIdList = $this->product->getConditionIdList();
         $originType = $this->product->getOriginType();
-        return view('admin.product.post', compact('data', 'originType'));
+        return view('admin.product.post', compact('data', 'originType', 'conditionIdList'));
     }
 
 
@@ -150,37 +151,14 @@ class ProductController extends AbstractController
         $response['status'] = false;
         try {
             $data = $request->all();
-            $updateProfitValidate = UpdateProfitRequest::validateData($data);
-            if ($updateProfitValidate->fails()) {
-                $mesageError = $updateProfitValidate->errors()->messages();
+            $calculateProfitValidate = CalculateProfitRequest::validateData($data);
+            if ($calculateProfitValidate->fails()) {
+                $mesageError = $calculateProfitValidate->errors()->messages();
                 $response['message_error'] = $this->productService->formatMessageError($mesageError);
                 return response()->json($response);
             }
 
             return $this->productService->calculatorProfit($data);
-        } catch (Exception $ex) {
-            Log::error($ex);
-            return response()->json($response);
-        }
-    }
-
-    /**
-     * update profit
-     * @param  Request $request
-     * @return Illuminate\Http\Response
-     */
-    public function updateProfit(Request $request)
-    {
-        $response['status'] = false;
-        try {
-            $data = $request->all();
-            $updateProfitValidate = UpdateProfitRequest::validateData($data);
-            if ($updateProfitValidate->fails()) {
-                $mesageError = $updateProfitValidate->errors()->messages();
-                $response['message_error'] = $this->productService->formatMessageError($mesageError);
-                return response()->json($response);
-            }
-            return $this->productService->updateProfit($data);
         } catch (Exception $ex) {
             Log::error($ex);
             return response()->json($response);

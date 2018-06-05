@@ -3,8 +3,8 @@
     <div class="box-body">
         @if($data['istTypeAmazon'])
         <div class="form-group form-group-custom">
-            <label for="dtb_item[product_size]">@lang('view.product_size') <span class="text-danger">(*)</span></label>
-            {!! Form::text("dtb_item[product_size]", isset($data['dtb_item']['product_size']) ? $data['dtb_item']['product_size'] : '', ['class' => 'form-control product_size', 'id' => 'product_size']) !!}
+            <label for="dtb_item[product_size]">@lang('view.product_size')</label>
+            {!! Form::text("dtb_item[product_size]", isset($data['dtb_item']['product_size']) ? $data['dtb_item']['product_size'] : '', ['class' => 'form-control product_size', 'id' => 'product_size', 'placeholder' => 'Example: 12x34x56']) !!}
             <p class="error-validate text-danger display-nones error-dtb_item_product_size"></p>
         </div>
         <div class="specific-itemssss">
@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="col-md-6 col-sm-6 col-xs-6">
-                <label for="dtb_item[material_quantity]">@lang('view.material_quantity') <span class="text-danger">(*)</span></label>
+                <label for="dtb_item[material_quantity]">@lang('view.material_quantity')</span></label>
                 <div class="form-group input-group">
                     {!! Form::text("dtb_item[material_quantity]", isset($data['dtb_item']['material_quantity']) ? $data['dtb_item']['material_quantity'] : '', ['class' => 'specific-value form-control', 'id' => 'material-quantity']) !!}
                     <span class="input-group-addon">@lang('view.g')</span>
@@ -24,9 +24,9 @@
                 <p class="error-validate text-danger display-nones error-dtb_item_material_quantity" id="error-material-quantity"></p>
             </div>
         </div>
-        <div class="form-group form-group-custom">
+        <div class="form-group form-group-custom setting-shipping-option">
             <label for="dtb_item[setting_shipping_option]">@lang('view.setting_shipping_option') <span class="text-danger">(*)</span></label>
-            {!! Form::select("dtb_item[setting_shipping_option]", $data['setting_shipping_option'], isset($data['setting_shipping_option']['value']) ? $data['setting_shipping_option']['value'] : '', ['class' => 'form-control', 'id' => 'setting-shipping']) !!}
+            {!! Form::select("dtb_item[setting_shipping_option]", $data['setting_shipping_option'], isset($data['setting_shipping_selected']) ? $data['setting_shipping_selected'] : '', ['class' => 'form-control', 'id' => 'setting-shipping']) !!}
             {!! $errors->first("dtb_item[setting_shipping_option]") ? '
             <p class="text-danger">'. $errors->first("dtb_item[setting_shipping_option]") .'</p>
             ' : ''!!}

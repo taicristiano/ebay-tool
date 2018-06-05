@@ -56,7 +56,7 @@
         <div class="form-group-custom">
             <label for="dtb_item[buy_price]">@lang('view.buy_price') <span class="text-danger">(*)</span></label>
             <div class="form-group input-group">
-                {!! Form::text("dtb_item[buy_price]", !empty($data['dtb_item']['buy_price']) ? $data['dtb_item']['buy_price'] : 2000, ['class' => 'form-control', 'id' => 'buy_price']) !!}
+                {!! Form::text("dtb_item[buy_price]", !empty($data['dtb_item']['buy_price']) ? $data['dtb_item']['buy_price'] : '', ['class' => 'form-control', 'id' => 'buy_price']) !!}
                 <span class="input-group-addon">@lang('view.man')</span>
             </div>
             <p class="error-validate text-danger display-nones error-dtb_item_buy_price"></p>

@@ -72,7 +72,7 @@ class UserController extends AbstractController
             }
             return $this->render(compact('user', 'typeOptions', 'categoryOptions', 'typeGuestAdmin'));
         }
-        $data             = array_filter($req->only($this->user->getFieldList()));        
+        $data             = array_filter($req->only($this->user->getFieldList()));
         if (!$userId) {
             $data['user_code'] = User::generateUserCode();
         }

@@ -567,26 +567,7 @@ class ProductService extends CommonService
             $settingShippingOption           = $this->getSettingShippingOfUser($data['dtb_item']);
             $data['setting_shipping_option'] = $settingShippingOption;
         }
-        $shippingType                    = [];
-        $paymentType                     = [];
-        $returnType                      = [];
-        $userId                          = Auth::user()->id;
-        $settingPolicyData               = $this->settingPolicy->getSettingPolicyOfUser($userId);
-        foreach ($settingPolicyData as $key => $policy) {
-            if ($policy->policy_type == SettingPolicy::TYPE_SHIPPING) {
-                $shippingType[$policy->id] = $policy->policy_name;
-            } elseif ($policy->policy_type == SettingPolicy::TYPE_PAYMENT) {
-                $paymentType[$policy->id] = $policy->policy_name;
-            } else {
-                $returnType[$policy->id] = $policy->policy_name;
-            }
-        }
-        $data['dtb_setting_policies'] = [
-            'shipping' => $shippingType,
-            'payment'  => $paymentType,
-            'return'   => $returnType
-        ];
-
+        $data['dtb_setting_policies'] = $this->getDataSettingPolicies();
         return $data;
     }
 
@@ -601,7 +582,7 @@ class ProductService extends CommonService
         $arrayImage = [];
         if (!$data) {
             $result['images'] = $arrayImage;
-           return response()->json($result);
+            return response()->json($result);
         }
         for ($i = 0; $i < $data['number_file']; $i++) {
             $url = $data['file_name_' . $i];

@@ -30,6 +30,7 @@ class PostProductRequest extends Request
             'dtb_item.condition_des'  => 'required',
             'dtb_item.price'          => 'required|numeric',
             'dtb_item.buy_price'      => 'required|numeric',
+            'dtb_item.category_id'    => 'required',
         ];
         if ($data['dtb_item']['type'] == 2) {
             $rules['dtb_item.product_size'] = 'required';

@@ -126,23 +126,7 @@ class ProductService extends CommonService
         }
 
         //data dtb_setting_policies
-        $shippingType = [];
-        $paymentType  = [];
-        $returnType   = [];
-        foreach ($settingPolicyData as $key => $policy) {
-            if ($policy->policy_type == SettingPolicy::TYPE_SHIPPING) {
-                $shippingType[$policy->id] = $policy->policy_name;
-            } elseif ($policy->policy_type == SettingPolicy::TYPE_PAYMENT) {
-                $paymentType[$policy->id] = $policy->policy_name;
-            } else {
-                $returnType[$policy->id] = $policy->policy_name;
-            }
-        }
-        $result['dtb_setting_policies'] = [
-            'shipping' => $shippingType,
-            'payment'  => $paymentType,
-            'return'   => $returnType
-        ];
+        $result['dtb_setting_policies'] = $this->getDataSettingPolicies();
         $result['duration']['option'] = $this->product->getDurationOption();
 
         return $result;
@@ -579,8 +563,10 @@ class ProductService extends CommonService
     {
         $data['duration']['option']      = $this->product->getDurationOption();
         $data['duration']['value']       = $data['dtb_item']['duration'];
-        $settingShippingOption           = $this->getSettingShippingOfUser($data['dtb_item']);
-        $data['setting_shipping_option'] = $settingShippingOption;
+        if ($data['dtb_item']['type'] == 2) {
+            $settingShippingOption           = $this->getSettingShippingOfUser($data['dtb_item']);
+            $data['setting_shipping_option'] = $settingShippingOption;
+        }
         $shippingType                    = [];
         $paymentType                     = [];
         $returnType                      = [];
@@ -611,7 +597,12 @@ class ProductService extends CommonService
      */
     public function getImageInit($data)
     {
+        $result['status'] = true;
         $arrayImage = [];
+        if (!$data) {
+            $result['images'] = $arrayImage;
+           return response()->json($result);
+        }
         for ($i = 0; $i < $data['number_file']; $i++) {
             $url = $data['file_name_' . $i];
             $arrayItem = explode(".", $url);
@@ -624,7 +615,6 @@ class ProductService extends CommonService
             ];
             $arrayImage[] = $item;
         }
-        $result['status'] = true;
         $result['images']   = $arrayImage;
         return response()->json($result);
     }
@@ -760,5 +750,56 @@ class ProductService extends CommonService
             $arrayError[str_replace('.', '_', $key)] = $value[0];
         }
         return $arrayError;
+    }
+
+    /**
+     * get data setting policies
+     * @return array
+     */
+    public function getDataSettingPolicies()
+    {
+        $userId             = Auth::user()->id;
+        $settingPolicyData  = $this->settingPolicy->getSettingPolicyOfUser($userId);
+        $shippingType = [];
+        $paymentType  = [];
+        $returnType   = [];
+        foreach ($settingPolicyData as $key => $policy) {
+            if ($policy->policy_type == SettingPolicy::TYPE_SHIPPING) {
+                $shippingType[$policy->id] = $policy->policy_name;
+            } elseif ($policy->policy_type == SettingPolicy::TYPE_PAYMENT) {
+                $paymentType[$policy->id] = $policy->policy_name;
+            } else {
+                $returnType[$policy->id] = $policy->policy_name;
+            }
+        }
+        return [
+            'shipping' => $shippingType,
+            'payment'  => $paymentType,
+            'return'   => $returnType
+        ];
+    }
+
+    /**
+     * get data for show page product post
+     * @param  array $data
+     * @return array
+     */
+    public function getDataForShowPagePostProduct($data)
+    {
+        if (!$data) {
+            $data['istTypeAmazon'] = false;
+        }
+        $data['duration']['option'] = $this->product->getDurationOption();
+        $data['dtb_setting_policies'] = $this->getDataSettingPolicies();
+        if (empty($data['dtb_item'])) {
+            $userId = Auth::user()->id;
+            $settingData = $this->setting->getSettingOfUser($userId);
+            $data['dtb_item']['duration'] = $settingData->duration;
+            $data['dtb_item']['quantity'] = $settingData->quantity;
+            $category = $this->categoryFee->getFirstItem();
+            $data['dtb_item']['category_id'] = $category->category_id;
+            $data['dtb_item']['category_name'] = $category->category_path;
+        }
+        return $data;
     }
 }

@@ -70,22 +70,16 @@
                             @csrf
                             <div id="conten-ajax">
                                 <div class="ebay-info">
-                                    @if(!empty($data))
-                                        @include('admin.product.component.item_ebay_info')
-                                    @endif
+                                    @include('admin.product.component.item_ebay_info')
                                 </div>
                                 <div class="yahoo-or-amazon-info">
-                                    @if(!empty($data))
-                                        @include('admin.product.component.item_yahoo_or_amazon_info')
-                                    @endif
+                                    @include('admin.product.component.item_yahoo_or_amazon_info')
                                 </div>
                                 <div class="{{!empty($data) ? '' : 'display-none'}} margin-20" id="profit-calculation">
                                     <button type="button" class="btn btn-primary" id="btn-calculator-profit"><i class="fa fa-calculator fa-fw"></i> @lang('view.benefit_calculation')</button>
                                 </div>
                                 <div class="calculator-info">
-                                    @if(!empty($data))
-                                        @include('admin.product.component.calculator_info')
-                                    @endif
+                                    @include('admin.product.component.calculator_info')
                                 </div>
                             </div>
                         </form>
@@ -116,7 +110,7 @@
     // $('input[type="radio"].minimal').iCheck({
         // radioClass: 'iradio_minimal-blue'
     // });
-    var numberSpecificItem = '{{ !empty($data['dtb_item_specifics']) ? count($data['dtb_item_specifics']) : 0 }}';
+    var numberSpecificItem = '{{ !empty($data['dtb_item_specifics']) ? count($data['dtb_item_specifics']) : 1 }}';
     var urlGetImageInit = "{{route('admin.product.get-image-init')}}";
     var urlSearchCategory = "{{route('admin.product.search-category')}}";
 </script>

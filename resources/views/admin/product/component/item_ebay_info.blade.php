@@ -7,7 +7,7 @@
             <p class="error-validate text-danger display-nones error-dtb_item_item_name"></p>
         </div>
         <div class="form-group form-group-custom">
-            <label for="dtb_item[category_name]">@lang('view.category') <span class="text-danger">(*)</span></label>
+            <label for="dtb_item[category_id]">@lang('view.category') <span class="text-danger">(*)</span></label>
             {!! Form::select("dtb_item[category_id]", isset($data['dtb_item']['category_id']) ? [$data['dtb_item']['category_id'] => $data['dtb_item']['category_name']] : [], isset($data['dtb_item']['category_id']) ? $data['dtb_item']['category_id'] : '', ['class' => 'form-control', 'id' => 'category-id']) !!}
             <p class="error-validate text-danger display-nones error-dtb_item_category_id"></p>
         </div>
@@ -27,6 +27,7 @@
         <div class="box box-success">
             <div class="box-header with-border">@lang('view.specifications')</div>
             <div class="box-body">
+                @if(!empty($data['dtb_item_specifics']))
                 @foreach($data['dtb_item_specifics'] as $key => $value)
                 <div class="specific-item row">
                     <div class="col-md-6 col-sm-6 col-xs-6">
@@ -46,6 +47,25 @@
                     </div>
                 </div>
                 @endforeach
+                @else
+                <div class="specific-item row">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            {!! Form::text("dtb_item_specifics[0][name]", isset($data['dtb_item_specifics'][0]['name']) ? $data['dtb_item_specifics'][0]['name'] : '', ['class' => 'specific-name form-control']) !!}
+                        </div>
+                        <p class="error-name error-validate-specifics text-danger display-nones"><span class="error-dtb_item_specifics_0_name"></span></p>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group input-group">
+                            {!! Form::text("dtb_item_specifics[0][value]", isset($data['dtb_item_specifics'][0]['value']) ? $data['dtb_item_specifics'][0]['value'] : '', ['class' => 'specific-value form-control']) !!}
+                            <span class="input-group-addon">
+                                <a class="delete-specific"><i class="btn btn-danger fa fa-trash btn-fa"></i></a>
+                            </span>
+                        </div>
+                        <p class="error-value error-validate-specifics text-danger display-nones"><span class="error-dtb_item_specifics_0_value"></span></p>
+                    </div>
+                </div>
+                @endif
                 <div class="text-center" id="div-add-specific">
                     <p class="error-value error-validate-specifics text-danger display-nones"><span class="error-dtb_item_specifics"></span></p>
                     <button type="button" class="btn btn-info fa" id="add-specific"><i class="fa fa-plus fa-fw"></i></a></button>

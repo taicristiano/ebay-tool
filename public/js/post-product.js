@@ -3,6 +3,7 @@ var isChangeItemId = false;
 var isChangeEbayOrAmazon = false;
 
 jQuery(document).ready(function() {
+    intSelectCategory();
     if ($('#item-yaohoo-or-amazon-content').length) {
         $.get(urlGetImageInit, function(data, status) {
             if (data.status) {
@@ -138,7 +139,7 @@ jQuery(document).ready(function() {
     });
 
     $(document).on("click", "#btn-calculator-profit",function() {
-        getCalculateProfitInfo();
+        getCalculateProfitInfo(true);
     });
 
     // $('.type').on('ifChanged', function(event) {
@@ -152,9 +153,9 @@ jQuery(document).ready(function() {
         }
     });
 
-    $(document).on("change", "#material-quantity, #setting-shipping, #buy_price, #sell_price, #product_size", function() {
+    $(document).on("change", "#category-id, #material-quantity, #setting-shipping, #buy_price, #sell_price, #product_size", function() {
         if ($('#item-calculator-info').length) {
-            getCalculateProfitInfo();
+            getCalculateProfitInfo(true);
         }
     });
 });
@@ -177,32 +178,13 @@ function getItemEbayInfo()
                 numberSpecificItem = $('.specific-item').length - 1;
                 $('#item-ebay-invalid').addClass('display-none');
                 $('#item-ebay-invalid').parent().parent().removeClass('has-error');
-                $('#category-id').select2({
-                    ajax: {
-                        url: urlSearchCategory,
-                        dataType: 'json',
-                        data: function(params) {
-                            var query = {
-                                category_path: params.term, limit: 10,
-                                page: params.page || 1
-                            }
-                            return query;
-                        },
-                        delay: 500,
-                        processResults: function(data, params) {
-                            params.page = params.page || 1;
-                            return {
-                                results: data.results,
-                                pagination: {
-                                    more: (params.page * 10) < data.count_filtered
-                                }
-                            };
-                        }
-                    }
-                });
+                intSelectCategory();
+                if ($('#sell_price').length && $('#buy_price').length) {
+                    getCalculateProfitInfo(false);
+                }
             } else {
-                $('#conten-ajax .ebay-info').html('');
-                $('#conten-ajax .calculator-info').html('');
+                // $('#conten-ajax .ebay-info').html('');
+                // $('#conten-ajax .calculator-info').html('');
                 $('#item-ebay-invalid').removeClass('display-none');
                 $('#item-ebay-invalid').parent().parent().addClass('has-error');
             }
@@ -267,7 +249,7 @@ function getYahooOrAmazonInfo(button)
                 fnInitFIlerImage(data.image);
                 var isShowCalculate = $('#item-calculator-info').length;
                 if (isShowCalculate) {
-                    getCalculateProfitInfo();
+                    getCalculateProfitInfo(false);
                 }
                 if ($('#item-ebay-content').length) {
                     $('html, body').animate({
@@ -275,8 +257,8 @@ function getYahooOrAmazonInfo(button)
                     }, 3000);
                 }
             } else {
-                $('#conten-ajax .yahoo-or-amazon-info').html('');
-                $('#conten-ajax .calculator-info').html('');
+                // $('#conten-ajax .yahoo-or-amazon-info').html('');
+                // $('#conten-ajax .calculator-info').html('');
                 $('#item-yahoo-or-amazon-invalid').removeClass('display-none');
                 $('#item-yahoo-or-amazon-invalid').parent().parent().addClass('has-error');
             }
@@ -289,7 +271,7 @@ function getYahooOrAmazonInfo(button)
     });
 }
 
-function getCalculateProfitInfo()
+function getCalculateProfitInfo(isValidate)
 {
     $('body').addClass('loading-ajax');
     isShowCalculate = $('#item-calculator-info').length;
@@ -298,16 +280,17 @@ function getCalculateProfitInfo()
     var type = $('.type:checked').val();
     var data = {
         _token: token,
+        is_validate: isValidate,
         is_update: isShowCalculate,
         material_quantity: materialQuantity,
         type: type,
-        product_size: isShowCalculate ? $('#product_size').val() : $('#product_size_hidden').val(),
+        product_size: (isShowCalculate && $('#product_size').length) ? $('#product_size').val() : $('#product_size_hidden').val(),
         commodity_weight: $('#commodity_weight').val(),
         sell_price: $('#sell_price').val(),
         buy_price: isShowCalculate ? $('#buy_price').val() : $('#buy_price_span').text(),
         category_id: $('#category-id').val(),
-        ship_fee: isShowCalculate ?  $('#ship_fee').val() : '',
-        setting_shipping: isShowCalculate ? $('#setting-shipping').val() : '',
+        ship_fee: (isShowCalculate && $('#ship_fee').length) ?  $('#ship_fee').val() : '',
+        setting_shipping: (isShowCalculate && $('#setting-shipping').length) ? $('#setting-shipping').val() : '',
     };
     $.ajax({
         url: urlCalculatorProfit,
@@ -315,15 +298,17 @@ function getCalculateProfitInfo()
         dataType: 'json',
         data: data,
         success: function (data) {
+            $('#error-material-quantity').text('');
+            $('.error-dtb_item_price').text('');
+            $('.error-dtb_item_buy_price').text('');
+            $('.error-dtb_item_product_size').text('');
+            $('.error-dtb_item_category_id').text('');
+            $('.error-dtb_item_category_id').parent().removeClass('has-error');
+            $('.error-dtb_item_price').parent().removeClass('has-error');
+            $('.error-dtb_item_buy_price').parent().removeClass('has-error');
+            $('.error-dtb_item_product_size').parent().removeClass('has-error');
+            $('#error-material-quantity').parent().removeClass('has-error');
             if (data.status) {
-                $('#error-material-quantity').text('');
-                $('.error-dtb_item_price').text('');
-                $('.error-dtb_item_buy_price').text('');
-                $('.error-dtb_item_product_size').text('');
-                $('.error-dtb_item_price').parent().removeClass('has-error');
-                $('.error-dtb_item_buy_price').parent().removeClass('has-error');
-                $('.error-dtb_item_product_size').parent().removeClass('has-error');
-                $('#error-material-quantity').parent().removeClass('has-error');
                 $('#conten-ajax .calculator-info').html(data.data);
             } else {
                 messageError = data.message_error;
@@ -342,6 +327,10 @@ function getCalculateProfitInfo()
                 if(messageError.product_size) {
                     $('.error-dtb_item_product_size').text(messageError.product_size);
                     $('.error-dtb_item_product_size').parent().addClass('has-error');
+                }
+                if(messageError.category_id) {
+                    $('.error-dtb_item_category_id').text(messageError.category_id);
+                    $('.error-dtb_item_category_id').parent().addClass('has-error');
                 }
                 // // if (!isShowCalculate) {
                 //     $('html, body').animate({
@@ -364,4 +353,31 @@ function resetSpecificiItemNone()
     specificItemNone.find('.specific-value').removeAttr('name');
     specificItemNone.find('.error-name span').removeClass();
     specificItemNone.find('.error-value span').removeClass();
+}
+
+function intSelectCategory()
+{
+    $('#category-id').select2({
+        ajax: {
+            url: urlSearchCategory,
+            dataType: 'json',
+            data: function(params) {
+                var query = {
+                    category_path: params.term, limit: 10,
+                    page: params.page || 1
+                }
+                return query;
+            },
+            delay: 500,
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+                return {
+                    results: data.results,
+                    pagination: {
+                        more: (params.page * 10) < data.count_filtered
+                    }
+                };
+            }
+        }
+    });
 }

@@ -84,6 +84,7 @@ jQuery(document).ready(function() {
         fd.append('dtb_item[original_id]', $('#id_ebay_or_amazon').val());
         fd.append('dtb_item[item_id]', $('#item_id').val());
         fd.append('dtb_item[type]', $('.type:checked').val());
+        fd.append('dtb_item[category_name]', $( "#category-id option:selected" ).text());
         $.each(fileUpload, function (index, value) {
             fd.append('files_upload_' + index, value.file);
         });
@@ -176,6 +177,29 @@ function getItemEbayInfo()
                 numberSpecificItem = $('.specific-item').length - 1;
                 $('#item-ebay-invalid').addClass('display-none');
                 $('#item-ebay-invalid').parent().parent().removeClass('has-error');
+                $('#category-id').select2({
+                    ajax: {
+                        url: urlSearchCategory,
+                        dataType: 'json',
+                        data: function(params) {
+                            var query = {
+                                category_path: params.term, limit: 10,
+                                page: params.page || 1
+                            }
+                            return query;
+                        },
+                        delay: 500,
+                        processResults: function(data, params) {
+                            params.page = params.page || 1;
+                            return {
+                                results: data.results,
+                                pagination: {
+                                    more: (params.page * 10) < data.count_filtered
+                                }
+                            };
+                        }
+                    }
+                });
             } else {
                 $('#conten-ajax .ebay-info').html('');
                 $('#conten-ajax .calculator-info').html('');
@@ -269,7 +293,7 @@ function getCalculateProfitInfo()
 {
     $('body').addClass('loading-ajax');
     isShowCalculate = $('#item-calculator-info').length;
-    var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : 0;
+    var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : null;
     var token = window.Laravel.csrfToken;
     var type = $('.type:checked').val();
     var data = {
@@ -281,7 +305,7 @@ function getCalculateProfitInfo()
         commodity_weight: $('#commodity_weight').val(),
         sell_price: $('#sell_price').val(),
         buy_price: isShowCalculate ? $('#buy_price').val() : $('#buy_price_span').text(),
-        category_id: $('#category_id').val(),
+        category_id: $('#category-id').val(),
         ship_fee: isShowCalculate ?  $('#ship_fee').val() : '',
         setting_shipping: isShowCalculate ? $('#setting-shipping').val() : '',
     };
@@ -291,15 +315,15 @@ function getCalculateProfitInfo()
         dataType: 'json',
         data: data,
         success: function (data) {
+            $('#error-material-quantity').text('');
+            $('.error-dtb_item_price').text('');
+            $('.error-dtb_item_buy_price').text('');
+            $('.error-dtb_item_product_size').text('');
+            $('.error-dtb_item_price').parent().removeClass('has-error');
+            $('.error-dtb_item_buy_price').parent().removeClass('has-error');
+            $('.error-dtb_item_product_size').parent().removeClass('has-error');
+            $('#error-material-quantity').parent().removeClass('has-error');
             if (data.status) {
-                $('#error-material-quantity').text('');
-                $('.error-dtb_item_price').text('');
-                $('.error-dtb_item_buy_price').text('');
-                $('.error-dtb_item_product_size').text('');
-                $('.error-dtb_item_price').parent().removeClass('has-error');
-                $('.error-dtb_item_buy_price').parent().removeClass('has-error');
-                $('.error-dtb_item_product_size').parent().removeClass('has-error');
-                $('#error-material-quantity').parent().removeClass('has-error');
                 $('#conten-ajax .calculator-info').html(data.data);
             } else {
                 messageError = data.message_error;

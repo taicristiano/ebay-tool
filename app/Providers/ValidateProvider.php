@@ -29,6 +29,40 @@ class ValidateProvider extends ServiceProvider
         Validator::extend('greateThanOrEqualZero', function ($attribute, $value, $parameters, $validator) {
             return $value >= 0;
         });
+        Validator::extend('greateThanZero', function ($attribute, $value, $parameters, $validator) {
+            if (strlen($value) > 0) {
+                return $value > 0;
+            }
+            return true;
+        });
+        Validator::extend('materialQuantity', function ($attribute, $value, $parameters, $validator) {
+            if (strlen($value) > 0) {
+                if (!is_numeric($value)) {
+                    return false;
+                }
+                return $value > 0;
+            }
+            return true;
+        });
+        Validator::extend('product_size', function ($attribute, $value, $parameters, $validator) {
+            if (strlen($value) > 0) {
+                $value = strtolower($value);
+                $array = explode('x', $value);
+                if (count($array) != 3) {
+                    return false;
+                }
+                foreach ($array as $item) {
+                    if (!is_numeric($item)) {
+                        return false;
+                    }
+                    if($item <= 0) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return true;
+        });
     }
 
     /**

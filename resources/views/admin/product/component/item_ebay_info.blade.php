@@ -7,19 +7,17 @@
             <p class="error-validate text-danger display-nones error-dtb_item_item_name"></p>
         </div>
         <div class="form-group form-group-custom">
-            {!! Form::hidden("dtb_item[category_id]", isset($data['dtb_item']['category_id']) ? $data['dtb_item']['category_id'] : '', ['id' => 'category_id']) !!}
             <label for="dtb_item[category_name]">@lang('view.category') <span class="text-danger">(*)</span></label>
-            {!! Form::text("dtb_item[category_name]", isset($data['dtb_item']['category_name']) ? $data['dtb_item']['category_name'] : '', ['class' => 'form-control', 'readonly' => true]) !!}
+            {!! Form::select("dtb_item[category_id]", isset($data['dtb_item']['category_id']) ? [$data['dtb_item']['category_id'] => $data['dtb_item']['category_name']] : [], isset($data['dtb_item']['category_id']) ? $data['dtb_item']['category_id'] : '', ['class' => 'form-control', 'id' => 'category-id']) !!}
+            <p class="error-validate text-danger display-nones error-dtb_item_category_id"></p>
         </div>
         <div class="form-group form-group-custom">
             <label for="dtb_item[jan_upc]">@lang('view.JAN/UPC') <span class="text-danger">(*)</span></label>
             {!! Form::text("dtb_item[jan_upc]", isset($data['dtb_item']['jan_upc']) ? $data['dtb_item']['jan_upc'] : '', ['class' => 'form-control', 'readonly' => true]) !!}
         </div>
         <div class="form-group form-group-custom">
-            {{-- {!! Form::hidden("dtb_item[condition_id]", isset($data['dtb_item']['condition_id']) ? $data['dtb_item']['condition_id'] : '', ['id' => 'condition_id']) !!} --}}
             <label for="dtb_item[condition_id]">@lang('view.category') <span class="text-danger">(*)</span></label>
-            {!! Form::select("dtb_item[condition_id]", $conditionIdList, isset($data['dtb_item']['condition_id']) ? $data['dtb_item']['condition_id'] : '', ['class' => 'form-control']) !!}
-            {{-- {!! Form::text("dtb_item[category_name]", isset($data['dtb_item']['category_name']) ? $data['dtb_item']['category_name'] : '', ['class' => 'form-control', 'readonly' => true]) !!} --}}
+            {!! Form::select("dtb_item[condition_id]", $conditionIdList, isset($data['dtb_item']['condition_id']) ? $data['dtb_item']['condition_id'] : '', ['class' => 'form-control', 'id' => 'condition-id']) !!}
         </div>
         <div class="form-group form-group-custom">
             <label for="dtb_item[condition_des]">@lang('view.condition_des') <span class="text-danger">(*)</span></label>

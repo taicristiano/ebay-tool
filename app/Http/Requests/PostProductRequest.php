@@ -28,13 +28,13 @@ class PostProductRequest extends Request
             'dtb_item.item_name'      => 'required',
             // 'dtb_item.condition_name' => 'required',
             'dtb_item.condition_des'  => 'required',
-            'dtb_item.price'          => 'required|numeric',
-            'dtb_item.buy_price'      => 'required|numeric',
+            'dtb_item.price'          => 'required|numeric|greate_than_zero',
+            'dtb_item.buy_price'      => 'required|numeric|greate_than_zero',
         ];
         if ($data['dtb_item']['type'] == 2) {
-            $rules['dtb_item.product_size'] = 'required';
+            $rules['dtb_item.product_size'] = 'product_size';
             if (!empty($data['dtb_item[material_quantity]'])) {
-                $rules['dtb_item.material_quantity'] = 'numeric';
+                $rules['dtb_item.material_quantity'] = 'material_quantity';
             }
         }
         if (!empty($data['dtb_item_specifics'])) {

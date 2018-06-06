@@ -28,4 +28,23 @@ class CategoryFee extends AbstractModel
     {
         return $arrayFee[$storeId];
     }
+
+    /**
+     * search category
+     * @param  array $input
+     * @return array
+     */
+    public function search($input)
+    {
+        $condition = $this->select('category_id as id', 'category_path as text');
+        if (isset($input['category_path'])) {
+            $condition = $condition->where('category_path', 'LIKE', '%' . $input['category_path'] . '%');
+        }
+        $result = $condition->skip(($input['page'] - 1) * $input['limit'])
+            ->limit($input['limit']);
+        return [
+            'results'        => $result->get()->toArray(),
+            'count_filtered' => $result->count(),
+        ];
+    }
 }

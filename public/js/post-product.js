@@ -275,7 +275,7 @@ function getCalculateProfitInfo(isValidate)
 {
     $('body').addClass('loading-ajax');
     isShowCalculate = $('#item-calculator-info').length;
-    var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : 0;
+    var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : null;
     var token = window.Laravel.csrfToken;
     var type = $('.type:checked').val();
     var data = {

@@ -77,11 +77,6 @@ jQuery(document).ready(function() {
         var api = $.fileuploader.getInstance('#files');
         var files = [];
         var fileUpload = api.getFiles();
-        // fd.append('dtb_item[item_name]', $('#item_name').val());
-        // fd.append('dtb_item[condition_name]', $('#condition_name').val());
-        // fd.append('dtb_item[price]', $('#sell_price').val());
-        // fd.append('dtb_item[product_size]', $('#product_size').val());
-        // fd.append('dtb_item[buy_price]', $('#buy_price').val());
         fd.append('dtb_item[original_id]', $('#id_ebay_or_amazon').val());
         fd.append('dtb_item[item_id]', $('#item_id').val());
         fd.append('dtb_item[type]', $('.type:checked').val());
@@ -153,7 +148,7 @@ jQuery(document).ready(function() {
         }
     });
 
-    $(document).on("change", "#category-id, #material-quantity, #setting-shipping, #buy_price, #sell_price, #height, #width, #length, #product_size", function() {
+    $(document).on("change", "#category-id, #material-quantity, #setting-shipping, #buy_price, #sell_price, #height, #width, #length", function() {
         if ($('#item-calculator-info').length) {
             getCalculateProfitInfo(true);
         }
@@ -284,7 +279,6 @@ function getCalculateProfitInfo(isValidate)
         is_update: isShowCalculate,
         material_quantity: materialQuantity,
         type: type,
-        product_size: (isShowCalculate && $('#product_size').length) ? $('#product_size').val() : $('#product_size_hidden').val(),
         height: (isShowCalculate && $('#height').length) ? $('#height').val() : $('#height_hidden').val(),
         width: (isShowCalculate && $('#width').length) ? $('#width').val() : $('#width_hidden').val(),
         length: (isShowCalculate && $('#length').length) ? $('#length').val() : $('#length_hidden').val(),
@@ -304,7 +298,6 @@ function getCalculateProfitInfo(isValidate)
             $('#error-material-quantity').text('');
             $('.error-dtb_item_price').text('');
             $('.error-dtb_item_buy_price').text('');
-            $('.error-dtb_item_product_size').text('');
             $('.error-dtb_item_height').text('');
             $('.error-dtb_item_width').text('');
             $('.error-dtb_item_length').text('');
@@ -312,7 +305,6 @@ function getCalculateProfitInfo(isValidate)
             $('.error-dtb_item_category_id').parent().removeClass('has-error');
             $('.error-dtb_item_price').parent().removeClass('has-error');
             $('.error-dtb_item_buy_price').parent().removeClass('has-error');
-            $('.error-dtb_item_product_size').parent().removeClass('has-error');
             $('.error-dtb_item_height').parent().removeClass('has-error');
             $('.error-dtb_item_width').parent().removeClass('has-error');
             $('.error-dtb_item_length').parent().removeClass('has-error');
@@ -332,10 +324,6 @@ function getCalculateProfitInfo(isValidate)
                 if(messageError.sell_price) {
                     $('.error-dtb_item_price').text(messageError.sell_price);
                     $('.error-dtb_item_price').parent().addClass('has-error');
-                }
-                if(messageError.product_size) {
-                    $('.error-dtb_item_product_size').text(messageError.product_size);
-                    $('.error-dtb_item_product_size').parent().addClass('has-error');
                 }
                 if(messageError.category_id) {
                     $('.error-dtb_item_category_id').text(messageError.category_id);

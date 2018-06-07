@@ -22,6 +22,7 @@ use App\Services\SignatureAmazon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Services\AmazonMwsClient;
+use Illuminate\Support\Facades\Lang;
 
 class ProductService extends CommonService
 {
@@ -81,6 +82,7 @@ class ProductService extends CommonService
         $result             = $this->callApi(null, null, $url, 'get');
         $response['status'] = false;
         if ($result['Ack'] == 'Failure') {
+            $response['message_error'] = Lang::get('view.item_not_found');
             return response()->json($response);
         }
         $userId             = Auth::user()->id;
@@ -269,7 +271,6 @@ class ProductService extends CommonService
         Session::forget($this->keyImageFromApi);
         Session::push($this->keyImageFromApi, $arrayImageFormApi);
 
-        $data['dtb_item']['product_size']     = $productSize;
         $data['dtb_item']['commodity_weight'] = round($commodityWeight * 453.59237, 2);
         $data['dtb_item']['length']           = $length;
         $data['dtb_item']['height']           = $height;
@@ -307,10 +308,6 @@ class ProductService extends CommonService
      */
     public function getSettingShippingOfUser($input)
     {
-        $arraySize = explode('x', strtolower($input['product_size']));
-        // $height                = $arraySize[0];
-        // $width                 = $arraySize[1];
-        // $length                = $arraySize[2];
         $height                = $input['height'];
         $width                 = $input['width'];
         $length                = $input['length'];
@@ -361,11 +358,11 @@ class ProductService extends CommonService
         $exchangeRate = $this->exchangeRate->getExchangeRateLatest();
         $userId       = Auth::user()->id;
         $settingInfo  = $this->setting->getSettingOfUser($userId);
-        $data['dtb_item']['product_size']     = $input['product_size'];
         $data['dtb_item']['height']           = $input['height'];
         $data['dtb_item']['width']            = $input['width'];
         $data['dtb_item']['length']           = $input['length'];
         $data['dtb_item']['commodity_weight'] = $input['commodity_weight'];
+        $data['dtb_item']['material_quantity'] = $input['material_quantity'];
         $settingShippingOption                = $this->getSettingShippingOfUser($input);
         $data['setting_shipping_option']      = $settingShippingOption;
         $optionSelected                       = $input['setting_shipping'];

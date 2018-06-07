@@ -20,11 +20,6 @@
                 <p class="error-validate text-danger display-nones error-dtb_item_length"></p>
             </div>
         </div>
-        <div class="form-group form-group-custom">
-            <label for="dtb_item[product_size]">@lang('view.product_size')</label>
-            {!! Form::text("dtb_item[product_size]", isset($data['dtb_item']['product_size']) ? $data['dtb_item']['product_size'] : '', ['class' => 'form-control product_size', 'id' => 'product_size', 'placeholder' => 'Example: 12x34x56']) !!}
-            <p class="error-validate text-danger error-dtb_item_product_size"></p>
-        </div>
         <div class="specific-itemssss">
             <div class="col-md-6 col-sm-6 col-xs-6">
                 <label for="dtb_item[commodity_weight]">@lang('view.commodity_weight') <span class="text-danger">(*)</span></label>

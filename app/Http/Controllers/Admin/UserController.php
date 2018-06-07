@@ -128,7 +128,7 @@ class UserController extends AbstractController
      * show page upload csv
      * @return view
      */
-    public function showPageuploadCsv()
+    public function showPageUploadCsv()
     {
         return view('admin.user.upload-csv');
     }

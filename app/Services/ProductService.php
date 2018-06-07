@@ -38,7 +38,7 @@ class ProductService extends CommonService
     protected $keyProduct;
     protected $keyImageFromApi;
     protected $pathUpload;
-    protected $fullpathUpload;
+    protected $fullPathUpload;
     protected $pathStorageFile;
 
     public function __construct(
@@ -66,7 +66,7 @@ class ProductService extends CommonService
         $this->keyProduct      = Item::SESSION_KEY_PRODUCT_INFO;
         $this->keyImageFromApi = ItemImage::SESSION_KEY_IMAGE_FROM_API;
         $this->pathUpload      = $this->itemImage->getPathUploadFile();
-        $this->fullpathUpload  = $this->itemImage->getFullPathUploadFile();
+        $this->fullPathUpload  = $this->itemImage->getfullPathUploadFile();
         $this->pathStorageFile = $this->itemImage->getPathStorageFile();
     }
 
@@ -134,8 +134,7 @@ class ProductService extends CommonService
 
     /**
      * api get item yahoo or amazon info
-     * @param  integer $itemId
-     * @param  integer $type
+     * @param  array $data
      * @return Illuminate\Http\Response
      */
     public function apiGetItemYahooOrAmazonInfo($data)
@@ -247,7 +246,7 @@ class ProductService extends CommonService
             if (!Storage::disk(env('FILESYSTEM_DRIVER'))->exists($this->pathUpload . $itemId . '_' . $key . '.' . $item['extension'])) {
                 $client  = new Client();
                 $client->getClient()->get($item['file'], [
-                    'save_to' => storage_path($this->fullpathUpload . $itemId . '_' . $key . '.' . $item['extension']),
+                    'save_to' => storage_path($this->fullPathUpload . $itemId . '_' . $key . '.' . $item['extension']),
                     'headers'=> [ 'Referer' => $item['file']]
                 ]);
             }
@@ -340,7 +339,7 @@ class ProductService extends CommonService
      * calculator profit type amazon
      * @param  array &$data
      * @param  array $input
-     * @return none
+     * @return void
      */
     public function calculatorProfitTypeAmazon(&$data, $input)
     {
@@ -376,7 +375,7 @@ class ProductService extends CommonService
      * calculator profit type yahoo
      * @param  array &$data
      * @param  array $input
-     * @return none
+     * @return void
      */
     public function calculatorProfitTypeYahoo(&$data, $input)
     {
@@ -394,7 +393,7 @@ class ProductService extends CommonService
 
     /**
      * update profit
-     * @param  Request $request
+     * @param  array $data
      * @return Illuminate\Http\Response
      */
     public function updateProfit($data)
@@ -421,6 +420,7 @@ class ProductService extends CommonService
     /**
      * format data insert product confirm
      * @param  array $data
+     * @param  array $dataSession
      * @return array
      */
     public function formatDataInsertProductConfirm($data, $dataSession)
@@ -484,7 +484,7 @@ class ProductService extends CommonService
      * upload file
      * @param  object  $file
      * @param  string  $path
-     * @param  string $rename
+     * @param  boolean $rename
      * @param  array   $allowType
      * @param  integer  $maxSize
      * @param  array   $config
@@ -544,9 +544,9 @@ class ProductService extends CommonService
         $userId = Auth::user()->id;
         $settingPolicyData = $this->settingPolicy->getSettingPolicyOfUser($userId);
         $data['dtb_item']['duration']             = $this->product->getDurationOption()[$data['dtb_item']['duration']];
-        $data['dtb_item']['shipping_policy_name'] = $this->getPoliciNameById(!empty($data['dtb_item']['shipping_policy_id']) ? $data['dtb_item']['shipping_policy_id'] : '', $settingPolicyData);
-        $data['dtb_item']['payment_policy_name']  = $this->getPoliciNameById(!empty($data['dtb_item']['payment_policy_id']) ? $data['dtb_item']['payment_policy_id'] : '', $settingPolicyData);
-        $data['dtb_item']['return_policy_name']   = $this->getPoliciNameById(!empty($data['dtb_item']['return_policy_id']) ? $data['dtb_item']['return_policy_id'] : '', $settingPolicyData);
+        $data['dtb_item']['shipping_policy_name'] = $this->getPolicyNameById(!empty($data['dtb_item']['shipping_policy_id']) ? $data['dtb_item']['shipping_policy_id'] : '', $settingPolicyData);
+        $data['dtb_item']['payment_policy_name']  = $this->getPolicyNameById(!empty($data['dtb_item']['payment_policy_id']) ? $data['dtb_item']['payment_policy_id'] : '', $settingPolicyData);
+        $data['dtb_item']['return_policy_name']   = $this->getPolicyNameById(!empty($data['dtb_item']['return_policy_id']) ? $data['dtb_item']['return_policy_id'] : '', $settingPolicyData);
         if (isset($data['dtb_item']['setting_shipping_option'])) {
             $data['dtb_item']['setting_shipping_option'] = $this->settingShipping->findById($data['dtb_item']['setting_shipping_option'])->shipping_name;
         }
@@ -606,18 +606,18 @@ class ProductService extends CommonService
      * @param  array $settingPolicyData
      * @return string
      */
-    public function getPoliciNameById($id, $settingPolicyData)
+    public function getPolicyNameById($id, $settingPolicyData)
     {
         foreach ($settingPolicyData as $key => $policy) {
             if ($policy->id == $id) {
                 return $policy->policy_name;
             }
         }
-        return;
+        return null;
     }
 
     /**
-     * post prodcut publish
+     * post product publish
      * @return Illuminate\Http\Response
      */
     public function postProductPublish()
@@ -684,7 +684,7 @@ class ProductService extends CommonService
      * insert item image
      * @param  array $data
      * @param  integer $productId
-     * @return none
+     * @return void
      */
     public function insertItemImage($data, $productId)
     {
@@ -721,13 +721,13 @@ class ProductService extends CommonService
 
     /**
      * format message error
-     * @param  array $mesageError
+     * @param  array $messageError
      * @return array
      */
-    public function formatMessageError($mesageError)
+    public function formatMessageError($messageError)
     {
         $arrayError = [];
-        foreach ($mesageError as $key => $value) {
+        foreach ($messageError as $key => $value) {
             $arrayError[str_replace('.', '_', $key)] = $value[0];
         }
         return $arrayError;

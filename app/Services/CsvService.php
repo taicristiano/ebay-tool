@@ -88,9 +88,9 @@ class CsvService extends CommonService
     }
 
     /**
-     * generate data exprot csv
+     * generate data export csv
      * @param  string $type
-     * @param  arrray $data
+     * @param  array $data
      * @return array
      */
     public function generateDataExportCsv($type, $data)

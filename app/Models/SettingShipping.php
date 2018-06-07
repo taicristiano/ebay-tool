@@ -24,7 +24,7 @@ class SettingShipping extends AbstractModel
     /**
      * create default shipping
      * @param  integer $userId
-     * @return mixed
+     * @return void
      */
     public function createDefaultShipping($userId)
     {
@@ -127,7 +127,7 @@ class SettingShipping extends AbstractModel
 
     /**
      * find setting shipping max size of user
-     * @param  interger $userId
+     * @param  integer $userId
      * @return array object
      */
     public function findSettingShippingMaxSizeOfUser($userId)

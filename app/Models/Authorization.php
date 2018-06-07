@@ -20,6 +20,7 @@ class Authorization extends AbstractModel
 
     /**
      * get category
+     * @param array $input
      * @return array
      */
     public function getCategoryOptions($input = [])
@@ -66,7 +67,7 @@ class Authorization extends AbstractModel
     }
 
     /**
-     * check get amazone info allow
+     * check get amazon info allow
      * @return boolean
      */
     public function amazoneInfoAllow()

@@ -45,7 +45,6 @@ class UserPolicy
      * accept or block get yahoo auction info
      *
      * @param  \App\User  $user
-     * @param array $authorization
      * @return bool
      */
     public function yahooAuctionInfo(User $user)
@@ -54,10 +53,9 @@ class UserPolicy
     }
 
     /**
-     * accept or block get amazone info
+     * accept or block get amazon info
      *
      * @param  \App\User  $user
-     * @param array $authorization
      * @return bool
      */
     public function amazoneInfo(User $user)
@@ -69,7 +67,6 @@ class UserPolicy
      * accept or block monitoring product
      *
      * @param  \App\User  $user
-     * @param array $authorization
      * @return bool
      */
     public function monitoringProduct(User $user)

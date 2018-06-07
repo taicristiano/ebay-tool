@@ -40,7 +40,7 @@ class SettingService extends CommonService
     public function formatExpirationTime($time)
     {
         if (!$time) {
-            return;
+            return null;
         }
         $time = date_create($time);
         return date_format($time, "Y/m/d H:i:s");

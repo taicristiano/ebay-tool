@@ -57,7 +57,7 @@
                                     <div class="form-group">
                                         <div class="col-xs-12 col-md-8">
                                             {!! Form::text('id_ebay_or_amazon', !empty($data['original_id']) ? $data['original_id'] : 'B01GUPMJMA', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
-                                            <p class="text-danger display-none invalid" id="item-yahoo-or-amazon-invalid">@lang('view.item_not_found')</p>
+                                            <p class="text-danger invalid" id="item-yahoo-or-amazon-invalid"></p>
                                         </div>
                                         <div class="col-xs-12 col-md-4">
                                             <button class="btn btn-primary" type="button" id="btn-get-yahoo-or-amazon"><i class="fa fa-info-circle"></i> {{ __('view.image_acquisition') }}</button>

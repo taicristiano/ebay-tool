@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Services\CommonService;
 use Illuminate\Support\Facades\Session;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Setting;
 use App\Models\SettingPolicy;
 use App\Models\Item;
@@ -19,8 +19,8 @@ use App\Models\MtbExchangeRate;
 use App\Models\ItemSpecific;
 use App\Models\ItemImage;
 use App\Services\SignatureAmazon;
-use DB;
-use Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Services\AmazonMwsClient;
 
 class ProductService extends CommonService
@@ -102,9 +102,9 @@ class ProductService extends CommonService
      */
     public function formatDataEbayInfo($data, $settingItem, $settingPolicyData)
     {
-        $exchangeRate = $this->exchangeRate->getExchangeRateLatest();
-        $userId       = Auth::user()->id;
-        $settingInfo  = $this->setting->getSettingOfUser($userId);
+        // $exchangeRate = $this->exchangeRate->getExchangeRateLatest();
+        // $userId       = Auth::user()->id;
+        // $settingInfo  = $this->setting->getSettingOfUser($userId);
         // data dtb_item
         $result['dtb_item'] = [
             'item_name'      => $data['Item']['Title'],
@@ -112,7 +112,8 @@ class ProductService extends CommonService
             'category_name'  => $data['Item']['PrimaryCategoryName'],
             'condition_id'   => $data['Item']['ConditionID'],
             'condition_name' => $data['Item']['ConditionDisplayName'],
-            'price'          => round($data['Item']['ConvertedCurrentPrice'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2),
+            // 'price'          => round($data['Item']['ConvertedCurrentPrice'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2),
+            'price'          => $data['Item']['ConvertedCurrentPrice'],
             'duration'       => $settingItem->duration,
             'quantity'       => $settingItem->quantity,
         ];
@@ -150,24 +151,26 @@ class ProductService extends CommonService
         $response['status'] = false;
         if ($type == $this->product->getOriginTypeYahooAuction()) {
             $isTypeAmazon = false;
-            $url     = config('api_info.api_yahoo_action_info') . $itemId;
-            $client  = new Client();
-            $crawler = $client->request('GET', $url);
-            $crawler = $crawler->filterXPath('//*[@id="l-sub"]/div[1]/ul/li[2]/div/dl/dd')->first();
+            $url          = config('api_info.api_yahoo_action_info') . $itemId;
+            $client       = new Client();
+            $crawler      = $client->request('GET', $url);
+            $crawler      = $crawler->filterXPath(config('api_info.regex_get_price_yahoo_auction'))->first();
+            // '//*[@id="l-sub"]/div[1]/ul/li[2]/div/dl/dd'
             if ($crawler->count()) {
-                $price = $crawler->text();
+                $price     = $crawler->text();
                 $arrayItem = explode("円", $price);
-                $price =  $arrayItem[0];
-                $price = round((float) str_replace(',', '', $price), 2);
+                $price     = $arrayItem[0];
+                $price     = round((float) str_replace(',', '', $price), 2);
             }
 
-            $crawler = $client->request('GET', $url);
+            $crawler    = $client->request('GET', $url);
             $arrayImage = [];
-            $crawler->filterXPath('//*[@id="l-main"]/div/div[1]/div[1]/ul/li/div/img')->each(function ($node) use (&$arrayImage) {
-                $url = $node->attr('src');
+            $crawler->filterXPath(config('api_info.regex_get_image_yahoo_auction'))->each(function ($node) use (&$arrayImage) {
+                // '//*[@id="l-main"]/div/div[1]/div[1]/ul/li/div/img'
+                $url       = $node->attr('src');
                 $arrayItem = explode(".", $url);
-                $type = array_pop($arrayItem);
-                $item = [
+                $type      = array_pop($arrayItem);
+                $item      = [
                     'name'      => '',
                     'type'      => 'image/' . $type,
                     'extension' => $type,
@@ -180,15 +183,20 @@ class ProductService extends CommonService
             $exchangeRate = $this->exchangeRate->getExchangeRateLatest();
             $userId       = Auth::user()->id;
             $settingInfo  = $this->setting->getSettingOfUser($userId);
-            $client       = new AmazonMwsClient(
-                'AKIAJWROE4YTDKN5COQQ',
-                'l4CCqytm56ps5QFw7AFv347bKxqzJWK4xL2hrVmb',
-                'A2GI94OS9KGZVF',
-                ['A1VC38T7YXB528'],
-                'amzn.mws.f8b1b1e5-f8df-3d8c-48ff-d8655ad92d86',
+            if (!$this->checkAmazonInfoOfUser($settingInfo)) {
+                $response['message_error'] = Lang::get('view.you_do_not_setting_amazon_information');
+                return response()->json($response);
+            }
+            $marketplaceId = config('api_info.market_place_id_amazon');
+            $client = new AmazonMwsClient(
+                $settingInfo->mws_access_key, //'AKIAJWROE4YTDKN5COQQ', //mws_access_key
+                $settingInfo->mws_secret_key, //'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', //mws_secret_key
+                $settingInfo->seller_id, //'A2GI94OS9KGZVF', //seller_id
+                [$marketplaceId],
+                $settingInfo->mws_auth_token, //'amzn.mws.f8b1b1e5-f8df-3d8c-48ff-d8655ad92d86', //mws_auth_token
                 'MCS/MwsClient',
                 '1.0',
-                'https://mws.amazonservices.jp'
+                config('api_info.api_amazon_get_item')
             );
             $optionalParams = [
                 'Query'         => $itemId,
@@ -196,19 +204,20 @@ class ProductService extends CommonService
                 // 'Query'         => 'B00RF2ZNI0',
                 // 'Query'         => 'B00FJV9ZW4',
                 // 'Query'         => 'B071NZD35X',
-                'MarketplaceId' => 'A1VC38T7YXB528'
+                'MarketplaceId' => $marketplaceId
             ];
             $data = $client->send('ListMatchingProducts', '/Products/2011-10-01', $optionalParams);
             if (!count($data)) {
+                $response['message_error'] = Lang::get('view.item_not_found');
                 return response()->json($response);
             }
 
             $arrayImage  = [];
             foreach ($data as $key => $item) {
                 if (!empty($item['ns2:SmallImage']['ns2:URL'])) {
-                    $url = $item['ns2:SmallImage']['ns2:URL'];
+                    $url       = $item['ns2:SmallImage']['ns2:URL'];
                     $arrayItem = explode(".", $url);
-                    $type = array_pop($arrayItem);
+                    $type      = array_pop($arrayItem);
                     $itemImage = [
                         'name'      => '',
                         'type'      => 'image/' . $type,
@@ -219,7 +228,7 @@ class ProductService extends CommonService
                 }
 
                 if (!empty($item['ns2:ListPrice']['ns2:Amount'])) {
-                    $price = $item['ns2:ListPrice']['ns2:Amount'];
+                    $price     = $item['ns2:ListPrice']['ns2:Amount'];
                     $priceType = $item['ns2:ListPrice']['ns2:CurrencyCode'];
                     if ($price && $priceType == "USD") {
                         $price = $price * ($exchangeRate->rate - $settingInfo->ex_rate_diff);
@@ -231,7 +240,10 @@ class ProductService extends CommonService
                     $length          = !empty($item['ns2:PackageDimensions']['ns2:Length']) ? $item['ns2:PackageDimensions']['ns2:Length'] : 0;
                     $height          = !empty($item['ns2:PackageDimensions']['ns2:Height']) ? $item['ns2:PackageDimensions']['ns2:Height'] : 0;
                     $width           = !empty($item['ns2:PackageDimensions']['ns2:Width']) ? $item['ns2:PackageDimensions']['ns2:Width'] : 0;
-                    $productSize = round($height * 2.54, 2) . 'x' . round($width * 2.54, 2) . 'x' . round($length * 2.54, 2);
+                    $productSize     = round($height * 2.54, 2) . 'x' . round($width * 2.54, 2) . 'x' . round($length * 2.54, 2);
+                    $length          = round($length * 2.54, 2);
+                    $height          = round($height * 2.54, 2);
+                    $width           = round($width * 2.54, 2);
                 }
             }
         }
@@ -259,9 +271,9 @@ class ProductService extends CommonService
 
         $data['dtb_item']['product_size']     = $productSize;
         $data['dtb_item']['commodity_weight'] = round($commodityWeight * 453.59237, 2);
-        // $data['dtb_item']['length']           = $length;
-        // $data['dtb_item']['height']           = $height;
-        // $data['dtb_item']['width']            = $width;
+        $data['dtb_item']['length']           = $length;
+        $data['dtb_item']['height']           = $height;
+        $data['dtb_item']['width']            = $width;
         $data['dtb_item']['buy_price']        = $price;
         $response['is_type_amazon']           = $isTypeAmazon;
         $response['status']                   = true;
@@ -296,9 +308,12 @@ class ProductService extends CommonService
     public function getSettingShippingOfUser($input)
     {
         $arraySize = explode('x', strtolower($input['product_size']));
-        $height                = $arraySize[0];
-        $width                 = $arraySize[1];
-        $length                = $arraySize[2];
+        // $height                = $arraySize[0];
+        // $width                 = $arraySize[1];
+        // $length                = $arraySize[2];
+        $height                = $input['height'];
+        $width                 = $input['width'];
+        $length                = $input['length'];
         $sizeOfProduct         = $length + $height + $width;
         $userId                = Auth::user()->id;
         $settingShipping       = $this->settingShipping->getSettingShippingOfUser($userId);
@@ -343,7 +358,13 @@ class ProductService extends CommonService
      */
     public function calculatorProfitTypeAmazon(&$data, $input)
     {
+        $exchangeRate = $this->exchangeRate->getExchangeRateLatest();
+        $userId       = Auth::user()->id;
+        $settingInfo  = $this->setting->getSettingOfUser($userId);
         $data['dtb_item']['product_size']     = $input['product_size'];
+        $data['dtb_item']['height']           = $input['height'];
+        $data['dtb_item']['width']            = $input['width'];
+        $data['dtb_item']['length']           = $input['length'];
         $data['dtb_item']['commodity_weight'] = $input['commodity_weight'];
         $settingShippingOption                = $this->getSettingShippingOfUser($input);
         $data['setting_shipping_option']      = $settingShippingOption;
@@ -359,16 +380,18 @@ class ProductService extends CommonService
         } else {
             $data['dtb_item']['ship_fee'] = $input['ship_fee'];
         }
-        $userId                               = Auth::user()->id;
-        $settingInfo                          = $this->setting->getSettingOfUser($userId);
-        $storeIdOfUser                        = $settingInfo->store_id;
-        $stores                               = $this->mtbStore->getAllStore();
-        $storeInfo                            = $this->formatStoreInfo($stores);
-        $typeFee                              = $storeInfo[$storeIdOfUser];
-        $data['dtb_item']['ebay_fee']         = round($input['sell_price'] * $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee / 100, 2);
-        $data['dtb_item']['paypal_fee']       = round($settingInfo->paypal_fee_rate  * $input['sell_price'] / 100, 2);
-        $data['dtb_item']['buy_price']        = $input['buy_price'];
-        $data['dtb_item']['profit']           = round((float)$input['sell_price'] - $data['dtb_item']['ebay_fee'] - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'] * $settingInfo->gift_discount / 100, 2);
+        $userId                         = Auth::user()->id;
+        $settingInfo                    = $this->setting->getSettingOfUser($userId);
+        $storeIdOfUser                  = $settingInfo->store_id;
+        $stores                         = $this->mtbStore->getAllStore();
+        $storeInfo                      = $this->formatStoreInfo($stores);
+        $typeFee                        = $storeInfo[$storeIdOfUser];
+        $sellPriceYen                   = round($input['sell_price'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
+        $data['dtb_item']['ebay_fee']   = round($input['sell_price'] * $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee / 100, 2);
+        $ebayFeeYen                     = round($data['dtb_item']['ebay_fee'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
+        $data['dtb_item']['paypal_fee'] = round($settingInfo->paypal_fee_rate  * $sellPriceYen / 100, 2);
+        $data['dtb_item']['buy_price']  = $input['buy_price'];
+        $data['dtb_item']['profit']     = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'] * $settingInfo->gift_discount / 100, 2);
     }
 
     /**
@@ -379,42 +402,19 @@ class ProductService extends CommonService
      */
     public function calculatorProfitTypeYahoo(&$data, $input)
     {
-        $userId                               = Auth::user()->id;
-        $settingInfo                          = $this->setting->getSettingOfUser($userId);
-        $storeIdOfUser                        = $settingInfo->store_id;
-        $stores                               = $this->mtbStore->getAllStore();
-        $storeInfo                            = $this->formatStoreInfo($stores);
-        $typeFee                              = $storeInfo[$storeIdOfUser];
-        $data['dtb_item']['ebay_fee']         = round($input['sell_price'] * $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee / 100, 2);
-        $data['dtb_item']['paypal_fee']       = round($settingInfo->paypal_fee_rate  * $input['sell_price'] / 100, 2);
-        $data['dtb_item']['buy_price']        = $input['buy_price'];
-        $data['dtb_item']['profit']           = round((float)$input['sell_price'] - $data['dtb_item']['ebay_fee'] - $data['dtb_item']['paypal_fee'] - (float)$data['dtb_item']['buy_price'], 2);
-    }
-
-    /**
-     * update profit
-     * @param  array $data
-     * @return Illuminate\Http\Response
-     */
-    public function updateProfit($data)
-    {
-        if ($data['type'] == 1) {
-            $result['profit']   = round((float) $data['sell_price'] - $data['ebay_fee'] - $data['paypal_fee']  - (float) $data['buy_price'], 2);
-        } else {
-            $totalWeigh         = $data['commodity_weight'] + $data['material_quantity'];
-            $shippingFee        = $this->shippingFee->getShippingFeeByShippingId((int) $data['setting_shipping'], $totalWeigh);
-            if (!$shippingFee) {
-                $result['status'] = false;
-                $result['message_error']['material_quantity'] = 'Too large';
-                return response()->json($result);
-            }
-            $result['ship_fee'] = $shippingFee->ship_fee;
-            $userId             = Auth::user()->id;
-            $settingInfo        = $this->setting->getSettingOfUser($userId);
-            $result['profit']   = round((float) $data['sell_price'] - $data['ebay_fee'] - $data['paypal_fee'] - $result['ship_fee'] - (float) $data['buy_price'] * $settingInfo->gift_discount / 100, 2);
-        }
-        $result['status']   = true;
-        return response()->json($result);
+        $userId                         = Auth::user()->id;
+        $exchangeRate                   = $this->exchangeRate->getExchangeRateLatest();
+        $settingInfo                    = $this->setting->getSettingOfUser($userId);
+        $storeIdOfUser                  = $settingInfo->store_id;
+        $stores                         = $this->mtbStore->getAllStore();
+        $storeInfo                      = $this->formatStoreInfo($stores);
+        $typeFee                        = $storeInfo[$storeIdOfUser];
+        $sellPriceYen                   = round($input['sell_price'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
+        $data['dtb_item']['ebay_fee']   = round($input['sell_price'] * $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee / 100, 2);
+        $ebayFeeYen                     = round($data['dtb_item']['ebay_fee'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
+        $data['dtb_item']['paypal_fee'] = round($settingInfo->paypal_fee_rate  * $sellPriceYen / 100, 2);
+        $data['dtb_item']['buy_price']  = $input['buy_price'];
+        $data['dtb_item']['profit']     = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - (float)$data['dtb_item']['buy_price'], 2);
     }
 
     /**
@@ -561,9 +561,9 @@ class ProductService extends CommonService
      */
     public function formatDataPageProduct($data)
     {
-        $data['duration']['option']      = $this->product->getDurationOption();
-        $data['duration']['value']       = $data['dtb_item']['duration'];
-        if ($data['dtb_item']['type'] == 2) {
+        $data['duration']['option'] = $this->product->getDurationOption();
+        $data['duration']['value']  = $data['dtb_item']['duration'];
+        if ($data['dtb_item']['type'] == $this->product->getOriginTypeAmazon()) {
             $settingShippingOption           = $this->getSettingShippingOfUser($data['dtb_item']);
             $data['setting_shipping_option'] = $settingShippingOption;
         }
@@ -585,10 +585,10 @@ class ProductService extends CommonService
             return response()->json($result);
         }
         for ($i = 0; $i < $data['number_file']; $i++) {
-            $url = $data['file_name_' . $i];
+            $url       = $data['file_name_' . $i];
             $arrayItem = explode(".", $url);
-            $type = array_pop($arrayItem);
-            $item = [
+            $type      = array_pop($arrayItem);
+            $item      = [
                 'name'      => '',
                 'type'      => 'image/' . $type,
                 'extension' => $type,
@@ -689,7 +689,7 @@ class ProductService extends CommonService
     public function insertItemImage($data, $productId)
     {
         $numberFile = $data['number_file'];
-        $dateNow = date('Y-m-d H:i:s');
+        $dateNow    = date('Y-m-d H:i:s');
         for ($i = 0; $i < $numberFile; $i++) {
             $itemImageId = $this->itemImage->insertGetId([
                 'item_id'    => $productId,
@@ -770,7 +770,7 @@ class ProductService extends CommonService
         if (!$data) {
             $data['istTypeAmazon'] = false;
         }
-        $data['duration']['option'] = $this->product->getDurationOption();
+        $data['duration']['option']   = $this->product->getDurationOption();
         $data['dtb_setting_policies'] = $this->getDataSettingPolicies();
         if (empty($data['dtb_item'])) {
             $userId = Auth::user()->id;
@@ -778,9 +778,26 @@ class ProductService extends CommonService
             $data['dtb_item']['duration'] = $settingData->duration;
             $data['dtb_item']['quantity'] = $settingData->quantity;
             $category = $this->categoryFee->getFirstItem();
-            $data['dtb_item']['category_id'] = $category->category_id;
+            $data['dtb_item']['category_id']   = $category->category_id;
             $data['dtb_item']['category_name'] = $category->category_path;
         }
         return $data;
+    }
+
+    /**
+     * check amazon info of user
+     * @param array $settingData
+     * @return boolean
+     */
+    public function checkAmazonInfoOfUser($settingData)
+    {
+        if ($settingData->seller_id
+            && $settingData->mws_auth_token
+            && $settingData->mws_access_key
+            && $settingData->mws_secret_key
+        ) {
+            return true;
+        }
+        return false;
     }
 }

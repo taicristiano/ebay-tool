@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class SettingService extends CommonService
 {

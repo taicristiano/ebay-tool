@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
-use Lang;
+use Illuminate\Support\Facades\Lang;
 
 class UploadCsvRequest extends Request
 {

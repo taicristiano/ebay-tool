@@ -4,17 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Setting;
 use App\Models\User;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Exception;
 use Hash;
 use Illuminate\Http\Request;
 use App\Services\SettingService;
 use App\Http\Requests\NormalSettingRequest;
-use Lang;
+use Illuminate\Support\Facades\Lang;
 use App\Models\MtbStore;
 use App\Models\SettingPolicy;
 use App\Models\Item;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class SettingNormalController extends AbstractController
 {

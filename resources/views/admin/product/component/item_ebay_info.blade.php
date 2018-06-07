@@ -4,12 +4,12 @@
         <div class="form-group form-group-custom">
             <label for="dtb_item[item_name]">@lang('view.product_name') <span class="text-danger">(*)</span></label>
             {!! Form::text("dtb_item[item_name]", isset($data['dtb_item']['item_name']) ? $data['dtb_item']['item_name'] : '', ['class' => 'form-control', 'id' => 'item_name']) !!}
-            <p class="error-validate text-danger display-nones error-dtb_item_item_name"></p>
+            <p class="error-validate text-danger error-dtb_item_item_name"></p>
         </div>
         <div class="form-group form-group-custom">
             <label for="dtb_item[category_id]">@lang('view.category') <span class="text-danger">(*)</span></label>
             {!! Form::select("dtb_item[category_id]", isset($data['dtb_item']['category_id']) ? [$data['dtb_item']['category_id'] => $data['dtb_item']['category_name']] : [], isset($data['dtb_item']['category_id']) ? $data['dtb_item']['category_id'] : '', ['class' => 'form-control', 'id' => 'category-id']) !!}
-            <p class="error-validate text-danger display-nones error-dtb_item_category_id"></p>
+            <p class="error-validate text-danger error-dtb_item_category_id"></p>
         </div>
         <div class="form-group form-group-custom">
             <label for="dtb_item[jan_upc]">@lang('view.JAN/UPC') <span class="text-danger">(*)</span></label>
@@ -22,7 +22,7 @@
         <div class="form-group form-group-custom">
             <label for="dtb_item[condition_des]">@lang('view.condition_des') <span class="text-danger">(*)</span></label>
             {{ Form::textarea('dtb_item[condition_des]', isset($data['dtb_item']['condition_des']) ? $data['dtb_item']['condition_des'] : '', ['size' => '30x5', 'class' => 'form-control', 'id' => 'condition_des']) }}
-            <p class="error-validate text-danger display-nones error-dtb_item_condition_des"></p>
+            <p class="error-validate text-danger error-dtb_item_condition_des"></p>
         </div>
         <div class="box box-success">
             <div class="box-header with-border">@lang('view.specifications')</div>
@@ -34,7 +34,7 @@
                         <div class="form-group">
                             {!! Form::text("dtb_item_specifics[$key][name]", isset($data['dtb_item_specifics'][$key]['name']) ? $data['dtb_item_specifics'][$key]['name'] : '', ['class' => 'specific-name form-control']) !!}
                         </div>
-                        <p class="error-name error-validate-specifics text-danger display-nones"><span class="error-dtb_item_specifics_{{$key}}_name"></span></p>
+                        <p class="error-name error-validate-specifics text-danger"><span class="error-dtb_item_specifics_{{$key}}_name"></span></p>
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group input-group">
@@ -43,7 +43,7 @@
                                 <a class="delete-specific"><i class="btn btn-danger fa fa-trash btn-fa"></i></a>
                             </span>
                         </div>
-                        <p class="error-value error-validate-specifics text-danger display-nones"><span class="error-dtb_item_specifics_{{$key}}_value"></span></p>
+                        <p class="error-value error-validate-specifics text-danger"><span class="error-dtb_item_specifics_{{$key}}_value"></span></p>
                     </div>
                 </div>
                 @endforeach
@@ -53,7 +53,7 @@
                         <div class="form-group">
                             {!! Form::text("dtb_item_specifics[0][name]", isset($data['dtb_item_specifics'][0]['name']) ? $data['dtb_item_specifics'][0]['name'] : '', ['class' => 'specific-name form-control']) !!}
                         </div>
-                        <p class="error-name error-validate-specifics text-danger display-nones"><span class="error-dtb_item_specifics_0_name"></span></p>
+                        <p class="error-name error-validate-specifics text-danger"><span class="error-dtb_item_specifics_0_name"></span></p>
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group input-group">
@@ -62,12 +62,12 @@
                                 <a class="delete-specific"><i class="btn btn-danger fa fa-trash btn-fa"></i></a>
                             </span>
                         </div>
-                        <p class="error-value error-validate-specifics text-danger display-nones"><span class="error-dtb_item_specifics_0_value"></span></p>
+                        <p class="error-value error-validate-specifics text-danger"><span class="error-dtb_item_specifics_0_value"></span></p>
                     </div>
                 </div>
                 @endif
                 <div class="text-center" id="div-add-specific">
-                    <p class="error-value error-validate-specifics text-danger display-nones"><span class="error-dtb_item_specifics"></span></p>
+                    <p class="error-value error-validate-specifics text-danger"><span class="error-dtb_item_specifics"></span></p>
                     <button type="button" class="btn btn-info fa" id="add-specific"><i class="fa fa-plus fa-fw"></i></a></button>
                 </div>
                 <div class="display-none" id="specific-item-none">
@@ -76,7 +76,7 @@
                             <div class="form-group">
                                 <input class="form-control specific-name" name="" type="text">
                             </div>
-                            <p class="error-name error-validate-specifics text-danger display-nones"><span></span></p>
+                            <p class="error-name error-validate-specifics text-danger"><span></span></p>
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6">
                             <div class="form-group input-group">
@@ -85,7 +85,7 @@
                                     <a class="delete-specific"><i class="btn btn-danger fa fa-trash btn-fa"></i></a>
                                 </span>
                             </div>
-                            <p class="error-value error-validate-specifics text-danger display-nones"><span></span></p>
+                            <p class="error-value error-validate-specifics text-danger"><span></span></p>
                         </div>
                     </div>
                 </div>
@@ -98,9 +98,9 @@
                     <label for="dtb_item[price]">@lang('view.sell_price') <span class="text-danger">(*)</span></label>
                     <div class="form-group input-group">
                         {!! Form::text("dtb_item[price]", isset($data['dtb_item']['price']) ? $data['dtb_item']['price'] : '', ['class' => 'form-control', 'id' => 'sell_price']) !!}
-                        <span class="input-group-addon">@lang('view.man')</span>
+                        <span class="input-group-addon">@lang('view.usd')</span>
                     </div>
-                    <p class="error-validate text-danger display-nones error-dtb_item_price"></p>
+                    <p class="error-validate text-danger error-dtb_item_price"></p>
                 </div>
             </div>
         </div>

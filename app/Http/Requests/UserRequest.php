@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Authorization;
 use App\Models\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;

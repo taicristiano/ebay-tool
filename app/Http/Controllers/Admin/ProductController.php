@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Log;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 use App\Models\Item;

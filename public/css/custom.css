@@ -104,3 +104,8 @@ body.loading-ajax .modal-loading {
 .select2-container--default .select2-search--dropdown .select2-search__field {
     border-color: #3c8dbc !important;
 }
+
+.row-custom {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+}

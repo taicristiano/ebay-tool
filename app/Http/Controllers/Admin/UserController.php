@@ -7,15 +7,15 @@ use App\Models\Authorization;
 use App\Models\Setting;
 use App\Models\SettingShipping;
 use App\Models\User;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Exception;
 use Hash;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Services\CsvService;
 use App\Http\Requests\UploadCsvRequest;
-use Lang;
-use Auth;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends AbstractController
 {

@@ -32,7 +32,7 @@ class CommonService
     public function formatDate($format, $date)
     {
         if (!$date) {
-            return;
+            return null;
         }
         return Carbon::parse($date)->format($format);
     }

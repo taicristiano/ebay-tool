@@ -148,6 +148,7 @@ class User extends Authenticatable
 
     /**
      * get role option
+     * @param $array $input
      * @return array
      */
     public function getTypeOptions($input = [])
@@ -202,6 +203,7 @@ class User extends Authenticatable
 
     /**
      * get list user
+     * @param array $filter
      * @return Collections
      */
     public function getList($filter = [])
@@ -228,7 +230,7 @@ class User extends Authenticatable
     }
 
     /**
-     * get data exprot csv
+     * get data export csv
      * @param  array $data
      * @return array object
      */

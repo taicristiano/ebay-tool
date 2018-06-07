@@ -63,8 +63,8 @@ class ProductController extends AbstractController
             $data = $request->all();
             $postProductValidate = PostProductRequest::validateData($data);
             if ($postProductValidate->fails()) {
-                $mesageError = $postProductValidate->errors()->messages();
-                $response['message_error'] = $this->productService->formatMessageError($mesageError);
+                $messageError = $postProductValidate->errors()->messages();
+                $response['message_error'] = $this->productService->formatMessageError($messageError);
                 return response()->json($response);
             }
             $dataSession = [];
@@ -158,8 +158,8 @@ class ProductController extends AbstractController
             $data = $request->all();
             $calculateProfitValidate = CalculateProfitRequest::validateData($data);
             if ($calculateProfitValidate->fails()) {
-                $mesageError = $calculateProfitValidate->errors()->messages();
-                $response['message_error'] = $this->productService->formatMessageError($mesageError);
+                $messageError = $calculateProfitValidate->errors()->messages();
+                $response['message_error'] = $this->productService->formatMessageError($messageError);
                 return response()->json($response);
             }
 

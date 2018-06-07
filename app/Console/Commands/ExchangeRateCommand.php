@@ -28,6 +28,7 @@ class ExchangeRateCommand extends Command
     /**
      * Create a new command instance.
      *
+     * @param MtbExchangeRate $exchangeRate
      * @return void
      */
     public function __construct(MtbExchangeRate $exchangeRate)
@@ -39,7 +40,7 @@ class ExchangeRateCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
     public function handle()
     {

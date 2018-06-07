@@ -152,7 +152,7 @@ return [
 
     'attributes'           => [],
 
-    'nomar-setting'        => [
+    'normal-setting'       => [
         'the_paypal_fee_rate_field_is_required'                       => 'Paypalの手数料率を入力してください。',
         'the_paypal_fee_rate_field_is_must_be_from_1_to_100'          => 'Paypalの手数料は1から100まで入力してください。',
         'the_paypal_fixed_fee_field_is_required'                      => 'Paypalの手数料の固定費を入力してください。',

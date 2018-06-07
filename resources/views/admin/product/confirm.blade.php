@@ -142,7 +142,7 @@
                                                 <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['height'] }}@lang('view.height') x {{ $data['dtb_item']['width'] }}@lang('view.width') x {{ $data['dtb_item']['length'] }}@lang('view.length')</label>
                                             </div>
                                             <div class="form-group form-group-custom">
-                                                <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.commodity_weight') @lang('view.g')</label>
+                                                <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.commodity_weight')</label>
                                                 <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['commodity_weight'] }} @lang('view.g')</label>
                                             </div>
                                             <div class="form-group form-group-custom">
@@ -197,7 +197,7 @@
 <script src="{{asset('lib/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{ asset('js/post-confirm.js') }}"></script>
 <script>
-    var urlBack = "{{ route('admin.product.show-page-post-product') }}";
+    var urlBack           = "{{ route('admin.product.show-page-post-product') }}";
     var urlPublishProduct = "{{ route('admin.product.publish') }}";
 </script>
 @endsection

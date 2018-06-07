@@ -36,7 +36,14 @@ class CreateTableItem extends Migration
             $table->foreign('return_policy_id')->references('id')->on('dtb_setting_policies')->onDelete('cascade');
             $table->smallInteger('status')->default(0);
             $table->dateTime('day_of_sale')->nullable();
+            $table->float('item_height', 10, 2)->nullable();
+            $table->float('item_width', 10, 2)->nullable();
+            $table->float('item_length', 10, 2)->nullable();
+            $table->float('item_weight', 10, 2)->nullable();
+            $table->float('pack_material_weight', 10, 2)->nullable();
+            $table->float('buy_price', 10, 2)->nullable();
             $table->double('ship_fee', 10, 2)->nullable();
+            $table->dateTime('last_mornitoring_date')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -55,7 +55,7 @@ class ValidateProvider extends ServiceProvider
                     if (!is_numeric($item)) {
                         return false;
                     }
-                    if($item <= 0) {
+                    if ($item <= 0) {
                         return false;
                     }
                 }

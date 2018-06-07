@@ -47,4 +47,14 @@ class CategoryFee extends AbstractModel
             'count_filtered' => $result->count(),
         ];
     }
+
+    /**
+     * get first item
+     * @return object
+     */
+    public function getFirstItem()
+    {
+        return $this->select('category_id', 'category_path')
+            ->first();
+    }
 }

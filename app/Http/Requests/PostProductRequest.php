@@ -28,6 +28,7 @@ class PostProductRequest extends Request
             'dtb_item.item_name'      => 'required',
             // 'dtb_item.condition_name' => 'required',
             'dtb_item.condition_des'  => 'required',
+            'dtb_item.category_id'    => 'required',
             'dtb_item.price'          => 'required|numeric|greate_than_zero',
             'dtb_item.buy_price'      => 'required|numeric|greate_than_zero',
         ];

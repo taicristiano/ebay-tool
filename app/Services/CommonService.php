@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use Lang;
+use Illuminate\Support\Facades\Lang;
 use Carbon\Carbon;
 
 class CommonService

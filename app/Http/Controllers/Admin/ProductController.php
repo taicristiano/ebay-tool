@@ -46,6 +46,7 @@ class ProductController extends AbstractController
         }
         $conditionIdList = $this->product->getConditionIdList();
         $originType = $this->product->getOriginType();
+        $data = $this->productService->getDataForShowPagePostProduct($data);
         return view('admin.product.post', compact('data', 'originType', 'conditionIdList'));
     }
 
@@ -177,9 +178,6 @@ class ProductController extends AbstractController
     {
         try {
             $data = Session::get($this->keyProduct)[0];
-            if (!$data) {
-                throw new Exception();
-            }
             return $this->productService->getImageInit($data);
         } catch (Exception $ex) {
             Log::error($ex);

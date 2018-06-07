@@ -290,7 +290,15 @@ function getCalculateProfitInfo(isValidate, isChangeType)
         buyPrice = $('#buy_price_span').text();
     } else {
         if (isShowCalculate && $('#buy_price').length) {
-            buyPrice = $('#buy_price').val();
+            if ($('#buy_price').val()) {
+                buyPrice = $('#buy_price').val();
+            } else {
+                if ($('#error-dtb_item_buy_price').text().length) {
+                    buyPrice = $('#buy_price').val();
+                } else {
+                    buyPrice = $('#buy_price_span').text();
+                }
+            }
         } else {
             buyPrice = $('#buy_price_span').text();
         }

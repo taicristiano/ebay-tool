@@ -103,15 +103,15 @@
 <script src="{{ asset('js/post-product.js') }}"></script>
 <script src="{{ asset('adminlte/plugins/select2/select2.min.js') }}"></script>
 <script>
-    var urlGetItemEbayInfo = "{{ route('admin.product.api-get-item-ebay-info') }}";
+    var urlGetItemEbayInfo          = "{{ route('admin.product.api-get-item-ebay-info') }}";
     var urlGetItemYahooOrAmazonInfo = "{{ route('admin.product.api-get-item-yahoo-or-amazon-info') }}";
-    var urlCalculatorProfit = "{{ route('admin.product.calculator-profit') }}";
-    var urlPostProductConfirm = "{{ route('admin.product.post-product-confirm') }}";
+    var urlCalculatorProfit         = "{{ route('admin.product.calculator-profit') }}";
+    var urlPostProductConfirm       = "{{ route('admin.product.post-product-confirm') }}";
+    var numberSpecificItem          = '{{ !empty($data['dtb_item_specifics']) ? count($data['dtb_item_specifics']) : 1 }}';
+    var urlGetImageInit             = "{{route('admin.product.get-image-init')}}";
+    var urlSearchCategory           = "{{route('admin.product.search-category')}}";
     // $('input[type="radio"].minimal').iCheck({
         // radioClass: 'iradio_minimal-blue'
     // });
-    var numberSpecificItem = '{{ !empty($data['dtb_item_specifics']) ? count($data['dtb_item_specifics']) : 1 }}';
-    var urlGetImageInit = "{{route('admin.product.get-image-init')}}";
-    var urlSearchCategory = "{{route('admin.product.search-category')}}";
 </script>
 @endsection

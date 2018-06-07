@@ -81,6 +81,7 @@ jQuery(document).ready(function() {
         fd.append('dtb_item[item_id]', $('#item_id').val());
         fd.append('dtb_item[type]', $('.type:checked').val());
         fd.append('dtb_item[category_name]', $( "#category-id option:selected" ).text());
+        fd.append('dtb_item[condition_name]', $( "#condition-id option:selected" ).text());
         $.each(fileUpload, function (index, value) {
             fd.append('files_upload_' + index, value.file);
         });
@@ -130,27 +131,40 @@ jQuery(document).ready(function() {
     });
 
     $(document).on("click", "#btn-get-yahoo-or-amazon", function() {
-        getYahooOrAmazonInfo($(this));
+        getYahooOrAmazonInfo($(this), false);
     });
 
     $(document).on("click", "#btn-calculator-profit",function() {
-        getCalculateProfitInfo(true);
+        getCalculateProfitInfo(true, false);
     });
 
     // $('.type').on('ifChanged', function(event) {
     // $('.type').change(function() {
-    $(document).on("change", ".type, #id_ebay_or_amazon", function() {
+    $(document).on("change", "#id_ebay_or_amazon", function() {
         var isShowYaohoo = $('#item-yaohoo-or-amazon-content').length;
         // var isShowCalculate = $('#item-calculator-info').length;
         if (isShowYaohoo || isChangeEbayOrAmazon) {
             isChangeEbayOrAmazon = true;
-            getYahooOrAmazonInfo($("#btn-get-yahoo-or-amazon"));
+            if ($('#item-yahoo-or-amazon-invalid').text().length) {
+                getYahooOrAmazonInfo($("#btn-get-yahoo-or-amazon"), true);
+            } else {
+                getYahooOrAmazonInfo($("#btn-get-yahoo-or-amazon"), false);
+            }
+        }
+    });
+
+    $(document).on("change", ".type", function() {
+        var isShowYaohoo = $('#item-yaohoo-or-amazon-content').length;
+        // var isShowCalculate = $('#item-calculator-info').length;
+        if (isShowYaohoo || isChangeEbayOrAmazon) {
+            isChangeEbayOrAmazon = true;
+            getYahooOrAmazonInfo($("#btn-get-yahoo-or-amazon"), true);
         }
     });
 
     $(document).on("change", "#category-id, #material-quantity, #setting-shipping, #buy_price, #sell_price, #height, #width, #length", function() {
         if ($('#item-calculator-info').length) {
-            getCalculateProfitInfo(true);
+            getCalculateProfitInfo(true, false);
         }
     });
 });
@@ -175,7 +189,7 @@ function getItemEbayInfo()
                 $('#item-ebay-invalid').parent().parent().removeClass('has-error');
                 intSelectCategory();
                 if ($('#sell_price').length && $('#buy_price').length) {
-                    getCalculateProfitInfo(false);
+                    getCalculateProfitInfo(false, false);
                 }
             } else {
                 // $('#conten-ajax .ebay-info').html('');
@@ -218,7 +232,7 @@ function urlEncode(str)
     str = str.replace(/\!/g, '%21');
     return str;
 }
-function getYahooOrAmazonInfo(button)
+function getYahooOrAmazonInfo(button, isChangeType)
 {
     $('body').addClass('loading-ajax');
     if (button.data('requestRunning')) {
@@ -244,7 +258,7 @@ function getYahooOrAmazonInfo(button)
                 fnInitFIlerImage(data.image);
                 var isShowCalculate = $('#item-calculator-info').length;
                 if (isShowCalculate) {
-                    getCalculateProfitInfo(false);
+                    getCalculateProfitInfo(false, isChangeType);
                 }
                 if ($('#item-ebay-content').length) {
                     $('html, body').animate({
@@ -266,11 +280,21 @@ function getYahooOrAmazonInfo(button)
     });
 }
 
-function getCalculateProfitInfo(isValidate)
+function getCalculateProfitInfo(isValidate, isChangeType)
 {
     $('body').addClass('loading-ajax');
     isShowCalculate = $('#item-calculator-info').length;
     var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : null;
+    var buyPrice;
+    if (isChangeType) {
+        buyPrice = $('#buy_price_span').text();
+    } else {
+        if (isShowCalculate && $('#buy_price').length) {
+            buyPrice = $('#buy_price').val();
+        } else {
+            buyPrice = $('#buy_price_span').text();
+        }
+    }
     var token = window.Laravel.csrfToken;
     var type = $('.type:checked').val();
     var data = {
@@ -284,7 +308,7 @@ function getCalculateProfitInfo(isValidate)
         length: (isShowCalculate && $('#length').length) ? $('#length').val() : $('#length_hidden').val(),
         commodity_weight: $('#commodity_weight').val(),
         sell_price: $('#sell_price').val(),
-        buy_price: isShowCalculate ? $('#buy_price').val() : $('#buy_price_span').text(),
+        buy_price: buyPrice,
         category_id: $('#category-id').val(),
         ship_fee: (isShowCalculate && $('#ship_fee').length) ?  $('#ship_fee').val() : '',
         setting_shipping: (isShowCalculate && $('#setting-shipping').length) ? $('#setting-shipping').val() : '',

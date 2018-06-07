@@ -157,7 +157,6 @@ class ProductService extends CommonService
             $client       = new Client();
             $crawler      = $client->request('GET', $url);
             $crawler      = $crawler->filterXPath(config('api_info.regex_get_price_yahoo_auction'))->first();
-            // '//*[@id="l-sub"]/div[1]/ul/li[2]/div/dl/dd'
             if ($crawler->count()) {
                 $price     = $crawler->text();
                 $arrayItem = explode("円", $price);
@@ -168,7 +167,6 @@ class ProductService extends CommonService
             $crawler    = $client->request('GET', $url);
             $arrayImage = [];
             $crawler->filterXPath(config('api_info.regex_get_image_yahoo_auction'))->each(function ($node) use (&$arrayImage) {
-                // '//*[@id="l-main"]/div/div[1]/div[1]/ul/li/div/img'
                 $url       = $node->attr('src');
                 $arrayItem = explode(".", $url);
                 $type      = array_pop($arrayItem);
@@ -191,21 +189,17 @@ class ProductService extends CommonService
             }
             $marketplaceId = config('api_info.market_place_id_amazon');
             $client = new AmazonMwsClient(
-                $settingInfo->mws_access_key, //'AKIAJWROE4YTDKN5COQQ', //mws_access_key
-                $settingInfo->mws_secret_key, //'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', //mws_secret_key
-                $settingInfo->seller_id, //'A2GI94OS9KGZVF', //seller_id
+                $settingInfo->mws_access_key,
+                $settingInfo->mws_secret_key,
+                $settingInfo->seller_id,
                 [$marketplaceId],
-                $settingInfo->mws_auth_token, //'amzn.mws.f8b1b1e5-f8df-3d8c-48ff-d8655ad92d86', //mws_auth_token
+                $settingInfo->mws_auth_token,
                 'MCS/MwsClient',
                 '1.0',
                 config('api_info.api_amazon_get_item')
             );
             $optionalParams = [
                 'Query'         => $itemId,
-                // 'Query'         => 'B078SY57F5',
-                // 'Query'         => 'B00RF2ZNI0',
-                // 'Query'         => 'B00FJV9ZW4',
-                // 'Query'         => 'B071NZD35X',
                 'MarketplaceId' => $marketplaceId
             ];
             $data = $client->send('ListMatchingProducts', '/Products/2011-10-01', $optionalParams);
@@ -251,6 +245,7 @@ class ProductService extends CommonService
         }
 
         if (!count($arrayImage)) {
+            $response['message_error'] = Lang::get('view.item_not_found');
             return response()->json($response);
         }
 
@@ -261,7 +256,7 @@ class ProductService extends CommonService
                 $client  = new Client();
                 $client->getClient()->get($item['file'], [
                     'save_to' => storage_path($this->fullPathUpload . $itemId . '_' . $key . '.' . $item['extension']),
-                    'headers'=> [ 'Referer' => $item['file']]
+                    'headers' => [ 'Referer' => $item['file']]
                 ]);
             }
             $item['file'] = asset($this->pathStorageFile . $itemId . '_' . $key . '.' . $item['extension']);
@@ -386,7 +381,7 @@ class ProductService extends CommonService
         $sellPriceYen                   = round($input['sell_price'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
         $data['dtb_item']['ebay_fee']   = round($input['sell_price'] * $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee / 100, 2);
         $ebayFeeYen                     = round($data['dtb_item']['ebay_fee'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
-        $data['dtb_item']['paypal_fee'] = round($settingInfo->paypal_fee_rate  * $sellPriceYen / 100, 2);
+        $data['dtb_item']['paypal_fee'] = round($settingInfo->paypal_fee_rate  * $sellPriceYen / 100 + $settingInfo->paypal_fixed_fee, 2);
         $data['dtb_item']['buy_price']  = $input['buy_price'];
         $data['dtb_item']['profit']     = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'] * $settingInfo->gift_discount / 100, 2);
     }
@@ -625,24 +620,31 @@ class ProductService extends CommonService
             // insert item
             $dateNow = date('Y-m-d H:i:s');
             $dataItem = [
-                'original_id'         => $data['dtb_item']['original_id'],
-                'item_id'             => $data['dtb_item']['item_id'],
-                'original_type'       => $data['dtb_item']['type'],
-                'item_name'           => $data['dtb_item']['item_name'],
-                'category_id'         => $data['dtb_item']['category_id'],
-                'category_name'       => $data['dtb_item']['category_name'],
-                // 'condition_des'       => $data['dtb_item']['condition_des'],
-                'condition_id'        => $data['dtb_item']['condition_id'],
-                // 'condition_name'      => $data['dtb_item']['condition_name'],
-                'price'               => $data['dtb_item']['price'],
-                'duration'            => $data['dtb_item']['duration'],
-                'quantity'            => $data['dtb_item']['quantity'],
-                'shipping_policy_id'  => $data['dtb_item']['shipping_policy_id'],
-                'payment_policy_id'   => $data['dtb_item']['payment_policy_id'],
-                // 'return_policy_id' => $data['dtb_item']['return_policy_id'],
-                'ship_fee'            => isset($data['dtb_item']['ship_fee']) ? $data['dtb_item']['ship_fee'] : 0,
-                'created_at'          => $dateNow,
-                'updated_at'          => $dateNow,
+                'original_id'           => $data['dtb_item']['original_id'],
+                'item_id'               => $data['dtb_item']['item_id'],
+                'original_type'         => $data['dtb_item']['type'],
+                'item_name'             => $data['dtb_item']['item_name'],
+                'category_id'           => $data['dtb_item']['category_id'],
+                'category_name'         => $data['dtb_item']['category_name'],
+                'condition_des'         => $data['dtb_item']['condition_des'],
+                'condition_id'          => $data['dtb_item']['condition_id'],
+                'condition_name'        => $data['dtb_item']['condition_name'],
+                'price'                 => $data['dtb_item']['price'],
+                'duration'              => $data['dtb_item']['duration'],
+                'quantity'              => $data['dtb_item']['quantity'],
+                'shipping_policy_id'    => !empty($data['dtb_item']['shipping_policy_id']) ? $data['dtb_item']['shipping_policy_id'] : null,
+                'payment_policy_id'     => !empty($data['dtb_item']['payment_policy_id']) ? $data['dtb_item']['payment_policy_id'] : null,
+                'return_policy_id'      => !empty($data['dtb_item']['return_policy_id']) ? $data['dtb_item']['return_policy_id'] : null,
+                'item_height'           => !empty($data['dtb_item']['height']) ? $data['dtb_item']['height'] : null,
+                'item_width'            => !empty($data['dtb_item']['width']) ? $data['dtb_item']['width'] : null,
+                'item_length'           => !empty($data['dtb_item']['length']) ? $data['dtb_item']['length'] : null,
+                'item_weight'           => !empty($data['dtb_item']['commodity_weight']) ? $data['dtb_item']['commodity_weight'] : null,
+                'pack_material_weight'  => !empty($data['dtb_item']['material_quantity']) ? $data['dtb_item']['material_quantity'] : null,
+                'buy_price'             => $data['dtb_item']['buy_price'],
+                'ship_fee'              => isset($data['dtb_item']['ship_fee']) ? $data['dtb_item']['ship_fee'] : null,
+                'last_mornitoring_date' => $dateNow,
+                'created_at'            => $dateNow,
+                'updated_at'            => $dateNow,
             ];
             $itemId = $this->product->insertGetId($dataItem);
 
@@ -666,6 +668,12 @@ class ProductService extends CommonService
         }
     }
 
+    /**
+     * format data item specifics
+     * @param  array $input
+     * @param  integer $productId
+     * @return array
+     */
     public function formatDataItemSpecifics($input, $productId)
     {
         $dateNow = date('Y-m-d H:i:s');
@@ -736,11 +744,11 @@ class ProductService extends CommonService
      */
     public function getDataSettingPolicies()
     {
-        $userId             = Auth::user()->id;
-        $settingPolicyData  = $this->settingPolicy->getSettingPolicyOfUser($userId);
-        $shippingType = [];
-        $paymentType  = [];
-        $returnType   = [];
+        $userId            = Auth::user()->id;
+        $settingPolicyData = $this->settingPolicy->getSettingPolicyOfUser($userId);
+        $shippingType      = [];
+        $paymentType       = [];
+        $returnType        = [];
         foreach ($settingPolicyData as $key => $policy) {
             if ($policy->policy_type == SettingPolicy::TYPE_SHIPPING) {
                 $shippingType[$policy->id] = $policy->policy_name;

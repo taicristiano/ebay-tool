@@ -139,7 +139,7 @@
                                             @if($data['istTypeAmazon'])
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.product_size')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['product_size'] }}</label>
+                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['height'] }}@lang('view.height') x {{ $data['dtb_item']['width'] }}@lang('view.width') x {{ $data['dtb_item']['length'] }}@lang('view.length')</label>
                                             </div>
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.commodity_weight') @lang('view.g')</label>

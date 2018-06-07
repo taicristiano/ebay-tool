@@ -34,7 +34,6 @@ class CalculateProfitRequest extends Request
                 $rules['buy_price'] = 'required|numeric|greater_than_zero';
                 if ($data['type'] == Item::ORIGIN_TYPE_AMAZON) {
                     $rules['material_quantity'] = 'material_quantity';
-                    $rules['product_size']      = 'product_size';
                     $rules['height']            = 'nullable|numeric|greater_than_zero';
                     $rules['width']             = 'nullable|numeric|greater_than_zero';
                     $rules['length']            = 'nullable|numeric|greater_than_zero';

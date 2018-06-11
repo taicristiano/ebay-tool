@@ -13,7 +13,8 @@
         </div>
         <div class="form-group form-group-custom">
             <label for="dtb_item[jan_upc]">@lang('view.JAN/UPC') <span class="text-danger">(*)</span></label>
-            {!! Form::text("dtb_item[jan_upc]", isset($data['dtb_item']['jan_upc']) ? $data['dtb_item']['jan_upc'] : '', ['class' => 'form-control', 'readonly' => true]) !!}
+            {!! Form::text("dtb_item[jan_upc]", isset($data['dtb_item']['jan_upc']) ? $data['dtb_item']['jan_upc'] : '', ['class' => 'form-control']) !!}
+            <p class="error-validate text-danger error-dtb_item_jan_upc "></p>
         </div>
         <div class="form-group form-group-custom">
             <label for="dtb_item[condition_id]">@lang('view.category') <span class="text-danger">(*)</span></label>
@@ -25,7 +26,7 @@
             <p class="error-validate text-danger error-dtb_item_condition_des"></p>
         </div>
         <div class="box box-success">
-            <div class="box-header with-border">@lang('view.specifications')</div>
+            <div class="box-header with-border">@lang('view.specifications') <span class="text-danger">(*)</span></div>
             <div class="box-body">
                 @if(!empty($data['dtb_item_specifics']))
                 @foreach($data['dtb_item_specifics'] as $key => $value)

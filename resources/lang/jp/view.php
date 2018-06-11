@@ -104,7 +104,7 @@ return [
     'original_id'                           => 'Origin id',
     'product_details'                       => '■製品詳細',
     'product_name'                          => '商品名',
-    'category'                              => 'カテゴリー',
+    'category'                              => '商品状態',
     'JAN/UPC'                               => 'JAN/UPC',
     'condition_name'                        => '商品状態',
     'specifications'                        => '■仕様詳細',

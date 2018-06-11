@@ -25,7 +25,7 @@
                                 <div class="col-xs-12 col-md-4">
                                     <div class="form-group">
                                         <div class="col-xs-12 col-md-8">
-                                            {!! Form::text('item_id', !empty($data['item_id']) ? $data['item_id'] : '192375777401', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'item_id']) !!}
+                                            {!! Form::text('item_id', !empty($data['item_id']) ? $data['item_id'] : '110327763724', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'item_id']) !!}
                                             <p class="text-danger display-none invalid" id="item-ebay-invalid">@lang('view.item_not_found')</p>
                                         </div>
                                         <div class="col-xs-12 col-md-4">

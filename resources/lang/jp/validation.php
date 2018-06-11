@@ -190,5 +190,9 @@ return [
         'the_width_product_field_must_be_greater_than_zero'  => 'the_width_product_field_must_be_greater_than_zero',
         'the_height_product_field_must_be_number'            => 'the_height_product_field_must_be_number',
         'the_height_product_field_must_be_greater_than_zero' => 'the_height_product_field_must_be_greater_than_zero',
+        'the_material_quantity_field_must_be_number'         => 'the_material_quantity_field_must_be_number',
+        'the_jan_upc_field_is_required'                      => 'the_jan_upc_field_is_required',
+        'the_paypal_email_field_is_required'                 => 'the_paypal_email_field_is_required',
+        'the_paypal_email_field_must_be_format_email'        => 'the_paypal_email_field_must_be_format_email',
     ]
 ];

@@ -26,6 +26,7 @@ class CreateTableSetting extends Migration
             $table->string('duration', 10)->default('Days_30');
             $table->smallInteger('quantity')->default(1);
             $table->string('seller_id', 20)->nullable();
+            $table->string('paypal_email', 40)->nullable();
             $table->string('mws_auth_token', 80)->nullable();
             $table->string('mws_access_key', 80)->nullable();
             $table->string('mws_secret_key', 80)->nullable();

@@ -122,10 +122,6 @@
                     {!! Form::select("dtb_item[shipping_policy_id]", $data['dtb_setting_policies']['shipping'], isset($data['dtb_setting_policies']['shipping']) ? $data['dtb_setting_policies']['shipping'] : '', ['class' => 'form-control']) !!}
                 </div>
                 <div class="form-group form-group-custom">
-                    <label for="dtb_item[payment_policy_id]">@lang('view.payment_policy') <span class="text-danger">(*)</span></label>
-                    {!! Form::select("dtb_item[payment_policy_id]", $data['dtb_setting_policies']['payment'], isset($data['dtb_setting_policies']['payment']) ? $data['dtb_setting_policies']['payment'] : '', ['class' => 'form-control']) !!}
-                </div>
-                <div class="form-group form-group-custom">
                     <label for="dtb_item[return_policy_id]">@lang('view.return_policy') <span class="text-danger">(*)</span></label>
                     {!! Form::select("dtb_item[return_policy_id]", $data['dtb_setting_policies']['return'], isset($data['dtb_setting_policies']['return']) ? $data['dtb_setting_policies']['return'] : '', ['class' => 'form-control']) !!}
                 </div>

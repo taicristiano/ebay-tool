@@ -100,6 +100,13 @@
                                 <p class="text-danger">'. $errors->first('seller_id') .'</p>
                                 ' : ''!!}
                             </div>
+                            <div class="form-group {{ $errors->first('paypal_email') ? 'has-error' : '' }}">
+                                <label for="paypal_email">@lang('view.paypal_email') <span class="text-danger">(*)</span></label>
+                                {!! Form::text('paypal_email', old('paypal_email', isset($setting->paypal_email) ? $setting->paypal_email : ''), ['class' => 'form-control']) !!}
+                                {!! $errors->first('paypal_email') ? '
+                                <p class="text-danger">'. $errors->first('paypal_email') .'</p>
+                                ' : ''!!}
+                            </div>
                             <div class="form-group {{ $errors->first('mws_auth_token') ? 'has-error' : '' }}">
                                 <label for="mws_auth_token">@lang('view.mws_auth_token') <span class="text-danger">(*)</span></label>
                                 {!! Form::text('mws_auth_token', old('mws_auth_token', isset($setting->mws_auth_token) ? $setting->mws_auth_token : ''), ['class' => 'form-control']) !!}

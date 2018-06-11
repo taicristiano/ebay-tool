@@ -170,17 +170,17 @@ return [
         'the_mws_auth_token_field_is_required'                        => 'MWS認証トークンを入力してください。',
         'the_mws_access_key_field_is_required'                        => 'MWSのアクセスキーを入力してください。',
         'the_mws_secret_key_field_is_required'                        => 'MWSの秘密キーを入力してください。',
+        'the_paypal_email_field_is_required'                          => 'the_paypal_email_field_is_required',
+        'the_paypal_email_field_must_be_format_email'                 => 'the_paypal_email_field_must_be_format_email',
     ],
 
     'post-product' => [
         'the_item_name_field_is_required'                    => 'the_item_name_field_is_required',
-        'the_condition_name_field_is_required'               => 'the_condition_name_field_is_required',
         'the_condition_des_field_is_required'                => 'the_condition_des_field_is_required',
         'the_price_field_is_required'                        => 'the_price_field_is_required',
         'the_price_field_must_be_number'                     => 'the_price_field_must_be_number',
         'the_buy_price_field_is_required'                    => 'the_buy_price_field_is_required',
         'the_buy_price_must_be_number'                       => 'the_buy_price_must_be_number',
-        'the_material_quantity_field_is_required'            => 'the_material_quantity_field_is_required',
         'the_item_specifics_name_field_is_required'          => 'the_item_specifics_name_field_is_required',
         'the_item_specifics_value_field_is_required'         => 'the_item_specifics_value_field_is_required',
         'the_item_specifics_field_is_required'               => 'the_item_specifics_field_is_required',
@@ -192,7 +192,5 @@ return [
         'the_height_product_field_must_be_greater_than_zero' => 'the_height_product_field_must_be_greater_than_zero',
         'the_material_quantity_field_must_be_number'         => 'the_material_quantity_field_must_be_number',
         'the_jan_upc_field_is_required'                      => 'the_jan_upc_field_is_required',
-        'the_paypal_email_field_is_required'                 => 'the_paypal_email_field_is_required',
-        'the_paypal_email_field_must_be_format_email'        => 'the_paypal_email_field_must_be_format_email',
     ]
 ];

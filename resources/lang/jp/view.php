@@ -144,4 +144,5 @@ return [
     'height'                                => '高(cm)',
     'width'                                 => '幅(cm)',
     'length'                                => '長(cm)',
+    'paypal_email'                          => 'Paypalメールアドレス'
 ];

@@ -110,6 +110,7 @@ jQuery(document).ready(function() {
                     if (messageError.dtb_item_condition_des
                         || messageError.dtb_item_item_name
                         || messageError.dtb_item_condition_name
+                        || messageError.dtb_item_jan_upc
                         ) {
                         $('html, body').animate({
                             scrollTop: $("#item_name").offset().top

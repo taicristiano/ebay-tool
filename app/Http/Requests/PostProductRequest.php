@@ -29,6 +29,7 @@ class PostProductRequest extends Request
             'dtb_item.item_name'      => 'required',
             // 'dtb_item.condition_name' => 'required',
             'dtb_item.condition_des'  => 'required',
+            'dtb_item.jan_upc'        => 'required',
             'dtb_item.category_id'    => 'required',
             'dtb_item.price'          => 'required|numeric|greater_than_zero',
             'dtb_item.buy_price'      => 'required|numeric|greater_than_zero',
@@ -61,6 +62,7 @@ class PostProductRequest extends Request
         $messages = [
             'dtb_item.item_name.required'        => trans('validation.post-product.the_item_name_field_is_required'),
             'dtb_item.condition_name.required'   => trans('validation.post-product.the_condition_name_field_is_required'),
+            'dtb_item.jan_upc.required'          => trans('validation.post-product.the_jan_upc_field_is_required'),
             'dtb_item.condition_des.required'    => trans('validation.post-product.the_condition_des_field_is_required'),
             'dtb_item.price.required'            => trans('validation.post-product.the_price_field_is_required'),
             'dtb_item.price.numeric'             => trans('validation.post-product.the_price_field_must_be_number'),

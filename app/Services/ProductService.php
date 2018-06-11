@@ -114,7 +114,6 @@ class ProductService extends CommonService
             'category_name'  => $data['Item']['PrimaryCategoryName'],
             'condition_id'   => $data['Item']['ConditionID'],
             'condition_name' => $data['Item']['ConditionDisplayName'],
-            // 'price'          => round($data['Item']['ConvertedCurrentPrice'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2),
             'price'          => $data['Item']['ConvertedCurrentPrice'],
             'duration'       => $settingItem->duration,
             'quantity'       => $settingItem->quantity,
@@ -123,6 +122,9 @@ class ProductService extends CommonService
         //data dtb_item_specifics
         $result['dtb_item_specifics'] = [];
         foreach ($data['Item']['ItemSpecifics']['NameValueList'] as $specific) {
+            if ($specific['Name'] == 'UPC') {
+                $result['dtb_item']['jan_upc'] = $specific['Value'];
+            }
             $item['name']                   = $specific['Name'];
             $item['value']                  = $specific['Value'];
             $result['dtb_item_specifics'][] = $item;
@@ -627,6 +629,7 @@ class ProductService extends CommonService
                 'category_id'           => $data['dtb_item']['category_id'],
                 'category_name'         => $data['dtb_item']['category_name'],
                 'condition_des'         => $data['dtb_item']['condition_des'],
+                'jan_upc'               => $data['dtb_item']['jan_upc'],
                 'condition_id'          => $data['dtb_item']['condition_id'],
                 'condition_name'        => $data['dtb_item']['condition_name'],
                 'price'                 => $data['dtb_item']['price'],

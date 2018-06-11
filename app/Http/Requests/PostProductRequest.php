@@ -27,7 +27,6 @@ class PostProductRequest extends Request
     {
         $rules = [
             'dtb_item.item_name'      => 'required',
-            // 'dtb_item.condition_name' => 'required',
             'dtb_item.condition_des'  => 'required',
             'dtb_item.jan_upc'        => 'required',
             'dtb_item.category_id'    => 'required',

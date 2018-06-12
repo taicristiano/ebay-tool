@@ -686,6 +686,9 @@ class ProductService extends CommonService
             $this->insertItemImage($data, $itemId);
 
             // post to ebay
+            // dd($data);
+
+
             DB::commit();
             Session::forget($this->keyProduct);
             $response['status'] = true;

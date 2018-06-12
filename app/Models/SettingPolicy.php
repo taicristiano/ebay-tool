@@ -70,4 +70,14 @@ class SettingPolicy extends AbstractModel
             ->where('user_id', $userId)
             ->get();
     }
+
+    /**
+     * get policy_content
+     * @param  integer $id
+     * @return Object
+     */
+    public static function getPolicyContent($id)
+    {
+        return static::select('policy_content')->find($id);
+    }
 }

@@ -71,4 +71,57 @@ class CommonService
         $json   = json_encode($xml);
         return json_decode($json, true);
     }
+
+    /**
+     * excute export csv
+     * @param  string $fileName
+     * @param  array $columns
+     * @param  array $rowList
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function excuteExportCsv($fileName, $columns, $rowList)
+    {
+        try {
+            $headers = array(
+                'Content-type' => 'text/csv',
+                'Content-Disposition' => 'attachment; filename=' . $fileName,
+                'Pragma' => 'no-cache',
+                'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+                'Expires' => '0'
+            );
+
+            $callback = function () use ($columns, $rowList) {
+                $file = fopen('php://output', 'w');
+                fputs($file, "\xEF\xBB\xBF");
+                fputcsv($file, $columns);
+
+                foreach ($rowList as $row) {
+                    fputcsv($file, $row);
+                }
+
+                fclose($file);
+            };
+
+            return response()->stream($callback, 200, $headers);
+        } catch (Exception $e) {
+            logger(__METHOD__ . ': ' . $e->getMessage());
+            abort('500');
+        }
+    }
+
+    /**
+     * get policy name by id
+     * @param  integer $id
+     * @param  array $settingPolicyData
+     * @return string
+     */
+    public function getPolicyNameById($id, $settingPolicyData)
+    {
+        foreach ($settingPolicyData as $key => $policy) {
+            if ($policy->id == $id) {
+                return $policy->policy_name;
+            }
+        }
+        return null;
+    }
 }

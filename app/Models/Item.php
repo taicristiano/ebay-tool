@@ -31,6 +31,14 @@ class Item extends AbstractModel
     const SESSION_KEY_PRODUCT_INFO = 'product-info';
 
     /**
+     * Get the images for the blog item.
+     */
+    public function images()
+    {
+        return $this->hasMany('App\Models\ItemImage', 'item_id');
+    }
+
+    /**
      * get origin type yahoo auction
      * @return integer
      */
@@ -103,5 +111,33 @@ class Item extends AbstractModel
     public function getConditionNameById($conditionId)
     {
         return $this->getConditionIdList()[$conditionId];
+    }
+
+    /**
+     * get list product
+     * @param  array $input
+     * @return array object
+     */
+    public function getListProduct($input)
+    {
+        $condition = $this->with('images');
+        if (!empty($input['search'])) {
+            $condition = $condition->where(function ($query) use  ($input) {
+                $query->orWhere('item_name', 'LIKE', '%' . $input['search'] . '%');
+                $query->orWhere('original_id', 'LIKE', '%' . $input['search'] . '%');
+            });
+        }
+        return $condition
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+    }
+
+    /**
+     * get data export csv
+     * @return array object
+     */
+    public function getDataExportCsv()
+    {
+        return $this->get()->toArray();
     }
 }

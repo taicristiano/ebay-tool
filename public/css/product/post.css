@@ -17,10 +17,6 @@ hr {
     border: 1px solid #ccc;
 }
 
-.swal-footer {
-    text-align: center !important;
-}
-
 .background-disable {
 	background: #eee !important;
 }

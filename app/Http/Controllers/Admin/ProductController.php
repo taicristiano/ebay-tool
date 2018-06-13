@@ -4,29 +4,37 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
-use App\Services\ProductService;
+use App\Services\ProductPostService;
+use App\Services\ProductListService;
 use App\Models\Item;
 use App\Models\CategoryFee;
 use App\Http\Requests\CalculateProfitRequest;
 use App\Http\Requests\PostProductRequest;
 use Illuminate\Support\Facades\Session;
+use App\Models\ItemImage;
 
 class ProductController extends AbstractController
 {
     protected $product;
     protected $category;
-    protected $productService;
+    protected $productPostService;
     protected $keyProduct;
+    protected $itemImage;
+    protected $productListService;
 
     public function __construct(
-        ProductService $productService,
+        ProductPostService $productPostService,
         Item $product,
-        CategoryFee $category
+        CategoryFee $category,
+        ProductListService $productListService,
+        ItemImage $itemImage
     ) {
-        $this->productService = $productService;
-        $this->product = $product;
-        $this->category = $category;
-        $this->keyProduct = Item::SESSION_KEY_PRODUCT_INFO;
+        $this->productPostService     = $productPostService;
+        $this->product            = $product;
+        $this->category           = $category;
+        $this->keyProduct         = Item::SESSION_KEY_PRODUCT_INFO;
+        $this->itemImage          = $itemImage;
+        $this->productListService = $productListService;
     }
 
     /**
@@ -35,18 +43,18 @@ class ProductController extends AbstractController
      */
     public function showPagePostProduct()
     {
-        $hasSettingPolicyData = $this->productService->checkHasSettingPolicyData();
+        $hasSettingPolicyData = $this->productPostService->checkHasSettingPolicyData();
         if (!$hasSettingPolicyData) {
             return view('admin.product.none_policy');
         }
         // Session::forget($this->keyProduct);
         $data = [];
         if (Session::has($this->keyProduct)) {
-            $data = $this->productService->formatDataPageProduct(Session::get($this->keyProduct)[0]);
+            $data = $this->productPostService->formatDataPageProduct(Session::get($this->keyProduct)[0]);
         }
         $conditionIdList = $this->product->getConditionIdList();
         $originType = $this->product->getOriginType();
-        $data = $this->productService->getDataForShowPagePostProduct($data);
+        $data = $this->productPostService->getDataForShowPagePostProduct($data);
         return view('admin.product.post', compact('data', 'originType', 'conditionIdList'));
     }
 
@@ -64,7 +72,7 @@ class ProductController extends AbstractController
             $postProductValidate = PostProductRequest::validateData($data);
             if ($postProductValidate->fails()) {
                 $messageError = $postProductValidate->errors()->messages();
-                $response['message_error'] = $this->productService->formatMessageError($messageError);
+                $response['message_error'] = $this->productPostService->formatMessageError($messageError);
                 return response()->json($response);
             }
             $dataSession = [];
@@ -72,7 +80,7 @@ class ProductController extends AbstractController
                 $dataSession = Session::get($this->keyProduct)[0];
                 Session::forget($this->keyProduct);
             }
-            $data = $this->productService->formatDataInsertProductConfirm($data, $dataSession);
+            $data = $this->productPostService->formatDataInsertProductConfirm($data, $dataSession);
             Session::push($this->keyProduct, $data);
             $response['status'] = true;
             $response['url'] = route('admin.product.show-confirm');
@@ -95,7 +103,7 @@ class ProductController extends AbstractController
         if (!$data) {
             return redirect()->route('admin.product.show-page-post-product');
         }
-        $data = $this->productService->formatDataPageConfirm($data);
+        $data = $this->productPostService->formatDataPageConfirm($data);
         return view('admin.product.confirm', compact('data'));
     }
 
@@ -106,7 +114,7 @@ class ProductController extends AbstractController
     public function postProductPublish()
     {
         try {
-            return $this->productService->postProductPublish();
+            return $this->productPostService->postProductPublish();
         } catch (Exception $ex) {
             Log::error($ex);
             $response['status'] = false;
@@ -122,7 +130,7 @@ class ProductController extends AbstractController
     public function apiGetItemEbayInfo(Request $request)
     {
         try {
-            return $this->productService->apiGetItemEbayInfo($request->item_id);
+            return $this->productPostService->apiGetItemEbayInfo($request->item_id);
         } catch (Exception $ex) {
             Log::error($ex);
             $response['status'] = false;
@@ -138,7 +146,7 @@ class ProductController extends AbstractController
     public function apiGetItemYahooOrAmazonInfo(Request $request)
     {
         try {
-            return $this->productService->apiGetItemYahooOrAmazonInfo($request->all());
+            return $this->productPostService->apiGetItemYahooOrAmazonInfo($request->all());
         } catch (Exception $ex) {
             Log::error($ex);
             $response['status'] = false;
@@ -159,11 +167,11 @@ class ProductController extends AbstractController
             $calculateProfitValidate = CalculateProfitRequest::validateData($data);
             if ($calculateProfitValidate->fails()) {
                 $messageError = $calculateProfitValidate->errors()->messages();
-                $response['message_error'] = $this->productService->formatMessageError($messageError);
+                $response['message_error'] = $this->productPostService->formatMessageError($messageError);
                 return response()->json($response);
             }
 
-            return $this->productService->calculatorProfit($data);
+            return $this->productPostService->calculatorProfit($data);
         } catch (Exception $ex) {
             Log::error($ex);
             return response()->json($response);
@@ -178,7 +186,7 @@ class ProductController extends AbstractController
     {
         try {
             $data = Session::get($this->keyProduct)[0];
-            return $this->productService->getImageInit($data);
+            return $this->productPostService->getImageInit($data);
         } catch (Exception $ex) {
             Log::error($ex);
             $response['status'] = false;
@@ -196,5 +204,28 @@ class ProductController extends AbstractController
         $data = $request->all();
         $data = $this->category->search($data);
         return response()->json($data);
+    }
+
+    /**
+     * list product
+     * @param  Request $request
+     * @return view
+     */
+    public function list(Request $request)
+    {
+        $products        = $this->product->getListProduct($request->all());
+        $pathStorageFile = $this->itemImage->getPathStorageFile();
+        $originType      = $this->product->getOriginType();
+        // $category = $this->category->getAll();
+        return view('admin.product.list', compact('products', 'pathStorageFile', 'originType'));
+    }
+
+    /**
+     * export csv
+     * @return file
+     */
+    public function exportCsv()
+    {
+        return $this->productListService->exportCsv();
     }
 }

@@ -32,7 +32,7 @@ class SettingPolicy extends AbstractModel
 
     const STRING_TYPE_SHIPPING = 'SHIPPING';
     const STRING_TYPE_PAYMENT  = 'PAYMENT';
-    const STRING_TYPE_RETURN   = 'RETURN';
+    const STRING_TYPE_RETURN   = 'RETURN_POLICY';
 
     /**
      * get type by string name

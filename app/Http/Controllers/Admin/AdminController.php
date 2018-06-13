@@ -10,7 +10,6 @@ class AdminController extends AbstractController
      */
     public function index()
     {
-        // dd((new \App\Services\EbayClient)->addFixedPriceItem([]));
         return view('admin.index');
     }
 }

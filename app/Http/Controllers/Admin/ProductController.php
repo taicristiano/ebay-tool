@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Log;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 use App\Models\Item;
@@ -46,6 +46,7 @@ class ProductController extends AbstractController
         }
         $conditionIdList = $this->product->getConditionIdList();
         $originType = $this->product->getOriginType();
+        $data = $this->productService->getDataForShowPagePostProduct($data);
         return view('admin.product.post', compact('data', 'originType', 'conditionIdList'));
     }
 
@@ -62,8 +63,8 @@ class ProductController extends AbstractController
             $data = $request->all();
             $postProductValidate = PostProductRequest::validateData($data);
             if ($postProductValidate->fails()) {
-                $mesageError = $postProductValidate->errors()->messages();
-                $response['message_error'] = $this->productService->formatMessageError($mesageError);
+                $messageError = $postProductValidate->errors()->messages();
+                $response['message_error'] = $this->productService->formatMessageError($messageError);
                 return response()->json($response);
             }
             $dataSession = [];
@@ -157,8 +158,8 @@ class ProductController extends AbstractController
             $data = $request->all();
             $calculateProfitValidate = CalculateProfitRequest::validateData($data);
             if ($calculateProfitValidate->fails()) {
-                $mesageError = $calculateProfitValidate->errors()->messages();
-                $response['message_error'] = $this->productService->formatMessageError($mesageError);
+                $messageError = $calculateProfitValidate->errors()->messages();
+                $response['message_error'] = $this->productService->formatMessageError($messageError);
                 return response()->json($response);
             }
 
@@ -177,9 +178,6 @@ class ProductController extends AbstractController
     {
         try {
             $data = Session::get($this->keyProduct)[0];
-            if (!$data) {
-                throw new Exception();
-            }
             return $this->productService->getImageInit($data);
         } catch (Exception $ex) {
             Log::error($ex);

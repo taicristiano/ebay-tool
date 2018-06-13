@@ -48,7 +48,7 @@
                             </div>
                             <label for="ex_rate_diff">@lang('view.paypal_fee')</span></label>
                             <div class="row">
-                                <div class="col-md-6 col-sm-6 col-xs-6 padding-left-30 {{ $errors->first('paypal_fixed_fee') ? 'has-error' : '' }}">
+                                <div class="col-md-4 col-sm-4 col-xs-12 padding-left-30 {{ $errors->first('paypal_fixed_fee') ? 'has-error' : '' }}">
                                     <label for="ex_rate_diff">@lang('view.paypal_fixed_fee') <span class="text-danger">(*)</span></label>
                                     <div class="form-group input-group">
                                         {!! Form::text('paypal_fixed_fee', old('paypal_fixed_fee', isset($setting->paypal_fixed_fee) ? $setting->paypal_fixed_fee : ''), ['class' => 'form-control']) !!}
@@ -58,7 +58,7 @@
                                     <p class="text-danger">'. $errors->first('paypal_fixed_fee') .'</p>
                                     ' : ''!!}
                                 </div>
-                                <div class="col-md-6 col-sm-6 col-xs-6 {{ $errors->first('ex_rate_diff') ? 'has-error' : '' }}">
+                                <div class="col-md-4 col-sm-4 col-xs-12 {{ $errors->first('ex_rate_diff') ? 'has-error' : '' }}">
                                     <label for="ex_rate_diff">@lang('view.ex_rate_diff') <span class="text-danger">(*)</span></label>
                                     <div class="form-group {{ $errors->first('paypal_fee_rate') ? 'has-error' : '' }} input-group">
                                         {!! Form::text('ex_rate_diff', old('ex_rate_diff', isset($setting->ex_rate_diff) ? $setting->ex_rate_diff : ''), ['class' => 'form-control']) !!}
@@ -67,6 +67,15 @@
                                     {!! $errors->first('ex_rate_diff') ? '
                                     <p class="text-danger">'. $errors->first('ex_rate_diff') .'</p>
                                     ' : ''!!}
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-12 {{ $errors->first('paypal_email') ? 'has-error' : '' }}">
+                                    <label for="paypal_email">@lang('view.paypal_email') <span class="text-danger">(*)</span></label>
+                                    <div class="form-group {{ $errors->first('paypal_fee_rate') ? 'has-error' : '' }}">
+                                        {!! Form::text('paypal_email', old('paypal_email', isset($setting->paypal_email) ? $setting->paypal_email : ''), ['class' => 'form-control']) !!}
+                                        {!! $errors->first('paypal_email') ? '
+                                        <p class="text-danger">'. $errors->first('paypal_email') .'</p>
+                                        ' : ''!!}
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group {{ $errors->first('gift_discount') ? 'has-error' : '' }}">

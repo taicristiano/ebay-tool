@@ -7,15 +7,15 @@ use App\Models\Authorization;
 use App\Models\Setting;
 use App\Models\SettingShipping;
 use App\Models\User;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Exception;
 use Hash;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Services\CsvService;
 use App\Http\Requests\UploadCsvRequest;
-use Lang;
-use Auth;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends AbstractController
 {
@@ -72,7 +72,7 @@ class UserController extends AbstractController
             }
             return $this->render(compact('user', 'typeOptions', 'categoryOptions', 'typeGuestAdmin'));
         }
-        $data             = array_filter($req->only($this->user->getFieldList()));        
+        $data             = array_filter($req->only($this->user->getFieldList()));
         if (!$userId) {
             $data['user_code'] = User::generateUserCode();
         }
@@ -128,7 +128,7 @@ class UserController extends AbstractController
      * show page upload csv
      * @return view
      */
-    public function showPageuploadCsv()
+    public function showPageUploadCsv()
     {
         return view('admin.user.upload-csv');
     }

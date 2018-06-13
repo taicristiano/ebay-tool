@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class SettingService extends CommonService
 {
@@ -40,7 +40,7 @@ class SettingService extends CommonService
     public function formatExpirationTime($time)
     {
         if (!$time) {
-            return;
+            return null;
         }
         $time = date_create($time);
         return date_format($time, "Y/m/d H:i:s");
@@ -118,27 +118,54 @@ class SettingService extends CommonService
     {
         $result = [];
         if (!empty($data['paymentProfileList'])) {
-            $payment                       = $data['paymentProfileList']['PaymentProfile'];
-            $dataPayment['policy_name']    = $payment['profileName'];
-            $dataPayment['policy_type']    = $payment['profileType'];
-            $dataPayment['policy_content'] = json_encode($payment);
-            $result[]                      = $dataPayment;
+            $payment = $data['paymentProfileList']['PaymentProfile'];
+            foreach($payment as $item) {
+                if (empty($item['profileName']) || empty($item['profileType'])) {
+                    $dataPayment['policy_name']    = $payment['profileName'];
+                    $dataPayment['policy_type']    = $payment['profileType'];
+                    $dataPayment['policy_content'] = json_encode($payment);
+                    $result[]                      = $dataPayment;
+                    break;
+                }
+                $dataPayment['policy_name']    = $item['profileName'];
+                $dataPayment['policy_type']    = $item['profileType'];
+                $dataPayment['policy_content'] = json_encode($item);
+                $result[]                      = $dataPayment;
+            }
         }
 
         if (!empty($data['returnPolicyProfileList'])) {
-            $return                       = $data['returnPolicyProfileList']['ReturnPolicyProfile'];
-            $dataReturn['policy_name']    = $return['profileName'];
-            $dataReturn['policy_type']    = $return['profileType'];
-            $dataReturn['policy_content'] = json_encode($return);
-            $result[]                     = $dataReturn;
+            $return = $data['returnPolicyProfileList']['ReturnPolicyProfile'];
+            foreach($return as $item) {
+                if (empty($item['profileName']) || empty($item['profileType'])) {
+                    $dataReturn['policy_name']    = $return['profileName'];
+                    $dataReturn['policy_type']    = $return['profileType'];
+                    $dataReturn['policy_content'] = json_encode($return);
+                    $result[]                     = $dataReturn;
+                    break;
+                }
+                $dataReturn['policy_name']    = $item['profileName'];
+                $dataReturn['policy_type']    = $item['profileType'];
+                $dataReturn['policy_content'] = json_encode($item);
+                $result[]                     = $dataReturn;
+            }
         }
 
         if (!empty($data['shippingPolicyProfile'])) {
-            $shipping                       = $data['shippingPolicyProfile']['ShippingPolicyProfile'];
-            $dataShipping['policy_name']    = $shipping['profileName'];
-            $dataShipping['policy_type']    = $shipping['profileType'];
-            $dataShipping['policy_content'] = json_encode($shipping);
-            $result[]                       = $dataShipping;
+            $shipping = $data['shippingPolicyProfile']['ShippingPolicyProfile'];
+            foreach($shipping as $item) {
+                if (empty($item['profileName']) || empty($item['profileType'])) {
+                    $dataShipping['policy_name']    = $shipping['profileName'];
+                    $dataShipping['policy_type']    = $shipping['profileType'];
+                    $dataShipping['policy_content'] = json_encode($shipping);
+                    $result[]                       = $dataShipping;
+                    break;
+                }
+                $dataShipping['policy_name']    = $item['profileName'];
+                $dataShipping['policy_type']    = $item['profileType'];
+                $dataShipping['policy_content'] = json_encode($item);
+                $result[]                       = $dataShipping;
+            }
         }
 
         return $result;

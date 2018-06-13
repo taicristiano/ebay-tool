@@ -152,7 +152,7 @@ return [
 
     'attributes'           => [],
 
-    'nomar-setting'        => [
+    'normal-setting'       => [
         'the_paypal_fee_rate_field_is_required'                       => 'Paypalの手数料率を入力してください。',
         'the_paypal_fee_rate_field_is_must_be_from_1_to_100'          => 'Paypalの手数料は1から100まで入力してください。',
         'the_paypal_fixed_fee_field_is_required'                      => 'Paypalの手数料の固定費を入力してください。',
@@ -170,21 +170,27 @@ return [
         'the_mws_auth_token_field_is_required'                        => 'MWS認証トークンを入力してください。',
         'the_mws_access_key_field_is_required'                        => 'MWSのアクセスキーを入力してください。',
         'the_mws_secret_key_field_is_required'                        => 'MWSの秘密キーを入力してください。',
+        'the_paypal_email_field_is_required'                          => 'the_paypal_email_field_is_required',
+        'the_paypal_email_field_must_be_format_email'                 => 'the_paypal_email_field_must_be_format_email',
     ],
 
     'post-product' => [
-        'the_item_name_field_is_required'            => 'the_item_name_field_is_required',
-        'the_condition_name_field_is_required'       => 'the_condition_name_field_is_required',
-        'the_condition_des_field_is_required'        => 'the_condition_des_field_is_required',
-        'the_price_field_is_required'                => 'the_price_field_is_required',
-        'the_price_field_must_be_number'             => 'the_price_field_must_be_number',
-        'the_buy_price_field_is_required'            => 'the_buy_price_field_is_required',
-        'the_buy_price_must_be_number'               => 'the_buy_price_must_be_number',
-        'the_product_size_is_required'               => 'the_product_size_is_required',
-        'the_material_quantity_field_is_required'    => 'the_material_quantity_field_is_required',
-        'the_item_specifics_name_field_is_required'  => 'the_item_specifics_name_field_is_required',
-        'the_item_specifics_value_field_is_required' => 'the_item_specifics_value_field_is_required',
-        'the_item_specifics_field_is_required'       => 'the_item_specifics_field_is_required',
-        'the_item_name_field_is_required'            => 'the_item_name_field_is_required',
+        'the_item_name_field_is_required'                    => 'the_item_name_field_is_required',
+        'the_condition_des_field_is_required'                => 'the_condition_des_field_is_required',
+        'the_price_field_is_required'                        => 'the_price_field_is_required',
+        'the_price_field_must_be_number'                     => 'the_price_field_must_be_number',
+        'the_buy_price_field_is_required'                    => 'the_buy_price_field_is_required',
+        'the_buy_price_must_be_number'                       => 'the_buy_price_must_be_number',
+        'the_item_specifics_name_field_is_required'          => 'the_item_specifics_name_field_is_required',
+        'the_item_specifics_value_field_is_required'         => 'the_item_specifics_value_field_is_required',
+        'the_item_specifics_field_is_required'               => 'the_item_specifics_field_is_required',
+        'the_length_product_field_must_be_number'            => 'the_length_product_field_must_be_number',
+        'the_length_product_field_must_be_greater_than_zero' => 'the_length_product_field_must_be_greater_than_zero',
+        'the_width_product_field_must_be_number'             => 'the_width_product_field_must_be_number',
+        'the_width_product_field_must_be_greater_than_zero'  => 'the_width_product_field_must_be_greater_than_zero',
+        'the_height_product_field_must_be_number'            => 'the_height_product_field_must_be_number',
+        'the_height_product_field_must_be_greater_than_zero' => 'the_height_product_field_must_be_greater_than_zero',
+        'the_material_quantity_field_must_be_number'         => 'the_material_quantity_field_must_be_number',
+        'the_jan_upc_field_is_required'                      => 'the_jan_upc_field_is_required',
     ]
 ];

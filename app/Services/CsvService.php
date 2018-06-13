@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use Excel;
-use Lang;
-use DB;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Authorization;
@@ -88,9 +88,9 @@ class CsvService extends CommonService
     }
 
     /**
-     * generate data exprot csv
+     * generate data export csv
      * @param  string $type
-     * @param  arrray $data
+     * @param  array $data
      * @return array
      */
     public function generateDataExportCsv($type, $data)

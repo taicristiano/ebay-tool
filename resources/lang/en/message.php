@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'no_data'                => 'No data.',
-    'delete_confirm'         => 'Do you want to delete?',
-    'no_thing'               => '---',
+    'no_data'        => 'No data.',
+    'delete_confirm' => 'Do you want to delete?',
+    'no_thing'       => '---',
     
     'deleted_user_success'   => 'Deleted user successfully.',
     'created_user_success'   => 'Created user successfully.',
@@ -14,7 +14,7 @@ return [
     'update_setting_success' => 'Updated setting successfully',
     'update_setting_error'   => 'Update setting error',
 
-    'deleted_template_success'   => 'Deleted template successfully.',
-    'created_template_success'   => 'Created template successfully.',
-    'updated_template_success'   => 'Updated template successfully.',
+    'deleted_template_success' => 'Deleted template successfully.',
+    'created_template_success' => 'Created template successfully.',
+    'updated_template_success' => 'Updated template successfully.',
 ];

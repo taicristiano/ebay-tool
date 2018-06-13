@@ -26,10 +26,10 @@ class ValidateProvider extends ServiceProvider
             }
             return false;
         });
-        Validator::extend('greateThanOrEqualZero', function ($attribute, $value, $parameters, $validator) {
+        Validator::extend('greaterThanOrEqualZero', function ($attribute, $value, $parameters, $validator) {
             return $value >= 0;
         });
-        Validator::extend('greateThanZero', function ($attribute, $value, $parameters, $validator) {
+        Validator::extend('greaterThanZero', function ($attribute, $value, $parameters, $validator) {
             if (strlen($value) > 0) {
                 return $value > 0;
             }
@@ -55,7 +55,7 @@ class ValidateProvider extends ServiceProvider
                     if (!is_numeric($item)) {
                         return false;
                     }
-                    if($item <= 0) {
+                    if ($item <= 0) {
                         return false;
                     }
                 }

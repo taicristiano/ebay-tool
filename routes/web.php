@@ -37,7 +37,7 @@ Route::group([
         Route::post('/update/{id}', 'UserController@create')->name('update');
         Route::delete('/delete/{id}', 'UserController@delete')->name('delete');
         Route::get('/export/csv', 'UserController@exportCsv')->name('export-csv');
-        Route::get('/upload/csv', 'UserController@showPageuploadCsv')->name('show-page-upload-csv');
+        Route::get('/upload/csv', 'UserController@showPageUploadCsv')->name('show-page-upload-csv');
         Route::post('/upload/csv', 'UserController@uploadCsv')->name('upload-csv');
         Route::any('/fetch', 'UserController@fetch')->name('fetch');
     });
@@ -92,7 +92,6 @@ Route::group([
         Route::post('post-product-confirm', 'ProductController@postProductConfirm')->name('post-product-confirm');
         Route::post('api-get-item-yahoo-or-amazon-info', 'ProductController@apiGetItemYahooOrAmazonInfo')->name('api-get-item-yahoo-or-amazon-info');
         Route::post('calculator-profit', 'ProductController@calculatorProfit')->name('calculator-profit');
-        Route::post('update-profit', 'ProductController@updateProfit')->name('update-profit');
         Route::get('get-image-init', 'ProductController@getImageInit')->name('get-image-init');
         Route::get('search-category', 'ProductController@searchCategory')->name('search-category');
     });

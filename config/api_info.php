@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'api_common' => 'https://api.sandbox.ebay.com/ws/api.dll',
+    'api_common'                      => 'https://api.sandbox.ebay.com/ws/api.dll',
     'header_api_fetch_get_session_id' => [
         'Content-Type'                   => 'text/xml',
         'X-EBAY-API-SITEID'              => '0',
@@ -21,43 +21,21 @@ return [
         'X-EBAY-API-CERT-NAME'           => 'SBX-e043dc2e8a00-3902-492f-90ce-5aba',
     ],
     'body_request_api_fetch_token' => '<?xml version="1.0" encoding="utf-8" ?><FetchTokenRequest xmlns="urn:ebay:apis:eBLBaseComponents"><ErrorLanguage>en_US</ErrorLanguage><WarningLevel>High</WarningLevel><SessionID>session_id</SessionID></FetchTokenRequest>',
-    'api_get_policy' => 'http://svcs.sandbox.ebay.com/services/selling/v1/SellerProfilesManagementService',
-    'header_api_get_policy' => [
+    'api_get_policy'               => 'http://svcs.sandbox.ebay.com/services/selling/v1/SellerProfilesManagementService',
+    'header_api_get_policy'        => [
         'X-EBAY-SOA-OPERATION-NAME' => 'getSellerProfiles',
         'X-EBAY-SOA-SECURITY-TOKEN' => '',
-        'X-EBAY-SOA-GLOBAL-ID' => 'EBAY-US',
+        'X-EBAY-SOA-GLOBAL-ID'      => 'EBAY-US',
     ],
-    'url_redirect_get_session_id' => 'https://signin.sandbox.ebay.com/ws/eBayISAPI.dll?SignIn&runame=YOURS_COMPANY-YOURSCOM--SBX-8-kkgfpvrbz&SessID=',
-    'api_ebay_get_item' => 'http://open.api.ebay.com/shopping?callname=GetSingleItem&responseencoding=XML&appid=YOURSCOM--PRD-de039438e-536f99c0&siteid=0&version=967&IncludeSelector=Details,ItemSpecifics&ItemID=',
-    'api_yahoo_action_info' => 'https://page.auctions.yahoo.co.jp/jp/auction/',
-    'api_amazon_get_item' => 'https://mws.amazonservices.jp/Products/2011-10-01',
-    'body_request_api_amazon_get_item' => [
-        'AWSAccessKeyId' => 'AKIAJWROE4YTDKN5COQQ',
-        'Action' => 'ListMatchingProducts',
-        'SellerId' => 'A2GI94OS9KGZVF',
-        'MWSAuthToken' => 'amzn.mws.f8b1b1e5-f8df-3d8c-48ff-d8655ad92d86',
-        'SignatureVersion' => 2,
-        'Timestamp' => date(DATE_ISO8601, time()),
-        'Version' => '2011-10-01',
-        'Signature' => '',
-        'SignatureMethod' => 'HmacSHA256',
-        'MarketplaceId' => 'A1VC38T7YXB528',
-        'Query' => '0439708184',
-    ],
-    'gen_sign' => [
-        'AWSAccessKeyId' => 'AKIAJWROE4YTDKN5COQQ',
-        'Action' => 'ListMatchingProducts',
-        'SellerId' => 'A2GI94OS9KGZVF',
-        'MWSAuthToken' => 'amzn.mws.f8b1b1e5-f8df-3d8c-48ff-d8655ad92d86',
-        'SignatureMethod' => 'HmacSHA256',
-        'SignatureVersion' => 2,
-        'Timestamp' => date(DATE_ISO8601, time()),
-        'Version' => '2011-10-01',
-    ],
-    // 'header_api_amazon_get_item' => [
-    //  'Content-Type' => 'text/xml',
-    // ],
-    // 'body_request_api_amazon_get_item' => 'AWSAccessKeyId=AKIAJWROE4YTDKN5COQQ&Action=ListMatchingProducts&SellerId=A2GI94OS9KGZVF&MWSAuthToken=amzn.mws.f8b1b1e5-f8df-3d8c-48ff-d8655ad92d86&SignatureVersion=2&Version=2011-10-01&SignatureMethod=HmacSHA256&MarketplaceId=A1VC38T7YXB528&Query=',
+    'url_redirect_get_session_id'   => 'https://signin.sandbox.ebay.com/ws/eBayISAPI.dll?SignIn&runame=YOURS_COMPANY-YOURSCOM--SBX-8-kkgfpvrbz&SessID=',
+    'api_ebay_get_item'             => 'http://open.api.sandbox.ebay.com/shopping?callname=GetSingleItem&responseencoding=XML&appid=YOURSCOM--SBX-8e043dc2e-701632f2&siteid=0&version=967&IncludeSelector=Details,ItemSpecifics&ItemID=',
+    'api_yahoo_action_info'         => 'https://page.auctions.yahoo.co.jp/jp/auction/',
+    'api_amazon_get_item'           => 'https://mws.amazonservices.jp',
+    'regex_get_price_yahoo_auction' => '//*[@id="l-sub"]/div[1]/ul/li[2]/div/dl/dd',
+    'regex_get_image_yahoo_auction' => '//*[@id="l-main"]/div/div[1]/div[1]/ul/li/div/img',
+    'market_place_id_amazon'        => 'A1VC38T7YXB528'
+
+    // for addFixedPriceItem
     'header_api_add_fixed_price_item' => [
         'Content-Type'                   => 'text/xml',
         'X-EBAY-API-COMPATIBILITY-LEVEL' => '967',

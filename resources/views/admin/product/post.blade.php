@@ -25,7 +25,7 @@
                                 <div class="col-xs-12 col-md-4">
                                     <div class="form-group">
                                         <div class="col-xs-12 col-md-8">
-                                            {!! Form::text('item_id', !empty($data['item_id']) ? $data['item_id'] : '192375777401', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'item_id']) !!}
+                                            {!! Form::text('item_id', !empty($data['item_id']) ? $data['item_id'] : '110327763724', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'item_id']) !!}
                                             <p class="text-danger display-none invalid" id="item-ebay-invalid">@lang('view.item_not_found')</p>
                                         </div>
                                         <div class="col-xs-12 col-md-4">
@@ -57,7 +57,7 @@
                                     <div class="form-group">
                                         <div class="col-xs-12 col-md-8">
                                             {!! Form::text('id_ebay_or_amazon', !empty($data['original_id']) ? $data['original_id'] : 'B01GUPMJMA', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
-                                            <p class="text-danger display-none invalid" id="item-yahoo-or-amazon-invalid">@lang('view.item_not_found')</p>
+                                            <p class="text-danger invalid" id="item-yahoo-or-amazon-invalid"></p>
                                         </div>
                                         <div class="col-xs-12 col-md-4">
                                             <button class="btn btn-primary" type="button" id="btn-get-yahoo-or-amazon"><i class="fa fa-info-circle"></i> {{ __('view.image_acquisition') }}</button>
@@ -70,22 +70,16 @@
                             @csrf
                             <div id="conten-ajax">
                                 <div class="ebay-info">
-                                    @if(!empty($data))
-                                        @include('admin.product.component.item_ebay_info')
-                                    @endif
+                                    @include('admin.product.component.item_ebay_info')
                                 </div>
                                 <div class="yahoo-or-amazon-info">
-                                    @if(!empty($data))
-                                        @include('admin.product.component.item_yahoo_or_amazon_info')
-                                    @endif
+                                    @include('admin.product.component.item_yahoo_or_amazon_info')
                                 </div>
                                 <div class="{{!empty($data) ? '' : 'display-none'}} margin-20" id="profit-calculation">
                                     <button type="button" class="btn btn-primary" id="btn-calculator-profit"><i class="fa fa-calculator fa-fw"></i> @lang('view.benefit_calculation')</button>
                                 </div>
                                 <div class="calculator-info">
-                                    @if(!empty($data))
-                                        @include('admin.product.component.calculator_info')
-                                    @endif
+                                    @include('admin.product.component.calculator_info')
                                 </div>
                             </div>
                         </form>
@@ -109,15 +103,15 @@
 <script src="{{ asset('js/post-product.js') }}"></script>
 <script src="{{ asset('adminlte/plugins/select2/select2.min.js') }}"></script>
 <script>
-    var urlGetItemEbayInfo = "{{ route('admin.product.api-get-item-ebay-info') }}";
+    var urlGetItemEbayInfo          = "{{ route('admin.product.api-get-item-ebay-info') }}";
     var urlGetItemYahooOrAmazonInfo = "{{ route('admin.product.api-get-item-yahoo-or-amazon-info') }}";
-    var urlCalculatorProfit = "{{ route('admin.product.calculator-profit') }}";
-    var urlPostProductConfirm = "{{ route('admin.product.post-product-confirm') }}";
+    var urlCalculatorProfit         = "{{ route('admin.product.calculator-profit') }}";
+    var urlPostProductConfirm       = "{{ route('admin.product.post-product-confirm') }}";
+    var numberSpecificItem          = '{{ !empty($data['dtb_item_specifics']) ? count($data['dtb_item_specifics']) : 1 }}';
+    var urlGetImageInit             = "{{route('admin.product.get-image-init')}}";
+    var urlSearchCategory           = "{{route('admin.product.search-category')}}";
     // $('input[type="radio"].minimal').iCheck({
         // radioClass: 'iradio_minimal-blue'
     // });
-    var numberSpecificItem = '{{ !empty($data['dtb_item_specifics']) ? count($data['dtb_item_specifics']) : 0 }}';
-    var urlGetImageInit = "{{route('admin.product.get-image-init')}}";
-    var urlSearchCategory = "{{route('admin.product.search-category')}}";
 </script>
 @endsection

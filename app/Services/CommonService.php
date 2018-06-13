@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use Lang;
+use Illuminate\Support\Facades\Lang;
 use Carbon\Carbon;
 
 class CommonService
@@ -32,7 +32,7 @@ class CommonService
     public function formatDate($format, $date)
     {
         if (!$date) {
-            return;
+            return null;
         }
         return Carbon::parse($date)->format($format);
     }

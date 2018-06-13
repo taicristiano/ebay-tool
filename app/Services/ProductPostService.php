@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Log;
 use App\Services\AmazonMwsClient;
 use Illuminate\Support\Facades\Lang;
 
-class ProductService extends CommonService
+class ProductPostService extends CommonService
 {
     protected $setting;
     protected $settingPolicy;
@@ -592,22 +592,6 @@ class ProductService extends CommonService
         }
         $result['images']   = $arrayImage;
         return response()->json($result);
-    }
-
-    /**
-     * get policy name by id
-     * @param  integer $id
-     * @param  array $settingPolicyData
-     * @return string
-     */
-    public function getPolicyNameById($id, $settingPolicyData)
-    {
-        foreach ($settingPolicyData as $key => $policy) {
-            if ($policy->id == $id) {
-                return $policy->policy_name;
-            }
-        }
-        return null;
     }
 
     /**

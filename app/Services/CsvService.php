@@ -152,7 +152,7 @@ class CsvService extends CommonService
             $fileName = 'ユーザー一覧（コネクト用） _' . $dateNow;
             $columnTitle = $this->generateColumnExportCsvSimple();
         }
-        return $this->exportCsvNew($fileName . ".csv", $columnTitle, $data);
+        return $this->excuteExportCsv($fileName . ".csv", $columnTitle, $data);
     }
 
     /**
@@ -243,42 +243,5 @@ class CsvService extends CommonService
             'data_user' => $item,
             'data_auth' => $dataAuth,
         ];
-    }
-    
-    /**
-     * excute export csv
-     * @param  string $fileName
-     * @param  array $columns
-     * @param  array $rowList
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
-     */
-    public function exportCsvNew($fileName, $columns, $rowList)
-    {
-        try {
-            $headers = array(
-                'Content-type' => 'text/csv',
-                'Content-Disposition' => 'attachment; filename=' . $fileName,
-                'Pragma' => 'no-cache',
-                'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-                'Expires' => '0'
-            );
-
-            $callback = function () use ($columns, $rowList) {
-                $file = fopen('php://output', 'w');
-                fputs($file, "\xEF\xBB\xBF");
-                fputcsv($file, $columns);
-
-                foreach ($rowList as $row) {
-                    fputcsv($file, $row);
-                }
-
-                fclose($file);
-            };
-
-            return response()->stream($callback, 200, $headers);
-        } catch (Exception $e) {
-            logger(__METHOD__ . ': ' . $e->getMessage());
-            abort('500');
-        }
     }
 }

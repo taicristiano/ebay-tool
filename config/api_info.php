@@ -33,5 +33,6 @@ return [
     'api_amazon_get_item'           => 'https://mws.amazonservices.jp',
     'regex_get_price_yahoo_auction' => '//*[@id="l-sub"]/div[1]/ul/li[2]/div/dl/dd',
     'regex_get_image_yahoo_auction' => '//*[@id="l-main"]/div/div[1]/div[1]/ul/li/div/img',
-    'market_place_id_amazon'        => 'A1VC38T7YXB528'
+    'market_place_id_amazon'        => 'A1VC38T7YXB528',
+    'ebay_url'                      => 'https://www.ebay.com/itm/',
 ];

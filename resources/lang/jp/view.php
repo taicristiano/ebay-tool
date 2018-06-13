@@ -161,5 +161,6 @@ return [
     'withdrawal_of_exhibition'              => '出品取り下げ',
     'day_of_sale'                           => 'Day Of Sale',
     'last_mornitoring_date'                 => 'Last mornitoring',
-    'cm'                                    => 'cm'
+    'cm'                                    => 'cm',
+    'man_to_usd'                            => '円/1USD'
 ];

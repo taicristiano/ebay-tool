@@ -8,6 +8,7 @@ use App\Services\ProductPostService;
 use App\Services\ProductListService;
 use App\Models\Item;
 use App\Models\CategoryFee;
+use App\Models\MtbExchangeRate;
 use App\Http\Requests\CalculateProfitRequest;
 use App\Http\Requests\PostProductRequest;
 use Illuminate\Support\Facades\Session;
@@ -21,20 +22,23 @@ class ProductController extends AbstractController
     protected $keyProduct;
     protected $itemImage;
     protected $productListService;
+    protected $exchangeRate;
 
     public function __construct(
         ProductPostService $productPostService,
         Item $product,
         CategoryFee $category,
         ProductListService $productListService,
-        ItemImage $itemImage
+        ItemImage $itemImage,
+        MtbExchangeRate $exchangeRate
     ) {
-        $this->productPostService     = $productPostService;
+        $this->productPostService = $productPostService;
         $this->product            = $product;
         $this->category           = $category;
         $this->keyProduct         = Item::SESSION_KEY_PRODUCT_INFO;
         $this->itemImage          = $itemImage;
         $this->productListService = $productListService;
+        $this->exchangeRate       = $exchangeRate;
     }
 
     /**
@@ -213,11 +217,12 @@ class ProductController extends AbstractController
      */
     public function list(Request $request)
     {
+        $exchangeRate    = $this->exchangeRate->getExchangeRateLatest();
         $products        = $this->product->getListProduct($request->all());
         $pathStorageFile = $this->itemImage->getPathStorageFile();
         $originType      = $this->product->getOriginType();
         // $category = $this->category->getAll();
-        return view('admin.product.list', compact('products', 'pathStorageFile', 'originType'));
+        return view('admin.product.list', compact('products', 'pathStorageFile', 'originType', 'exchangeRate'));
     }
 
     /**

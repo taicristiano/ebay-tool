@@ -44,4 +44,15 @@ jQuery(document).ready(function() {
         $("#export-csv").attr('action', encodeURI(urlDownloadCsv));
         $('#export-csv').submit();
     });
+
+    $(".keyword").keyup(function() {
+        var id = $(this).data('id');
+        var keyword = $(this).val();
+        console.log(keyword);
+        keyword = keyword.replace(/ /g, "+");
+        console.log(keyword);
+        var urlTemplate = $('#url-ebay-keyword-template').text();
+        urlTemplate = urlTemplate.replace('KEYWORD', keyword);
+        $('#ebay_keyword_' + id).attr('href', urlTemplate);
+    });
 });

@@ -122,3 +122,7 @@ body.loading-ajax .modal-loading {
 .padding-right-15 {
     padding-right: 15px;
 }
+
+.width-83 {
+    width: 83px !important;
+}

@@ -41,6 +41,7 @@
                                     <th>{{ __('view.original_type') }}</th>
                                     <th>{{ __('view.buy_price') }}</th>
                                     <th>{{ __('view.shipping_cost') }}</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -60,7 +61,9 @@
                                     </td>
                                     <td>{{ date_format($item->created_at, "Y/m/d")  }}</td>
                                     <td>
-                                        <img src="{{ asset($pathStorageFile . $item->images[0]->item_image) }}" class="image-preview">
+                                        @if (!empty($pathStorageFile . $item->images[0]->item_image))
+                                        <img src="{{ asset($pathStorageFile . $item->images[0]->item_image)  }}" class="image-preview">
+                                        @endif
                                     </td>
                                     <td>
                                         {{ $item->item_name }}
@@ -76,14 +79,18 @@
                                                 {{-- <span class="input-group-addon">％</span> --}}
                                             </div>
                                         </form>
-
-
                                     </td>
                                     <td>{{ $item->quantity }}</td>
                                     <td>{{ $item->price }} @lang('view.usd')</td>
                                     <td>{{ $originType[$item->original_type] }}</td>
                                     <td>{{ $item->buy_price }} @lang('view.man')</td>
                                     <td>{{ __('view.shipping_cost') }}</td>
+                                    <td class="width-83 ">
+                                        <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                                            <a href="" class="btn btn-info"><i class="fa fa-edit"></i></a>
+                                            <a href="" class="btn btn-primary"><i class="fa fa-cog"></i></a>
+                                        </div>
+                                    </td>
                                 </tr>
                                 @endforeach
                                 @endif
@@ -98,6 +105,7 @@
                 </div>
             </div>
         </div>
+        <div class="modal modal-loading"></div>
     </section>
 @endsection
 @section('script')
@@ -105,5 +113,8 @@
 <script src="{{ asset('js/list-product.js') }}"></script>
 <script>
     var urlDownloadCsv = "{{ route('admin.product.export-csv') }}";
+    var urlUpdateItem  = "{{ route('admin.product.update') }}";
+    var urlListProduct = "{{ route('admin.product.show-page-product-list') }}";
+    var urlEndItem     = "{{ route('admin.product.end-item') }}";
 </script>
 @endsection

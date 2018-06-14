@@ -96,6 +96,8 @@ Route::group([
         Route::get('search-category', 'ProductController@searchCategory')->name('search-category');
         Route::get('list', 'ProductController@list')->name('show-page-product-list');
         Route::get('export/csv', 'ProductController@exportCsv')->name('export-csv');
+        Route::post('update', 'ProductController@update')->name('update');
+        Route::post('end-item', 'ProductController@endItem')->name('end-item');
     });
 
     // setting template

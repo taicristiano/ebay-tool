@@ -118,3 +118,11 @@ body.loading-ajax .modal-loading {
 .swal-footer {
     text-align: center !important;
 }
+
+.padding-right-15 {
+    padding-right: 15px;
+}
+
+.width-83 {
+    width: 83px !important;
+}

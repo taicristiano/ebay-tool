@@ -33,7 +33,14 @@ return [
     'api_amazon_get_item'           => 'https://mws.amazonservices.jp',
     'regex_get_price_yahoo_auction' => '//*[@id="l-sub"]/div[1]/ul/li[2]/div/dl/dd',
     'regex_get_image_yahoo_auction' => '//*[@id="l-main"]/div/div[1]/div[1]/ul/li/div/img',
-    'market_place_id_amazon'        => 'A1VC38T7YXB528'
+    'market_place_id_amazon'        => 'A1VC38T7YXB528',
+    'ebay_url'                      => 'https://www.ebay.com/itm/',
+    'header_api_end_item' => [
+        'Content-Type'                   => 'text/xml',
+        'X-EBAY-API-SITEID'              => '0',
+        'X-EBAY-API-COMPATIBILITY-LEVEL' => '967',
+        'X-EBAY-API-CALL-NAME'           => 'EndItems',
+    ],
 
     // for addFixedPriceItem
     'header_api_add_fixed_price_item' => [

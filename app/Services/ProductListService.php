@@ -8,6 +8,7 @@ use App\Models\Item;
 use App\Models\SettingPolicy;
 use App\Services\CommonService;
 use Illuminate\Support\Facades\Auth;
+use SimpleXMLElement;
 
 class ProductListService extends CommonService
 {
@@ -103,16 +104,51 @@ class ProductListService extends CommonService
 
     /**
      * export csv
-     * @param  array $data
+     * @param  integer $userId
      * @return file
      */
-    public function exportCsv()
+    public function exportCsv($userId)
     {
-        $data        = $this->product->getDataExportCsv();
+        $data        = $this->product->getDataExportCsv($userId);
         $data        = $this->generateDataExportCsv($data);
         $dateNow     = date('Ymd h:i:s');
         $fileName    = Lang::get('view.product_list') . '_' . $dateNow;
         $columnTitle = $this->generateColumnExportCsv();
         return $this->excuteExportCsv($fileName . ".csv", $columnTitle, $data);
+    }
+
+    /**
+     * update item
+     * @param  array $data
+     * @return boolean
+     */
+    public function updateItem($data)
+    {
+        unset($data['_token']);
+        $id = $data['id'];
+        unset($data['id']);
+        return $this->product->updateItem($id, $data);
+    }
+
+    public function endItem($data)
+    {
+        $token = Auth::user()->ebay_access_token;
+        $body = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8" ?><EndItemsRequest xmlns="urn:ebay:apis:eBLBaseComponents"></EndItemsRequest>');
+        $body->addChild('RequesterCredentials')->addChild('eBayAuthToken', $token);
+        foreach ($data['item_ids'] as $key => $item) {
+            $endItem = $body->addChild('EndItemRequestContainer');
+            $endItem->addChild('EndingReason', 'LostOrBroken');
+            $endItem->addChild('ItemID', $item);
+        }
+        $url    = config('api_info.api_common');
+        $header = config('api_info.header_api_end_item');
+        $result = $this->callApi($header, $body->asXML(), $url, 'post');
+        if ($result['Ack'] == 'Failure') {
+            return false;
+        }
+        if ($this->product->endListItem($data['item_ids']) !== false) {
+            return true;
+        }
+        return false;
     }
 }

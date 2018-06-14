@@ -32,7 +32,7 @@ jQuery(document).ready(function() {
             .then((value) => {
                 switch (value) {
                     case "ok":
-                        swal("End product success!", "", "success");
+                        endItem(endItemIds);
                         break;
                 }
             });
@@ -44,4 +44,63 @@ jQuery(document).ready(function() {
         $("#export-csv").attr('action', encodeURI(urlDownloadCsv));
         $('#export-csv').submit();
     });
+
+    $(".keyword").keyup(function() {
+        var id          = $(this).data('id');
+        var keyword     = $(this).val();
+        keyword         = keyword.replace(/ /g, "+");
+        var urlTemplate = $('#url-ebay-keyword-template').text();
+        urlTemplate     = urlTemplate.replace('KEYWORD', keyword);
+        $('#ebay_keyword_' + id).attr('href', urlTemplate);
+    });
+    $(document).on("change", ".keyword", function() {
+        var keyword = $(this).val();
+        var id      = $(this).data('id');
+        var token   = window.Laravel.csrfToken;
+        var data    = {
+            _token: token,
+            keyword,
+            id
+        };
+        $.ajax({
+            url: urlUpdateItem,
+            type: 'post',
+            dataType: 'json',
+            data: data,
+            success: function (data) {
+            },
+            complete: function () {
+            }
+        });
+    });
+
+    $(document).on("click", ".swal-button--confirm", function() {
+        window.location.href = urlListProduct;
+    })
 });
+
+function endItem(itemIds)
+{
+    var token   = window.Laravel.csrfToken;
+    var data    = {
+        _token: token,
+        item_ids: itemIds,
+    };
+    $('body').addClass('loading-ajax');
+    $.ajax({
+        url: urlEndItem,
+        type: 'post',
+        dataType: 'json',
+        data: data,
+        success: function (data) {
+            if (data.status) {
+                swal("", "End product success!", "success");
+            } else {
+                swal("", "End product error!", "error");
+            }
+        },
+        complete: function () {
+            $('body').removeClass('loading-ajax');
+        }
+    });
+}

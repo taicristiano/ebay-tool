@@ -50,8 +50,8 @@
             </li>
             @endcan
             @can('product_manager')
-            <li class="treeview" id="admin.product">
-                <a href="#">
+            <li class="treeview" id="admin.product.show-page-product-list">
+                <a href="{{ route('admin.product.show-page-product-list')}}">
                     <i class="fa fa-truck"></i>
                     <span>{{ __('side_bar.product_manager') }}</span>
                 </a>

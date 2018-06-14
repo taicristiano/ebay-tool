@@ -8,10 +8,12 @@ use App\Services\ProductPostService;
 use App\Services\ProductListService;
 use App\Models\Item;
 use App\Models\CategoryFee;
+use App\Models\MtbExchangeRate;
 use App\Http\Requests\CalculateProfitRequest;
 use App\Http\Requests\PostProductRequest;
 use Illuminate\Support\Facades\Session;
 use App\Models\ItemImage;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends AbstractController
 {
@@ -21,20 +23,23 @@ class ProductController extends AbstractController
     protected $keyProduct;
     protected $itemImage;
     protected $productListService;
+    protected $exchangeRate;
 
     public function __construct(
         ProductPostService $productPostService,
         Item $product,
         CategoryFee $category,
         ProductListService $productListService,
-        ItemImage $itemImage
+        ItemImage $itemImage,
+        MtbExchangeRate $exchangeRate
     ) {
-        $this->productPostService     = $productPostService;
+        $this->productPostService = $productPostService;
         $this->product            = $product;
         $this->category           = $category;
         $this->keyProduct         = Item::SESSION_KEY_PRODUCT_INFO;
         $this->itemImage          = $itemImage;
         $this->productListService = $productListService;
+        $this->exchangeRate       = $exchangeRate;
     }
 
     /**
@@ -213,11 +218,13 @@ class ProductController extends AbstractController
      */
     public function list(Request $request)
     {
-        $products        = $this->product->getListProduct($request->all());
+        $userId          = Auth::user()->id;
+        $exchangeRate    = $this->exchangeRate->getExchangeRateLatest();
+        $products        = $this->product->getListProduct($request->all(), $userId);
         $pathStorageFile = $this->itemImage->getPathStorageFile();
         $originType      = $this->product->getOriginType();
         // $category = $this->category->getAll();
-        return view('admin.product.list', compact('products', 'pathStorageFile', 'originType'));
+        return view('admin.product.list', compact('products', 'pathStorageFile', 'originType', 'exchangeRate'));
     }
 
     /**
@@ -226,6 +233,43 @@ class ProductController extends AbstractController
      */
     public function exportCsv()
     {
-        return $this->productListService->exportCsv();
+        $userId = Auth::user()->id;
+        return $this->productListService->exportCsv($userId);
+    }
+
+    /**
+     * update item
+     * @param  Request $request
+     * @return json
+     */
+    public function update(Request $request)
+    {
+        $response['status'] = false;
+        try {
+            $data = $request->all();
+            $response['status'] = $this->productListService->updateItem($data);
+            return response()->json($response);
+        } catch (Exception $ex) {
+            Log::error($ex);
+            return response()->json($response);
+        }
+    }
+
+    /**
+     * end item
+     * @param  Request $request
+     * @return json
+     */
+    public function endItem(Request $request)
+    {
+        $response['status'] = false;
+        try {
+            $data = $request->all();
+            $response['status'] = $this->productListService->endItem($data);
+            return response()->json($response);
+        } catch (Exception $ex) {
+            Log::error($ex);
+            return response()->json($response);
+        }
     }
 }

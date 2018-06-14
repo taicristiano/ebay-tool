@@ -38,9 +38,9 @@ function postProduct()
         data: data,
         success: function (data) {
             if (data.status) {
-                swal("Success!", "Post product success!", "success");
+                swal("", "Post product success!", "success");
             } else {
-                swal("Error!", "Post product error!", "error");
+                swal("", "Post product error!", "error");
             }
         },
         complete: function () {

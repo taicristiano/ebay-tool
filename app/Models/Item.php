@@ -30,6 +30,47 @@ class Item extends AbstractModel
 
     const SESSION_KEY_PRODUCT_INFO = 'product-info';
 
+    const STATUS_SELLING = 1;
+    const STATUS_CANCEL  = 2;
+    const STATUS_EXPIRE  = 3;
+    const STATUS_SOLD    = 4;
+
+    /**
+     * get status selling
+     * @return integer
+     */
+    public function getStatusSelling()
+    {
+        return self::STATUS_SELLING;
+    }
+
+    /**
+     * get status cancel
+     * @return integer
+     */
+    public function getStatusCancel()
+    {
+        return self::STATUS_CANCEL;
+    }
+
+    /**
+     * get status expire
+     * @return integer
+     */
+    public function getStatusExpire()
+    {
+        return self::STATUS_EXPIRE;
+    }
+
+    /**
+     * get status sold
+     * @return integer
+     */
+    public function getStatusSold()
+    {
+        return self::STATUS_SOLD;
+    }
+
     /**
      * Get the images for the blog item.
      */
@@ -116,9 +157,10 @@ class Item extends AbstractModel
     /**
      * get list product
      * @param  array $input
+     * @param  integer $userId
      * @return array object
      */
-    public function getListProduct($input)
+    public function getListProduct($input, $userId)
     {
         $condition = $this->with('images');
         if (!empty($input['search'])) {
@@ -128,16 +170,45 @@ class Item extends AbstractModel
             });
         }
         return $condition
+            ->whereUserId($userId)
+            ->whereStatus($this->getStatusSelling())
             ->orderBy('id', 'desc')
             ->paginate(10);
     }
 
     /**
      * get data export csv
+     * @param $integer $userId
      * @return array object
      */
-    public function getDataExportCsv()
+    public function getDataExportCsv($userId)
     {
-        return $this->get()->toArray();
+        return $this->whereUserId($userId)
+            ->whereStatus($this->getStatusSelling())
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * update
+     * @param  integer $id
+     * @param  array $data
+     * @return boolean
+     */
+    public function updateItem($id, $data)
+    {
+        return $this->find($id)
+            ->update($data);
+    }
+
+    /**
+     * end list item
+     * @param  array $itemIds
+     * @return boolean
+     */
+    public function endListItem($itemIds)
+    {
+        return $this->whereIn('item_id', $itemIds)
+            ->update(['status' => $this->getStatusCancel()]);
     }
 }

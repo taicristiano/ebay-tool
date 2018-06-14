@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Setting;
 use App\Models\SettingPolicy;
 use Auth;
 use Exception;
@@ -28,7 +29,7 @@ class EbayClient extends CommonService
 
         // add base params
         $itemNode->addChild('Title', htmlspecialchars($data['dtb_item']['item_name']));
-        $itemNode->addChild('Description', htmlspecialchars($data['dtb_item']['item_name']));
+        $itemNode->addChild('Description', htmlspecialchars($data['dtb_item']['condition_des']));
         $itemNode->addChild('ConditionID', $data['dtb_item']['condition_id']);
         $itemNode->addChild('ConditionDisplayName', htmlspecialchars($data['dtb_item']['condition_name']));
         $itemNode->addChild('StartPrice', $data['dtb_item']['price']);
@@ -37,8 +38,13 @@ class EbayClient extends CommonService
         $itemNode->addChild('Currency', 'USD');
         $itemNode->addChild('Country', 'US');
         $itemNode->addChild('Location', 'JP');
+
+        // add  payment method
+        if (!$paypalEmail = Setting::getPaymentEmailByUserId(Auth::id())) {
+            throw new Exception("PayPal email not found.");
+        }
         $itemNode->addChild('PaymentMethods', 'PayPal');
-        $itemNode->addChild('PayPalEmailAddress', Auth::user()->email);
+        $itemNode->addChild('PayPalEmailAddress', $paypalEmail);
 
         // add category
         $categoryNode = $itemNode->addChild('PrimaryCategory');

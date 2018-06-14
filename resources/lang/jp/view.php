@@ -162,5 +162,6 @@ return [
     'day_of_sale'                           => 'Day Of Sale',
     'last_mornitoring_date'                 => 'Last mornitoring',
     'cm'                                    => 'cm',
-    'man_to_usd'                            => '円/1USD'
+    'man_to_usd'                            => '円/1USD',
+    'page_not_found'                        => 'Page not found'
 ];

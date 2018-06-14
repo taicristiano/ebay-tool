@@ -12,4 +12,16 @@ class ItemSpecific extends AbstractModel
     protected $table = 'dtb_item_specifics';
 
     protected $guarded = [];
+
+    /**
+     * get by item id
+     * @param  integer $itemId
+     * @return array
+     */
+    public function getByItemId($itemId)
+    {
+        return $this->whereItemId($itemId)
+            ->get()
+            ->toArray();
+    }
 }

@@ -211,4 +211,14 @@ class Item extends AbstractModel
         return $this->whereIn('item_id', $itemIds)
             ->update(['status' => $this->getStatusCancel()]);
     }
+
+    /**
+     * find by id
+     * @param  integer $id
+     * @return object
+     */
+    public function findById($id)
+    {
+        return $this->find($id)->toArray();
+    }
 }

@@ -5,6 +5,9 @@ var isChangeEbayOrAmazon = false;
 jQuery(document).ready(function() {
     intSelectCategory();
     if ($('#item-yaohoo-or-amazon-content').length) {
+        if (itemId) {
+            urlGetImageInit += '/' + itemId;
+        }
         $.get(urlGetImageInit, function(data, status) {
             if (data.status) {
                 fnInitFIlerImage(data.images);

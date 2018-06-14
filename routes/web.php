@@ -92,12 +92,13 @@ Route::group([
         Route::post('post-product-confirm', 'ProductController@postProductConfirm')->name('post-product-confirm');
         Route::post('api-get-item-yahoo-or-amazon-info', 'ProductController@apiGetItemYahooOrAmazonInfo')->name('api-get-item-yahoo-or-amazon-info');
         Route::post('calculator-profit', 'ProductController@calculatorProfit')->name('calculator-profit');
-        Route::get('get-image-init', 'ProductController@getImageInit')->name('get-image-init');
+        Route::get('get-image-init/{itemId?}', 'ProductController@getImageInit')->name('get-image-init');
         Route::get('search-category', 'ProductController@searchCategory')->name('search-category');
         Route::get('list', 'ProductController@list')->name('show-page-product-list');
         Route::get('export/csv', 'ProductController@exportCsv')->name('export-csv');
         Route::post('update', 'ProductController@update')->name('update');
         Route::post('end-item', 'ProductController@endItem')->name('end-item');
+        Route::get('edit/{itemId}', 'ProductController@showPageEditProduct')->name('edit-item');
     });
 
     // setting template

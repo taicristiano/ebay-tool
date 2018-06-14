@@ -81,8 +81,8 @@ class EbayClient extends CommonService
 
         // add ShippingPackageDetails
         $calculatedShippingRateNode = $itemNode->addChild('ShippingPackageDetails');
-        $calculatedShippingRateNode->addChild('PackageLength', $data['dtb_item']['length']);
-        $calculatedShippingRateNode->addChild('PackageWidth', $data['dtb_item']['width']);
+        $calculatedShippingRateNode->addChild('PackageLength', round($data['dtb_item']['length'] / 2.54, 2));
+        $calculatedShippingRateNode->addChild('PackageWidth', round($data['dtb_item']['width'] / 2.54, 2));
 
         // make request
         $response = (new Client)->request('POST', config('api_info.api_common'), [

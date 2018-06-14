@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Services\ProductPostService;
 use App\Services\ProductListService;
+use App\Services\ProductEditService;
 use App\Models\Item;
 use App\Models\CategoryFee;
 use App\Models\MtbExchangeRate;
@@ -24,12 +25,14 @@ class ProductController extends AbstractController
     protected $itemImage;
     protected $productListService;
     protected $exchangeRate;
+    protected $productEditService;
 
     public function __construct(
         ProductPostService $productPostService,
         Item $product,
         CategoryFee $category,
         ProductListService $productListService,
+        ProductEditService $productEditService,
         ItemImage $itemImage,
         MtbExchangeRate $exchangeRate
     ) {
@@ -40,6 +43,7 @@ class ProductController extends AbstractController
         $this->itemImage          = $itemImage;
         $this->productListService = $productListService;
         $this->exchangeRate       = $exchangeRate;
+        $this->productEditService = $productEditService;
     }
 
     /**
@@ -187,11 +191,15 @@ class ProductController extends AbstractController
      * get image init
      * @return Illuminate\Http\Response
      */
-    public function getImageInit()
+    public function getImageInit($itemId = null)
     {
         try {
-            $data = Session::get($this->keyProduct)[0];
-            return $this->productPostService->getImageInit($data);
+            if ($itemId) {
+                return $this->productEditService->getImageInit($itemId);
+            } else {
+                $data = Session::get($this->keyProduct)[0];
+                return $this->productPostService->getImageInit($data);
+            }
         } catch (Exception $ex) {
             Log::error($ex);
             $response['status'] = false;
@@ -271,5 +279,21 @@ class ProductController extends AbstractController
             Log::error($ex);
             return response()->json($response);
         }
+    }
+
+    /**
+     * show page post product
+     * @return view
+     */
+    public function showPageEditProduct($itemId)
+    {
+        $item = $this->product->findById($itemId);
+        if (!$item) {
+            return view('not-found');
+        }
+        $data = $this->productEditService->getDataForShowPageEditProduct($item);
+        $conditionIdList = $this->product->getConditionIdList();
+        $originType = $this->product->getOriginType();
+        return view('admin.product.post', compact('data', 'originType', 'conditionIdList'));
     }
 }

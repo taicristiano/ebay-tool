@@ -57,4 +57,17 @@ class ItemImage extends AbstractModel
     {
         return self::PATH_STORAGE_FILE;
     }
+
+    /**
+     * get image of product
+     * @param  integer $itemId
+     * @return array
+     */
+    public function getImageOfProduct($itemId)
+    {
+        return $this->select('id', 'item_image')
+            ->whereItemId($itemId)
+            ->get()
+            ->toArray();
+    }
 }

@@ -302,52 +302,6 @@ class ProductPostService extends CommonService
     }
 
     /**
-     * get setting shipping of user
-     * @param  array $input
-     * @return array
-     */
-    public function getSettingShippingOfUser($input)
-    {
-        $height                = $input['height'];
-        $width                 = $input['width'];
-        $length                = $input['length'];
-        $sizeOfProduct         = $length + $height + $width;
-        $userId                = Auth::user()->id;
-        $settingShipping       = $this->settingShipping->getSettingShippingOfUser($userId);
-        $settingShippingOption = [];
-        foreach ($settingShipping as $key => $item) {
-            $sideMaxSize = $item->side_max_size;
-            if ($sizeOfProduct <= $item->max_size &&
-                $height < $sideMaxSize &&
-                $length <= $sideMaxSize &&
-                $width <= $sideMaxSize
-            ) {
-                $settingShippingOption[$item->id] = $item->shipping_name;
-            }
-        }
-        if (!$settingShippingOption) {
-            $settingShipping = $this->settingShipping->findSettingShippingMaxSizeOfUser($userId);
-            $settingShippingOption[$settingShipping->id] = $settingShipping->shipping_name;
-        }
-        return $settingShippingOption;
-    }
-
-    /**
-     * format store info
-     * @param  array $stores
-     * @return array
-     */
-    public function formatStoreInfo($stores)
-    {
-        $arrayCategoryFee = ['standard_fee_rate', 'basic_fee_rate', 'premium_fee_rate', 'anchor_fee_rate'];
-        $result = [];
-        foreach ($stores as $key => $store) {
-            $result[$store->id] = $arrayCategoryFee[$key];
-        }
-        return $result;
-    }
-
-    /**
      * calculator profit type amazon
      * @param  array &$data
      * @param  array $input
@@ -377,7 +331,6 @@ class ProductPostService extends CommonService
         } else {
             $data['dtb_item']['ship_fee'] = $input['ship_fee'];
         }
-        $userId                         = Auth::user()->id;
         $settingInfo                    = $this->setting->getSettingOfUser($userId);
         $storeIdOfUser                  = $settingInfo->store_id;
         $stores                         = $this->mtbStore->getAllStore();
@@ -611,6 +564,7 @@ class ProductPostService extends CommonService
             // insert item
             $dateNow = date('Y-m-d H:i:s');
             $dataItem = [
+                'user_id'               => Auth::user()->id,
                 'original_id'           => $data['dtb_item']['original_id'],
                 'item_id'               => $ebayItemId,
                 'original_type'         => $data['dtb_item']['type'],
@@ -727,33 +681,6 @@ class ProductPostService extends CommonService
             $arrayError[str_replace('.', '_', $key)] = $value[0];
         }
         return $arrayError;
-    }
-
-    /**
-     * get data setting policies
-     * @return array
-     */
-    public function getDataSettingPolicies()
-    {
-        $userId            = Auth::user()->id;
-        $settingPolicyData = $this->settingPolicy->getSettingPolicyOfUser($userId);
-        $shippingType      = [];
-        $paymentType       = [];
-        $returnType        = [];
-        foreach ($settingPolicyData as $key => $policy) {
-            if ($policy->policy_type == SettingPolicy::TYPE_SHIPPING) {
-                $shippingType[$policy->id] = $policy->policy_name;
-            } elseif ($policy->policy_type == SettingPolicy::TYPE_PAYMENT) {
-                $paymentType[$policy->id] = $policy->policy_name;
-            } else {
-                $returnType[$policy->id] = $policy->policy_name;
-            }
-        }
-        return [
-            'shipping' => $shippingType,
-            'payment'  => $paymentType,
-            'return'   => $returnType
-        ];
     }
 
     /**

@@ -108,8 +108,9 @@
     var urlCalculatorProfit         = "{{ route('admin.product.calculator-profit') }}";
     var urlPostProductConfirm       = "{{ route('admin.product.post-product-confirm') }}";
     var numberSpecificItem          = '{{ !empty($data['dtb_item_specifics']) ? count($data['dtb_item_specifics']) : 1 }}';
-    var urlGetImageInit             = "{{route('admin.product.get-image-init')}}";
+    var urlGetImageInit             = "{{route('admin.product.get-image-init', ['itemId' => null])}}";
     var urlSearchCategory           = "{{route('admin.product.search-category')}}";
+    var itemId                      = {{ !empty($data['dtb_item']['id']) ? $data['dtb_item']['id'] : 'null'}};
     // $('input[type="radio"].minimal').iCheck({
         // radioClass: 'iradio_minimal-blue'
     // });

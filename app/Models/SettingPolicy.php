@@ -15,6 +15,15 @@ class SettingPolicy extends AbstractModel
      */
     protected $table = 'dtb_setting_policies';
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'policy_content' => 'array',
+    ];
+
     protected $guarded = [];
 
     const TYPE_SHIPPING = 1;
@@ -69,5 +78,17 @@ class SettingPolicy extends AbstractModel
         return $this->select('id', 'policy_name', 'policy_type')
             ->where('user_id', $userId)
             ->get();
+    }
+
+    /**
+     * get policy_content
+     * @param  integer $id
+     * @return Object
+     */
+    public static function getPolicyContent($id)
+    {
+        if ($policy = static::select('policy_content')->find($id)) {
+            return $policy->policy_content;
+        }
     }
 }

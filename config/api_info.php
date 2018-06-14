@@ -41,4 +41,13 @@ return [
         'X-EBAY-API-COMPATIBILITY-LEVEL' => '967',
         'X-EBAY-API-CALL-NAME'           => 'EndItems',
     ],
+
+    // for addFixedPriceItem
+    'header_api_add_fixed_price_item' => [
+        'Content-Type'                   => 'text/xml',
+        'X-EBAY-API-COMPATIBILITY-LEVEL' => '967',
+        'X-EBAY-API-CALL-NAME'           => 'AddFixedPriceItem',
+        'X-EBAY-API-SITEID'              => 0,
+    ],
+    'sandbox_user_token' => "AgAAAA**AQAAAA**aAAAAA**36sWWw**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6wFk4agD5KDpwSdj6x9nY+seQ**W50EAA**AAMAAA**U3b/w0pgbwIxDcpuI5ctSt1l5Vqd/MQ7rbwZY7B64rPXHsmFw+4pOaB11swhHE0pde2Ija6iAn/Ycnu+mYa9zds9wV0D2xDfrYbGNnTYOxr6k2wde60IVsMRPJUZKSA3hA2T16CCsHZRVg/D1G1cf0mqmAv6Im62y1dLuT7peQMH9cZoMZUb6ezBascw4MviTooO6Y70FKc+WH87oMN9jzq78P5as6MDJ/amQa/ZdSdPsL0+6lKFlEE9/2BuA6QDDAl7TL+2bgaQeuQgBvUYSHnAw0yfKF8BLpKYBmoytS+mSxB6gp9sbniuMbmOp99edx+YCR6ZHAeMQkrzwGN6WqfERY87a830KdJ7LQntiDH/1bYCLLHpn7jeuRgXV53M77/pn/7PYL+k77EW61P84qGpCW7RLrnU5ikhKCnQ6BlGsi4LSp0FSR+uG7vf7tRabRUB4KTrexmY0DZ3nd4TUa3njBrjZgElH0/QfoDnXB6L/waUQfJ5SfyHgbYzaKR4UV90BRy7l1yDOo3XtLOzS4tX7GgcO2xqrz8CcCzMUS0ANEvVmZQ44qsZZdjJLbBJZrkcmYdE645A5fHq3Ow/GmvwK/Pe6pC5RSRuzj4VjdHx4yyqRncg8metkIMJ72EywSwikgcpXJtNKIEE1TJVfanMewB4zxMh6+d3HQ2teTGA8WK6YDqtzOwqhSOabeFfVcdmAFmZLWps8oOQCYOkqyBhOUyBxTCoIq/+0sKX8OXE7PMP5m/L8XBdfJxgiQjy",
 ];

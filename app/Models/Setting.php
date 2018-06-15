@@ -91,4 +91,16 @@ class Setting extends AbstractModel
         return $this->where('id', $id)
             ->update($data);
     }
+
+    /**
+     * get by user_id
+     * @param  integer $userId
+     * @return object
+     */
+    public static function getPaymentEmailByUserId($userId)
+    {
+        if ($setting = static::select('paypal_email')->where('user_id', $userId)->first()) {
+            return $setting->paypal_email;
+        }
+    }
 }

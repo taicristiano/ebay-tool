@@ -178,7 +178,7 @@ function getItemEbayInfo()
     $('body').addClass('loading-ajax');
     var data = {
         _token: token,
-        item_id: $('#item_id').val(),
+        item_id: $('#item_id').val()
     };
     $.ajax({
         url: urlGetItemEbayInfo,
@@ -248,6 +248,7 @@ function getYahooOrAmazonInfo(button, isChangeType)
         _token: token,
         item_id: $('#id_ebay_or_amazon').val(),
         type: $('.type:checked').val(),
+        id: itemId,
     };
     $.ajax({
         url: urlGetItemYahooOrAmazonInfo,

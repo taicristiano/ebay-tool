@@ -199,4 +199,21 @@ class CommonService
         }
         return $result;
     }
+
+    /**
+     * format data page product
+     * @param  array $data
+     * @return array
+     */
+    public function formatDataPageProduct($data)
+    {
+        $data['duration']['option'] = $this->product->getDurationOption();
+        $data['duration']['value']  = $data['dtb_item']['duration'];
+        if ($data['dtb_item']['type'] == $this->product->getOriginTypeAmazon()) {
+            $settingShippingOption           = $this->getSettingShippingOfUser($data['dtb_item']);
+            $data['setting_shipping_option'] = $settingShippingOption;
+        }
+        $data['dtb_setting_policies'] = $this->getDataSettingPolicies();
+        return $data;
+    }
 }

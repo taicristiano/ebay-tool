@@ -24,4 +24,15 @@ class ItemSpecific extends AbstractModel
             ->get()
             ->toArray();
     }
+
+    /**
+     * delete by item id
+     * @param  integer $itemId
+     * @return boolean
+     */
+    public function deleteByItemId($itemId)
+    {
+        return $this->whereItemId($itemId)
+            ->delete();
+    }
 }

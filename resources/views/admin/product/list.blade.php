@@ -70,7 +70,7 @@
                                         <br>
                                         ItemID: {{ $item->item_id }}&nbsp;&nbsp;&nbsp;&nbsp;JAN/EAN: {{ $item->jan_upc }}
                                         <br>
-                                        <form class="form-inline" id="filter-post" role="form" method="GET">
+                                        <form class="form-inline" role="form">
                                             <a href="{{ config('api_info.ebay_url') }}{{ str_slug($item->item_name, '-') }}/{{ $item->item_id }}" target="_blank">商品ページ </a>&nbsp;&nbsp;&nbsp;&nbsp;
                                             <a href="https://www.ebay.com/sch/i.html?_from=R40&_nkw={{ $item->jan_upc }}&_in_kw=1&_ex_kw=&_sacat=0&_udlo=&_udhi=&LH_BIN=1&_ftrt=901&_ftrv=1&_sabdlo=&_sabdhi=&_samilow=&_samihi=&_sadis=15&_stpos=&_sargn=-1%26saslc%3D1&_fsradio2=%26LH_LocatedIn%3D1&_salic=104&LH_SubLocation=1&_sop=12&_dmd=1&_ipg=50" target="_blank">ebay JAN検索</a>&nbsp;&nbsp;&nbsp;&nbsp;
                                             <a href="{{ str_replace('KEYWORD', $item->keyword, $urlEbayKeywordSearchtTemplate) }}" target="_blank" id="ebay_keyword_{{$item->id}}">ebayキーワード検索</a>&nbsp;&nbsp;&nbsp;&nbsp;

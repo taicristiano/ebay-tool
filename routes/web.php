@@ -99,6 +99,7 @@ Route::group([
         Route::post('update', 'ProductController@update')->name('update');
         Route::post('end-item', 'ProductController@endItem')->name('end-item');
         Route::get('edit/{itemId}', 'ProductController@showPageEditProduct')->name('edit-item');
+        Route::get('edit/{itemId}/confirm', 'ProductController@showEditConfirm')->name('show-edit-confirm');
     });
 
     // setting template

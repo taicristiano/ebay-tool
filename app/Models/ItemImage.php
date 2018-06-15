@@ -13,11 +13,12 @@ class ItemImage extends AbstractModel
 
     protected $guarded = [];
 
-    const PATH_UPLOAD_FILE = 'upload/item-images/';
+    const PATH_UPLOAD_FILE      = 'upload/item-images/';
     const FULL_PATH_UPLOAD_FILE = 'app/public/upload/item-images/';
-    const PATH_STORAGE_FILE = 'storage/upload/item-images/';
+    const PATH_STORAGE_FILE     = 'storage/upload/item-images/';
 
-    const SESSION_KEY_IMAGE_FROM_API = 'image-from-api';
+    const SESSION_KEY_IMAGE_FROM_API      = 'image-from-api';
+    const SESSION_KEY_IMAGE_EDIT_FROM_API = 'image-edit-from-api';
 
     /**
      * update item image by id
@@ -69,5 +70,27 @@ class ItemImage extends AbstractModel
             ->whereItemId($itemId)
             ->get()
             ->toArray();
+    }
+
+    /**
+     * delete by names
+     * @param  array $imageNames
+     * @return boolean
+     */
+    public function deleteByName($imageNames)
+    {
+        return $this->whereIn('item_image', $imageNames)
+            ->delete();
+    }
+
+    /**
+     * find by image name
+     * @param  string $imageName
+     * @return object
+     */
+    public function findByImageName($imageName)
+    {
+        return $this->where('item_image', $imageName)
+            ->first();
     }
 }

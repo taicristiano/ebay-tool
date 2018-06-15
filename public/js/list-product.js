@@ -45,7 +45,14 @@ jQuery(document).ready(function() {
         $('#export-csv').submit();
     });
 
-    $(".keyword").keyup(function() {
+    $('.keyword').on('keydown', function (e) {
+        if (e.keyCode == 13) {
+            e.preventDefault();
+            updateKeyword($(this));
+        }
+    });
+
+    $(".keyword").keyup(function(e) {
         var id          = $(this).data('id');
         var keyword     = $(this).val();
         keyword         = keyword.replace(/ /g, "+");
@@ -54,24 +61,7 @@ jQuery(document).ready(function() {
         $('#ebay_keyword_' + id).attr('href', urlTemplate);
     });
     $(document).on("change", ".keyword", function() {
-        var keyword = $(this).val();
-        var id      = $(this).data('id');
-        var token   = window.Laravel.csrfToken;
-        var data    = {
-            _token: token,
-            keyword,
-            id
-        };
-        $.ajax({
-            url: urlUpdateItem,
-            type: 'post',
-            dataType: 'json',
-            data: data,
-            success: function (data) {
-            },
-            complete: function () {
-            }
-        });
+        updateKeyword($(this));
     });
 
     $(document).on("click", ".swal-button--confirm", function() {
@@ -101,6 +91,28 @@ function endItem(itemIds)
         },
         complete: function () {
             $('body').removeClass('loading-ajax');
+        }
+    });
+}
+
+function updateKeyword(item)
+{
+    var keyword = item.val();
+    var id      = item.data('id');
+    var token   = window.Laravel.csrfToken;
+    var data    = {
+        _token: token,
+        keyword,
+        id
+    };
+    $.ajax({
+        url: urlUpdateItem,
+        type: 'post',
+        dataType: 'json',
+        data: data,
+        success: function (data) {
+        },
+        complete: function () {
         }
     });
 }

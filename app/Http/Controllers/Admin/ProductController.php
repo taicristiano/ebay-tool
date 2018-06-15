@@ -23,6 +23,7 @@ class ProductController extends AbstractController
     protected $category;
     protected $productPostService;
     protected $keyProduct;
+    protected $keyProductEdit;
     protected $itemImage;
     protected $productListService;
     protected $exchangeRate;
@@ -41,6 +42,7 @@ class ProductController extends AbstractController
         $this->product            = $product;
         $this->category           = $category;
         $this->keyProduct         = Item::SESSION_KEY_PRODUCT_INFO;
+        $this->keyProductEdit     = Item::SESSION_KEY_PRODUCT_EDIT_INFO;
         $this->itemImage          = $itemImage;
         $this->productListService = $productListService;
         $this->exchangeRate       = $exchangeRate;
@@ -86,14 +88,20 @@ class ProductController extends AbstractController
                 return response()->json($response);
             }
             $dataSession = [];
-            if (Session::has($this->keyProduct)) {
-                $dataSession = Session::get($this->keyProduct)[0];
-                Session::forget($this->keyProduct);
+            $keySession  = $this->keyProduct;
+            $urlNext     = route('admin.product.show-confirm');
+            if (!empty($data['dtb_item']['id'])) {
+                $keySession = $this->keyProductEdit . '_' . $data['dtb_item']['id'];
+                $urlNext    = route('admin.product.show-edit-confirm', ['itemId' => $data['dtb_item']['id']]);
+            }
+            if (Session::has($keySession)) {
+                $dataSession = Session::get($keySession)[0];
+                Session::forget($keySession);
             }
             $data = $this->productPostService->formatDataInsertProductConfirm($data, $dataSession);
-            Session::push($this->keyProduct, $data);
+            Session::push($keySession, $data);
             $response['status'] = true;
-            $response['url'] = route('admin.product.show-confirm');
+            $response['url']    = $urlNext;
             return response()->json($response);
         } catch (Exception $ex) {
             Log::error($ex);
@@ -117,13 +125,28 @@ class ProductController extends AbstractController
     }
 
     /**
+     * show page edit confirm
+     * @return Illuminate\Support\Facades\View
+     */
+    public function showEditConfirm($itemId)
+    {
+        $keySession = $this->keyProductEdit . '_' . $itemId;
+        $data = Session::get($keySession)[0];
+        if (!$data) {
+            return redirect()->route('admin.product.show-page-post-product');
+        }
+        $data = $this->productPostService->formatDataPageConfirm($data);
+        return view('admin.product.confirm', compact('data'));
+    }
+
+    /**
      * post product publish
      * @return Illuminate\Http\Response
      */
-    public function postProductPublish()
+    public function postProductPublish(Request $request)
     {
         try {
-            return $this->productPostService->postProductPublish();
+            return $this->productPostService->postProductPublish($request->all());
         } catch (Exception $ex) {
             Log::error($ex);
             $response['status'] = false;
@@ -291,9 +314,16 @@ class ProductController extends AbstractController
         if (!$item) {
             return view('not-found');
         }
-        $data = $this->productEditService->getDataForShowPageEditProduct($item);
+        $data = [];
+        $keySession = $this->keyProductEdit . '_' . $item['id'];
+        if (Session::has($keySession)) {
+            $dataSession = Session::get($keySession)[0];
+            $data = $this->productEditService->formatDataPageProduct($dataSession);
+        } else {
+            $data = $this->productEditService->getDataForShowPageEditProduct($item);
+        }
         $conditionIdList = $this->product->getConditionIdList();
-        $originType = $this->product->getOriginType();
+        $originType      = $this->product->getOriginType();
         return view('admin.product.post', compact('data', 'originType', 'conditionIdList'));
     }
 }

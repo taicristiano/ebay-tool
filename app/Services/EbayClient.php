@@ -24,7 +24,10 @@ class EbayClient extends CommonService
     {
         $xmlBody = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><AddFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"></AddFixedPriceItemRequest>');
 
-        $xmlBody->addChild('RequesterCredentials')->addChild('eBayAuthToken', config('api_info.sandbox_user_token'));
+        if (!$ebayAccessToken = Auth::user()->ebay_access_token) {
+            throw new Exception("Access token not found.");
+        }
+        $xmlBody->addChild('RequesterCredentials')->addChild('eBayAuthToken', $ebayAccessToken);
         $itemNode = $xmlBody->addChild('Item');
 
         // add base params

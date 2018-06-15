@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Lang;
 use App\Models\Item;
 use App\Models\SettingPolicy;
 use App\Models\ItemSpecific;
@@ -12,7 +11,6 @@ use App\Models\MtbExchangeRate;
 use App\Models\MtbStore;
 use App\Models\Setting;
 use App\Models\CategoryFee;
-use App\Services\CommonService;
 use Illuminate\Support\Facades\Auth;
 
 class ProductEditService extends CommonService
@@ -91,7 +89,6 @@ class ProductEditService extends CommonService
         $settingShippingOption             = $this->getSettingShippingOfUser($data['dtb_item']);
         $data['setting_shipping_option']   = $settingShippingOption;
         $data['setting_shipping_selected'] = 1;
-        $settingInfo                       = $this->setting->getSettingOfUser($userId);
         $storeIdOfUser                     = $settingInfo->store_id;
         $stores                            = $this->mtbStore->getAllStore();
         $storeInfo                         = $this->formatStoreInfo($stores);

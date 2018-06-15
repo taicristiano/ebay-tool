@@ -5,14 +5,12 @@ namespace App\Services;
 use Excel;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Authorization;
 use App\Models\Setting;
 use App\Models\ShippingFee;
 use App\Models\SettingShipping;
 use Exception;
-use App\Services\CommonService;
 use Illuminate\Support\Facades\Hash;
 
 class CsvService extends CommonService
@@ -38,11 +36,11 @@ class CsvService extends CommonService
     }
 
     /**
-     * format data exprot csv
+     * format data export csv
      * @param  array $data
      * @return array
      */
-    public function formatDataExprotCsv($data)
+    public function formatDataExportCsv($data)
     {
         return $data;
     }

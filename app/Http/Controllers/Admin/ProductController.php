@@ -15,6 +15,7 @@ use App\Http\Requests\PostProductRequest;
 use Illuminate\Support\Facades\Session;
 use App\Models\ItemImage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 
 class ProductController extends AbstractController
 {
@@ -103,10 +104,9 @@ class ProductController extends AbstractController
 
     /**
      * show page confirm
-     * @param  Request $request
      * @return Illuminate\Support\Facades\View
      */
-    public function showConfirm(Request $request)
+    public function showConfirm()
     {
         $data = Session::get($this->keyProduct)[0];
         if (!$data) {

@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Services\CommonService;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Setting;
@@ -18,11 +17,8 @@ use App\Models\MtbStore;
 use App\Models\MtbExchangeRate;
 use App\Models\ItemSpecific;
 use App\Models\ItemImage;
-use App\Services\SignatureAmazon;
-use App\Services\EbayClient;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Services\AmazonMwsClient;
 use Illuminate\Support\Facades\Lang;
 
 class ProductPostService extends CommonService
@@ -90,9 +86,8 @@ class ProductPostService extends CommonService
         }
         $userId             = Auth::user()->id;
         $settingData        = $this->setting->getSettingOfUser($userId);
-        $settingPolicyData  = $this->settingPolicy->getSettingPolicyOfUser($userId);
         $conditionIdList = $this->product->getConditionIdList();
-        $data               = $this->formatDataEbayInfo($result, $settingData, $settingPolicyData);
+        $data               = $this->formatDataEbayInfo($result, $settingData);
         $response['status'] = true;
         $response['data']   = view('admin.product.component.item_ebay_info', compact('data', 'conditionIdList'))->render();
         return response()->json($response);
@@ -102,14 +97,10 @@ class ProductPostService extends CommonService
      * format data ebay info
      * @param  array $data
      * @param  array $settingItem
-     * @param  array $settingPolicyData
      * @return array
      */
-    public function formatDataEbayInfo($data, $settingItem, $settingPolicyData)
+    public function formatDataEbayInfo($data, $settingItem)
     {
-        // $exchangeRate = $this->exchangeRate->getExchangeRateLatest();
-        // $userId       = Auth::user()->id;
-        // $settingInfo  = $this->setting->getSettingOfUser($userId);
         // data dtb_item
         $result['dtb_item'] = [
             'item_name'      => $data['Item']['Title'],
@@ -149,7 +140,6 @@ class ProductPostService extends CommonService
     {
         $itemId             = $data['item_id'];
         $type               = $data['type'];
-        $productSize        = null;
         $price              = 0;
         $commodityWeight    = 0;
         $length             = 0;
@@ -241,7 +231,6 @@ class ProductPostService extends CommonService
                     $length          = !empty($item['ns2:PackageDimensions']['ns2:Length']) ? $item['ns2:PackageDimensions']['ns2:Length'] : 0;
                     $height          = !empty($item['ns2:PackageDimensions']['ns2:Height']) ? $item['ns2:PackageDimensions']['ns2:Height'] : 0;
                     $width           = !empty($item['ns2:PackageDimensions']['ns2:Width']) ? $item['ns2:PackageDimensions']['ns2:Width'] : 0;
-                    $productSize     = round($height * 2.54, 2) . 'x' . round($width * 2.54, 2) . 'x' . round($length * 2.54, 2);
                     $length          = round($length * 2.54, 2);
                     $height          = round($height * 2.54, 2);
                     $width           = round($width * 2.54, 2);
@@ -331,7 +320,6 @@ class ProductPostService extends CommonService
         } else {
             $data['dtb_item']['ship_fee'] = $input['ship_fee'];
         }
-        $settingInfo                    = $this->setting->getSettingOfUser($userId);
         $storeIdOfUser                  = $settingInfo->store_id;
         $stores                         = $this->mtbStore->getAllStore();
         $storeInfo                      = $this->formatStoreInfo($stores);
@@ -718,6 +706,7 @@ class ProductPostService extends CommonService
             && $settingData->mws_auth_token
             && $settingData->mws_access_key
             && $settingData->mws_secret_key
+            && $settingData->paypal_email
         ) {
             return true;
         }

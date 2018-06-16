@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Services\ProductPostService;
 use App\Services\ProductListService;
+use App\Services\ProductEditService;
 use App\Models\Item;
 use App\Models\CategoryFee;
 use App\Models\MtbExchangeRate;
@@ -14,6 +15,7 @@ use App\Http\Requests\PostProductRequest;
 use Illuminate\Support\Facades\Session;
 use App\Models\ItemImage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 
 class ProductController extends AbstractController
 {
@@ -21,15 +23,18 @@ class ProductController extends AbstractController
     protected $category;
     protected $productPostService;
     protected $keyProduct;
+    protected $keyProductEdit;
     protected $itemImage;
     protected $productListService;
     protected $exchangeRate;
+    protected $productEditService;
 
     public function __construct(
         ProductPostService $productPostService,
         Item $product,
         CategoryFee $category,
         ProductListService $productListService,
+        ProductEditService $productEditService,
         ItemImage $itemImage,
         MtbExchangeRate $exchangeRate
     ) {
@@ -37,9 +42,11 @@ class ProductController extends AbstractController
         $this->product            = $product;
         $this->category           = $category;
         $this->keyProduct         = Item::SESSION_KEY_PRODUCT_INFO;
+        $this->keyProductEdit     = Item::SESSION_KEY_PRODUCT_EDIT_INFO;
         $this->itemImage          = $itemImage;
         $this->productListService = $productListService;
         $this->exchangeRate       = $exchangeRate;
+        $this->productEditService = $productEditService;
     }
 
     /**
@@ -81,14 +88,20 @@ class ProductController extends AbstractController
                 return response()->json($response);
             }
             $dataSession = [];
-            if (Session::has($this->keyProduct)) {
-                $dataSession = Session::get($this->keyProduct)[0];
-                Session::forget($this->keyProduct);
+            $keySession  = $this->keyProduct;
+            $urlNext     = route('admin.product.show-confirm');
+            if (!empty($data['dtb_item']['id'])) {
+                $keySession = $this->keyProductEdit . '_' . $data['dtb_item']['id'];
+                $urlNext    = route('admin.product.show-edit-confirm', ['itemId' => $data['dtb_item']['id']]);
+            }
+            if (Session::has($keySession)) {
+                $dataSession = Session::get($keySession)[0];
+                Session::forget($keySession);
             }
             $data = $this->productPostService->formatDataInsertProductConfirm($data, $dataSession);
-            Session::push($this->keyProduct, $data);
+            Session::push($keySession, $data);
             $response['status'] = true;
-            $response['url'] = route('admin.product.show-confirm');
+            $response['url']    = $urlNext;
             return response()->json($response);
         } catch (Exception $ex) {
             Log::error($ex);
@@ -99,12 +112,26 @@ class ProductController extends AbstractController
 
     /**
      * show page confirm
-     * @param  Request $request
      * @return Illuminate\Support\Facades\View
      */
-    public function showConfirm(Request $request)
+    public function showConfirm()
     {
         $data = Session::get($this->keyProduct)[0];
+        if (!$data) {
+            return redirect()->route('admin.product.show-page-post-product');
+        }
+        $data = $this->productPostService->formatDataPageConfirm($data);
+        return view('admin.product.confirm', compact('data'));
+    }
+
+    /**
+     * show page edit confirm
+     * @return Illuminate\Support\Facades\View
+     */
+    public function showEditConfirm($itemId)
+    {
+        $keySession = $this->keyProductEdit . '_' . $itemId;
+        $data = Session::get($keySession)[0];
         if (!$data) {
             return redirect()->route('admin.product.show-page-post-product');
         }
@@ -116,10 +143,10 @@ class ProductController extends AbstractController
      * post product publish
      * @return Illuminate\Http\Response
      */
-    public function postProductPublish()
+    public function postProductPublish(Request $request)
     {
         try {
-            return $this->productPostService->postProductPublish();
+            return $this->productPostService->postProductPublish($request->all());
         } catch (Exception $ex) {
             Log::error($ex);
             $response['status'] = false;
@@ -187,11 +214,15 @@ class ProductController extends AbstractController
      * get image init
      * @return Illuminate\Http\Response
      */
-    public function getImageInit()
+    public function getImageInit($itemId = null)
     {
         try {
-            $data = Session::get($this->keyProduct)[0];
-            return $this->productPostService->getImageInit($data);
+            if ($itemId) {
+                return $this->productEditService->getImageInit($itemId);
+            } else {
+                $data = Session::get($this->keyProduct)[0];
+                return $this->productPostService->getImageInit($data);
+            }
         } catch (Exception $ex) {
             Log::error($ex);
             $response['status'] = false;
@@ -271,5 +302,28 @@ class ProductController extends AbstractController
             Log::error($ex);
             return response()->json($response);
         }
+    }
+
+    /**
+     * show page post product
+     * @return view
+     */
+    public function showPageEditProduct($itemId)
+    {
+        $item = $this->product->findById($itemId);
+        if (!$item) {
+            return view('not-found');
+        }
+        $data = [];
+        $keySession = $this->keyProductEdit . '_' . $item['id'];
+        if (Session::has($keySession)) {
+            $dataSession = Session::get($keySession)[0];
+            $data = $this->productEditService->formatDataPageProduct($dataSession);
+        } else {
+            $data = $this->productEditService->getDataForShowPageEditProduct($item);
+        }
+        $conditionIdList = $this->product->getConditionIdList();
+        $originType      = $this->product->getOriginType();
+        return view('admin.product.post', compact('data', 'originType', 'conditionIdList'));
     }
 }

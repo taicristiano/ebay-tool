@@ -2,6 +2,9 @@
     <div class="box-header with-border">@lang('view.product_details')</div>
     <div class="box-body">
         <div class="form-group form-group-custom">
+            @if(!empty($data['dtb_item']['id']))
+                <input type="hidden" name="dtb_item[id]" value="{{ $data['dtb_item']['id'] }}">
+            @endif
             <label for="dtb_item[item_name]">@lang('view.product_name') <span class="text-danger">(*)</span></label>
             {!! Form::text("dtb_item[item_name]", isset($data['dtb_item']['item_name']) ? $data['dtb_item']['item_name'] : '', ['class' => 'form-control', 'id' => 'item_name']) !!}
             <p class="error-validate text-danger error-dtb_item_item_name"></p>

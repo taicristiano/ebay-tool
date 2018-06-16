@@ -15,7 +15,6 @@ use Illuminate\Http\Request;
 use App\Services\CsvService;
 use App\Http\Requests\UploadCsvRequest;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Auth;
 
 class UserController extends AbstractController
 {
@@ -119,7 +118,7 @@ class UserController extends AbstractController
     public function exportCsv(Request $request)
     {
         $data = $request->all();
-        $data = $this->csvService->formatDataExprotCsv($data);
+        $data = $this->csvService->formatDataExportCsv($data);
         $listUser = $this->user->getDataExportCsv($data);
         return $this->csvService->exportCsv($data['type_csv'], $listUser);
     }

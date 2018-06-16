@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Services\CommonService;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Setting;
@@ -18,11 +17,8 @@ use App\Models\MtbStore;
 use App\Models\MtbExchangeRate;
 use App\Models\ItemSpecific;
 use App\Models\ItemImage;
-use App\Services\SignatureAmazon;
-use App\Services\EbayClient;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Services\AmazonMwsClient;
 use Illuminate\Support\Facades\Lang;
 
 class ProductPostService extends CommonService
@@ -39,9 +35,11 @@ class ProductPostService extends CommonService
     protected $itemImage;
     protected $keyProduct;
     protected $keyImageFromApi;
+    protected $keyImageEditFromApi;
     protected $pathUpload;
     protected $fullPathUpload;
     protected $pathStorageFile;
+    protected $keyProductEdit;
 
     public function __construct(
         Setting $setting,
@@ -56,22 +54,24 @@ class ProductPostService extends CommonService
         ItemImage $itemImage,
         EbayClient $ebayClient
     ) {
-        $this->setting         = $setting;
-        $this->settingPolicy   = $settingPolicy;
-        $this->product         = $product;
-        $this->settingShipping = $settingShipping;
-        $this->shippingFee     = $shippingFee;
-        $this->categoryFee     = $categoryFee;
-        $this->mtbStore        = $mtbStore;
-        $this->exchangeRate    = $exchangeRate;
-        $this->itemSpecific    = $itemSpecific;
-        $this->itemImage       = $itemImage;
-        $this->ebayClient      = $ebayClient;
-        $this->keyProduct      = Item::SESSION_KEY_PRODUCT_INFO;
-        $this->keyImageFromApi = ItemImage::SESSION_KEY_IMAGE_FROM_API;
-        $this->pathUpload      = $this->itemImage->getPathUploadFile();
-        $this->fullPathUpload  = $this->itemImage->getfullPathUploadFile();
-        $this->pathStorageFile = $this->itemImage->getPathStorageFile();
+        $this->setting             = $setting;
+        $this->settingPolicy       = $settingPolicy;
+        $this->product             = $product;
+        $this->settingShipping     = $settingShipping;
+        $this->shippingFee         = $shippingFee;
+        $this->categoryFee         = $categoryFee;
+        $this->mtbStore            = $mtbStore;
+        $this->exchangeRate        = $exchangeRate;
+        $this->itemSpecific        = $itemSpecific;
+        $this->itemImage           = $itemImage;
+        $this->ebayClient          = $ebayClient;
+        $this->keyProduct          = Item::SESSION_KEY_PRODUCT_INFO;
+        $this->keyProductEdit      = Item::SESSION_KEY_PRODUCT_EDIT_INFO;
+        $this->keyImageFromApi     = ItemImage::SESSION_KEY_IMAGE_FROM_API;
+        $this->keyImageEditFromApi = ItemImage::SESSION_KEY_IMAGE_EDIT_FROM_API;
+        $this->pathUpload          = $this->itemImage->getPathUploadFile();
+        $this->fullPathUpload      = $this->itemImage->getfullPathUploadFile();
+        $this->pathStorageFile     = $this->itemImage->getPathStorageFile();
     }
 
     /**
@@ -90,9 +90,8 @@ class ProductPostService extends CommonService
         }
         $userId             = Auth::user()->id;
         $settingData        = $this->setting->getSettingOfUser($userId);
-        $settingPolicyData  = $this->settingPolicy->getSettingPolicyOfUser($userId);
-        $conditionIdList = $this->product->getConditionIdList();
-        $data               = $this->formatDataEbayInfo($result, $settingData, $settingPolicyData);
+        $conditionIdList    = $this->product->getConditionIdList();
+        $data               = $this->formatDataEbayInfo($result, $settingData);
         $response['status'] = true;
         $response['data']   = view('admin.product.component.item_ebay_info', compact('data', 'conditionIdList'))->render();
         return response()->json($response);
@@ -102,20 +101,16 @@ class ProductPostService extends CommonService
      * format data ebay info
      * @param  array $data
      * @param  array $settingItem
-     * @param  array $settingPolicyData
      * @return array
      */
-    public function formatDataEbayInfo($data, $settingItem, $settingPolicyData)
+    public function formatDataEbayInfo($data, $settingItem)
     {
-        // $exchangeRate = $this->exchangeRate->getExchangeRateLatest();
-        // $userId       = Auth::user()->id;
-        // $settingInfo  = $this->setting->getSettingOfUser($userId);
         // data dtb_item
         $result['dtb_item'] = [
             'item_name'      => $data['Item']['Title'],
             'category_id'    => $data['Item']['PrimaryCategoryID'],
             'category_name'  => $data['Item']['PrimaryCategoryName'],
-            'condition_id'   => $data['Item']['ConditionID'],
+            'condition_id'   => !empty($data['Item']['ConditionID']) ? $data['Item']['ConditionID'] : null,
             'condition_name' => $data['Item']['ConditionDisplayName'],
             'price'          => $data['Item']['ConvertedCurrentPrice'],
             'duration'       => $settingItem->duration,
@@ -142,14 +137,13 @@ class ProductPostService extends CommonService
 
     /**
      * api get item yahoo or amazon info
-     * @param  array $data
+     * @param  array $input
      * @return Illuminate\Http\Response
      */
-    public function apiGetItemYahooOrAmazonInfo($data)
+    public function apiGetItemYahooOrAmazonInfo($input)
     {
-        $itemId             = $data['item_id'];
-        $type               = $data['type'];
-        $productSize        = null;
+        $itemId             = $input['item_id'];
+        $type               = $input['type'];
         $price              = 0;
         $commodityWeight    = 0;
         $length             = 0;
@@ -241,7 +235,6 @@ class ProductPostService extends CommonService
                     $length          = !empty($item['ns2:PackageDimensions']['ns2:Length']) ? $item['ns2:PackageDimensions']['ns2:Length'] : 0;
                     $height          = !empty($item['ns2:PackageDimensions']['ns2:Height']) ? $item['ns2:PackageDimensions']['ns2:Height'] : 0;
                     $width           = !empty($item['ns2:PackageDimensions']['ns2:Width']) ? $item['ns2:PackageDimensions']['ns2:Width'] : 0;
-                    $productSize     = round($height * 2.54, 2) . 'x' . round($width * 2.54, 2) . 'x' . round($length * 2.54, 2);
                     $length          = round($length * 2.54, 2);
                     $height          = round($height * 2.54, 2);
                     $width           = round($width * 2.54, 2);
@@ -268,8 +261,12 @@ class ProductPostService extends CommonService
             array_push($arrayImageFormApi, $itemId . '_' . $key . '.' . $item['extension']);
         }
 
-        Session::forget($this->keyImageFromApi);
-        Session::push($this->keyImageFromApi, $arrayImageFormApi);
+        $keyImageFromApi = $this->keyImageFromApi;
+        if (!empty($input['id'])) {
+            $keyImageFromApi = $this->keyImageEditFromApi . '_' . $input['id'];
+        }
+        Session::forget($keyImageFromApi);
+        Session::push($keyImageFromApi, $arrayImageFormApi);
 
         $data['dtb_item']['commodity_weight'] = round($commodityWeight * 453.59237, 2);
         $data['dtb_item']['length']           = $length;
@@ -302,52 +299,6 @@ class ProductPostService extends CommonService
     }
 
     /**
-     * get setting shipping of user
-     * @param  array $input
-     * @return array
-     */
-    public function getSettingShippingOfUser($input)
-    {
-        $height                = $input['height'];
-        $width                 = $input['width'];
-        $length                = $input['length'];
-        $sizeOfProduct         = $length + $height + $width;
-        $userId                = Auth::user()->id;
-        $settingShipping       = $this->settingShipping->getSettingShippingOfUser($userId);
-        $settingShippingOption = [];
-        foreach ($settingShipping as $key => $item) {
-            $sideMaxSize = $item->side_max_size;
-            if ($sizeOfProduct <= $item->max_size &&
-                $height < $sideMaxSize &&
-                $length <= $sideMaxSize &&
-                $width <= $sideMaxSize
-            ) {
-                $settingShippingOption[$item->id] = $item->shipping_name;
-            }
-        }
-        if (!$settingShippingOption) {
-            $settingShipping = $this->settingShipping->findSettingShippingMaxSizeOfUser($userId);
-            $settingShippingOption[$settingShipping->id] = $settingShipping->shipping_name;
-        }
-        return $settingShippingOption;
-    }
-
-    /**
-     * format store info
-     * @param  array $stores
-     * @return array
-     */
-    public function formatStoreInfo($stores)
-    {
-        $arrayCategoryFee = ['standard_fee_rate', 'basic_fee_rate', 'premium_fee_rate', 'anchor_fee_rate'];
-        $result = [];
-        foreach ($stores as $key => $store) {
-            $result[$store->id] = $arrayCategoryFee[$key];
-        }
-        return $result;
-    }
-
-    /**
      * calculator profit type amazon
      * @param  array &$data
      * @param  array $input
@@ -377,8 +328,6 @@ class ProductPostService extends CommonService
         } else {
             $data['dtb_item']['ship_fee'] = $input['ship_fee'];
         }
-        $userId                         = Auth::user()->id;
-        $settingInfo                    = $this->setting->getSettingOfUser($userId);
         $storeIdOfUser                  = $settingInfo->store_id;
         $stores                         = $this->mtbStore->getAllStore();
         $storeInfo                      = $this->formatStoreInfo($stores);
@@ -432,10 +381,13 @@ class ProductPostService extends CommonService
                 array_push($dataImageOld, $dataSession['file_name_' . $i]);
             }
         }
-
-        if (Session::has($this->keyImageFromApi)) {
-            $imageFromApi = Session::get($this->keyImageFromApi)[0];
-            Session::forget($this->keyImageFromApi);
+        $keyImageFromApi = $this->keyImageFromApi;
+        if (!empty($data['dtb_item']['id'])) {
+            $keyImageFromApi = $this->keyImageEditFromApi . '_' . $data['dtb_item']['id'];
+        }
+        if (Session::has($keyImageFromApi)) {
+            $imageFromApi = Session::get($keyImageFromApi)[0];
+            Session::forget($keyImageFromApi);
             foreach ($imageFromApi as $key => $item) {
                 if (!in_array($item, $dataImageOld)) {
                     array_push($dataImageOld, $item);
@@ -552,23 +504,6 @@ class ProductPostService extends CommonService
     }
 
     /**
-     * format data page product
-     * @param  array $data
-     * @return array
-     */
-    public function formatDataPageProduct($data)
-    {
-        $data['duration']['option'] = $this->product->getDurationOption();
-        $data['duration']['value']  = $data['dtb_item']['duration'];
-        if ($data['dtb_item']['type'] == $this->product->getOriginTypeAmazon()) {
-            $settingShippingOption           = $this->getSettingShippingOfUser($data['dtb_item']);
-            $data['setting_shipping_option'] = $settingShippingOption;
-        }
-        $data['dtb_setting_policies'] = $this->getDataSettingPolicies();
-        return $data;
-    }
-
-    /**
      * get image init
      * @param  array $data
      * @return Illuminate\Http\Response
@@ -599,20 +534,21 @@ class ProductPostService extends CommonService
 
     /**
      * post product publish
+     * @param array $input
      * @return Illuminate\Http\Response
      */
-    public function postProductPublish()
+    public function postProductPublish($input)
     {
         try {
             DB::beginTransaction();
-            $data = Session::get($this->keyProduct)[0];
-            // call addFixedPriceItem and get ebayItemId
-            $ebayItemId = $this->ebayClient->addFixedPriceItem($data);
-            // insert item
-            $dateNow = date('Y-m-d H:i:s');
+            $keyProduct = $this->keyProduct;
+            if (!empty($input['id'])) {
+                $keyProduct = $this->keyProductEdit . '_' . $input['id'];
+            }
+            $data     = Session::get($keyProduct)[0];
+            $dateNow  = date('Y-m-d H:i:s');
             $dataItem = [
                 'original_id'           => $data['dtb_item']['original_id'],
-                'item_id'               => $ebayItemId,
                 'original_type'         => $data['dtb_item']['type'],
                 'item_name'             => $data['dtb_item']['item_name'],
                 'category_id'           => $data['dtb_item']['category_id'],
@@ -634,21 +570,37 @@ class ProductPostService extends CommonService
                 'pack_material_weight'  => !empty($data['dtb_item']['material_quantity']) ? $data['dtb_item']['material_quantity'] : null,
                 'buy_price'             => $data['dtb_item']['buy_price'],
                 'ship_fee'              => isset($data['dtb_item']['ship_fee']) ? $data['dtb_item']['ship_fee'] : null,
-                'last_mornitoring_date' => $dateNow,
-                'created_at'            => $dateNow,
-                'updated_at'            => $dateNow,
+                'last_mornitoring_date' => $dateNow
             ];
-            $itemId = $this->product->insertGetId($dataItem);
+            if (!empty($input['id'])) {
+                $itemId = $input['id'];
+                // call api update
+                
+                // update item
+                $this->product->updateItem($itemId, $dataItem);
 
+                // delete dtb_item_specifics
+                $this->itemSpecific->deleteByItemId($itemId);
+
+                // update item image
+                $this->updateItemImage($itemId, $data);            
+            } else {
+                // call addFixedPriceItem and get ebayItemId
+                $ebayItemId = $this->ebayClient->addFixedPriceItem($data);
+                // insert item
+                $dataItem['user_id']    = Auth::user()->id;
+                $dataItem['created_at'] = $dateNow;
+                $dataItem['updated_at'] = $dateNow;
+                $dataItem['item_id']    = $ebayItemId;
+                $itemId = $this->product->insertGetId($dataItem);
+                // insert item image
+                $this->insertItemImage($data, $itemId);
+            }
             // insert item_specifics
             $dataItemSpecifics = $this->formatDataItemSpecifics($data['dtb_item_specifics'], $itemId);
             $this->itemSpecific->insert($dataItemSpecifics);
-
-            // insert item image
-            $this->insertItemImage($data, $itemId);
-
             DB::commit();
-            Session::forget($this->keyProduct);
+            Session::forget($keyProduct);
             $response['status'] = true;
             return response()->json($response);
         } catch (Exception $ex) {
@@ -730,33 +682,6 @@ class ProductPostService extends CommonService
     }
 
     /**
-     * get data setting policies
-     * @return array
-     */
-    public function getDataSettingPolicies()
-    {
-        $userId            = Auth::user()->id;
-        $settingPolicyData = $this->settingPolicy->getSettingPolicyOfUser($userId);
-        $shippingType      = [];
-        $paymentType       = [];
-        $returnType        = [];
-        foreach ($settingPolicyData as $key => $policy) {
-            if ($policy->policy_type == SettingPolicy::TYPE_SHIPPING) {
-                $shippingType[$policy->id] = $policy->policy_name;
-            } elseif ($policy->policy_type == SettingPolicy::TYPE_PAYMENT) {
-                $paymentType[$policy->id] = $policy->policy_name;
-            } else {
-                $returnType[$policy->id] = $policy->policy_name;
-            }
-        }
-        return [
-            'shipping' => $shippingType,
-            'payment'  => $paymentType,
-            'return'   => $returnType
-        ];
-    }
-
-    /**
      * get data for show page product post
      * @param  array $data
      * @return array
@@ -791,9 +716,53 @@ class ProductPostService extends CommonService
             && $settingData->mws_auth_token
             && $settingData->mws_access_key
             && $settingData->mws_secret_key
+            && $settingData->paypal_email
         ) {
             return true;
         }
         return false;
+    }
+
+    /**
+     * update item image
+     * @param  integer $productId
+     * @param  array $data
+     * @return void
+     */
+    public function updateItemImage($productId, $data)
+    {
+        $imageOfItem = $this->itemImage->getImageOfProduct($productId);
+        $dataImageOld = [];
+        $dataImageNew = [];
+        foreach ($imageOfItem as $item) {
+            array_push($dataImageOld, $item['item_image']);
+        }
+
+        $numberFile = $data['number_file'];
+        $dateNow    = date('Y-m-d H:i:s');
+        for ($i = 0; $i < $numberFile; $i++) {
+            array_push($dataImageNew, $data['file_name_' . $i]);
+            if (!$this->itemImage->findByImageName($data['file_name_' . $i])) {
+                $itemImageId = $this->itemImage->insertGetId([
+                    'item_id'    => $productId,
+                    'item_image' => $data['file_name_' . $i],
+                    'created_at' => $dateNow,
+                    'updated_at' => $dateNow
+                ]);
+                $arrayItem       = explode(".", $data['file_name_' . $i]);
+                $extension       = array_pop($arrayItem);
+                $itemImageString = $productId . '_' . $itemImageId . '_' . date('ymd_his') . '.' . $extension;
+                $this->itemImage->updateItemImageById($itemImageId, ['item_image' => $itemImageString]);
+                $this->pathUpload = $this->itemImage->getPathUploadFile();
+                if (Storage::disk(env('FILESYSTEM_DRIVER'))->exists($this->pathUpload . $data['file_name_' . $i])) {
+                    Storage::move($this->pathUpload . $data['file_name_' . $i], $this->pathUpload . $itemImageString);
+                }
+            }
+        }
+        $imageDelete = array_diff($dataImageOld, $dataImageNew);
+        $this->itemImage->deleteByName($imageDelete);
+        foreach ($imageDelete as $key => $item) {
+            Storage::delete($this->pathUpload . $item);
+        }
     }
 }

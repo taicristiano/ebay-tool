@@ -5,6 +5,9 @@ var isChangeEbayOrAmazon = false;
 jQuery(document).ready(function() {
     intSelectCategory();
     if ($('#item-yaohoo-or-amazon-content').length) {
+        if (itemId) {
+            urlGetImageInit += '/' + itemId;
+        }
         $.get(urlGetImageInit, function(data, status) {
             if (data.status) {
                 fnInitFIlerImage(data.images);
@@ -175,7 +178,7 @@ function getItemEbayInfo()
     $('body').addClass('loading-ajax');
     var data = {
         _token: token,
-        item_id: $('#item_id').val(),
+        item_id: $('#item_id').val()
     };
     $.ajax({
         url: urlGetItemEbayInfo,
@@ -245,6 +248,7 @@ function getYahooOrAmazonInfo(button, isChangeType)
         _token: token,
         item_id: $('#id_ebay_or_amazon').val(),
         type: $('.type:checked').val(),
+        id: itemId,
     };
     $.ajax({
         url: urlGetItemYahooOrAmazonInfo,

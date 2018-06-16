@@ -28,7 +28,8 @@ class Item extends AbstractModel
     const ORIGIN_TYPE_YAHOO_AUCTION = 1;
     const ORIGIN_TYPE_AMAZON = 2;
 
-    const SESSION_KEY_PRODUCT_INFO = 'product-info';
+    const SESSION_KEY_PRODUCT_INFO      = 'product-info';
+    const SESSION_KEY_PRODUCT_EDIT_INFO = 'product-edit-info';
 
     const STATUS_SELLING = 1;
     const STATUS_CANCEL  = 2;
@@ -210,5 +211,15 @@ class Item extends AbstractModel
     {
         return $this->whereIn('item_id', $itemIds)
             ->update(['status' => $this->getStatusCancel()]);
+    }
+
+    /**
+     * find by id
+     * @param  integer $id
+     * @return object
+     */
+    public function findById($id)
+    {
+        return $this->find($id)->toArray();
     }
 }

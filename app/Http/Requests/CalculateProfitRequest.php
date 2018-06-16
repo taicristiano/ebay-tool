@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Item;
 
@@ -69,7 +68,7 @@ class CalculateProfitRequest extends Request
     /**
      * validate data
      * @param array
-     * @return validator
+     * @return Illuminate\Support\Facades\Validator
      */
     public static function validateData($data = array())
     {

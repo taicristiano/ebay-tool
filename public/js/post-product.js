@@ -138,9 +138,9 @@ jQuery(document).ready(function() {
         getYahooOrAmazonInfo($(this), false);
     });
 
-    $(document).on("click", "#btn-calculator-profit",function() {
-        getCalculateProfitInfo(true, false);
-    });
+    // $(document).on("click", "#btn-calculator-profit",function() {
+    //     getCalculateProfitInfo(true, false);
+    // });
 
     // $('.type').on('ifChanged', function(event) {
     // $('.type').change(function() {
@@ -166,9 +166,10 @@ jQuery(document).ready(function() {
         }
     });
 
-    $(document).on("change", "#category-id, #material-quantity, #setting-shipping, #buy_price, #sell_price, #height, #width, #length", function() {
+    $(document).on("change", "#category-id, #material-quantity, #setting-shipping, #buy_price, #sell_price, #height, #width, #length, #ship_fee", function() {
         if ($('#item-calculator-info').length) {
-            getCalculateProfitInfo(true, false);
+            refreshProfitInfo();
+            // getCalculateProfitInfo(true, false);
         }
     });
 });
@@ -193,6 +194,7 @@ function getItemEbayInfo()
                 $('#item-ebay-invalid').parent().parent().removeClass('has-error');
                 intSelectCategory();
                 if ($('#sell_price').length && $('#buy_price').length) {
+                    refreshProfitInfo();
                     getCalculateProfitInfo(false, false);
                 }
             } else {
@@ -290,24 +292,6 @@ function getCalculateProfitInfo(isValidate, isChangeType)
     $('body').addClass('loading-ajax');
     isShowCalculate = $('#item-calculator-info').length;
     var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : null;
-    var buyPrice;
-    if (isChangeType) {
-        buyPrice = $('#buy_price_span').text();
-    } else {
-        if (isShowCalculate && $('#buy_price').length) {
-            if ($('#buy_price').val()) {
-                buyPrice = $('#buy_price').val();
-            } else {
-                if ($('#error-dtb_item_buy_price').text().length) {
-                    buyPrice = $('#buy_price').val();
-                } else {
-                    buyPrice = $('#buy_price_span').text();
-                }
-            }
-        } else {
-            buyPrice = $('#buy_price_span').text();
-        }
-    }
     var token = window.Laravel.csrfToken;
     var type = $('.type:checked').val();
     var data = {
@@ -316,15 +300,15 @@ function getCalculateProfitInfo(isValidate, isChangeType)
         is_update: isShowCalculate,
         material_quantity: materialQuantity,
         type: type,
-        height: (isShowCalculate && $('#height').length) ? $('#height').val() : $('#height_hidden').val(),
-        width: (isShowCalculate && $('#width').length) ? $('#width').val() : $('#width_hidden').val(),
-        length: (isShowCalculate && $('#length').length) ? $('#length').val() : $('#length_hidden').val(),
-        commodity_weight: $('#commodity_weight').val(),
+        height: $('#height_hidden').val(),
+        width: $('#width_hidden').val(),
+        length: $('#length_hidden').val(),
+        commodity_weight: $('#commodity_weight_hidden').val(),
         sell_price: $('#sell_price').val(),
-        buy_price: buyPrice,
+        buy_price: $('buy_price_span').text(),
         category_id: $('#category-id').val(),
-        ship_fee: (isShowCalculate && $('#ship_fee').length) ?  $('#ship_fee').val() : '',
-        setting_shipping: (isShowCalculate && $('#setting-shipping').length) ? $('#setting-shipping').val() : '',
+        ship_fee: null,
+        setting_shipping: null,
     };
     $.ajax({
         url: urlCalculatorProfit,
@@ -339,12 +323,16 @@ function getCalculateProfitInfo(isValidate, isChangeType)
             $('.error-dtb_item_width').text('');
             $('.error-dtb_item_length').text('');
             $('.error-dtb_item_category_id').text('');
+            $('.error-dtb_item_ship_fee').text('');
+            $('.error-dtb_item_commodity_weight').text('');
             $('.error-dtb_item_category_id').parent().removeClass('has-error');
             $('.error-dtb_item_price').parent().removeClass('has-error');
             $('.error-dtb_item_buy_price').parent().removeClass('has-error');
             $('.error-dtb_item_height').parent().removeClass('has-error');
             $('.error-dtb_item_width').parent().removeClass('has-error');
             $('.error-dtb_item_length').parent().removeClass('has-error');
+            $('.error-dtb_item_commodity_weight').parent().removeClass('has-error');
+            $('.error-dtb_item_ship_fee').parent().removeClass('has-error');
             $('#error-material-quantity').parent().removeClass('has-error');
             if (data.status) {
                 $('#conten-ajax .calculator-info').html(data.data);
@@ -377,6 +365,115 @@ function getCalculateProfitInfo(isValidate, isChangeType)
                 if(messageError.length) {
                     $('.error-dtb_item_length').text(messageError.length);
                     $('.error-dtb_item_length').parent().addClass('has-error');
+                }
+                if(messageError.ship_fee) {
+                    $('.error-dtb_item_ship_fee').text(messageError.ship_fee);
+                    $('.error-dtb_item_ship_fee').parent().addClass('has-error');
+                }
+                if(messageError.commodity_weight) {
+                    $('.error-dtb_item_commodity_weight').text(messageError.commodity_weight);
+                    $('.error-dtb_item_commodity_weight').parent().addClass('has-error');
+                }
+                // // if (!isShowCalculate) {
+                //     $('html, body').animate({
+                //         scrollTop: $("#sell_price").offset().top
+                //     }, 3000);                        
+                // // }
+            }
+            toggleBtnSlove();
+        },
+        complete: function () {
+            $('body').removeClass('loading-ajax');
+        }
+    });
+}
+
+function refreshProfitInfo()
+{
+    $('body').addClass('loading-ajax');
+    isShowCalculate = $('#item-calculator-info').length;
+    var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : null;
+    var token = window.Laravel.csrfToken;
+    var type = $('.type:checked').val();
+    var data = {
+        _token: token,
+        is_validate: true,
+        is_update: isShowCalculate,
+        material_quantity: materialQuantity,
+        type: type,
+        height: $('#height').val(),
+        width: $('#width').val(),
+        length: $('#length').val(),
+        commodity_weight: $('#commodity_weight').val(),
+        sell_price: $('#sell_price').val(),
+        buy_price: $('#buy_price').val(),
+        category_id: $('#category-id').val(),
+        ship_fee: $('#ship_fee').val(),
+        setting_shipping: $('#setting-shipping').val() ,
+    };
+    $.ajax({
+        url: urlCalculatorProfit,
+        type: 'post',
+        dataType: 'json',
+        data: data,
+        success: function (data) {
+            $('#error-material-quantity').text('');
+            $('.error-dtb_item_price').text('');
+            $('.error-dtb_item_buy_price').text('');
+            $('.error-dtb_item_height').text('');
+            $('.error-dtb_item_width').text('');
+            $('.error-dtb_item_length').text('');
+            $('.error-dtb_item_category_id').text('');
+            $('.error-dtb_item_ship_fee').text('');
+            $('.error-dtb_item_commodity_weight').text('');
+            $('.error-dtb_item_category_id').parent().removeClass('has-error');
+            $('.error-dtb_item_price').parent().removeClass('has-error');
+            $('.error-dtb_item_buy_price').parent().removeClass('has-error');
+            $('.error-dtb_item_height').parent().removeClass('has-error');
+            $('.error-dtb_item_width').parent().removeClass('has-error');
+            $('.error-dtb_item_length').parent().removeClass('has-error');
+            $('.error-dtb_item_commodity_weight').parent().removeClass('has-error');
+            $('.error-dtb_item_ship_fee').parent().removeClass('has-error');
+            $('#error-material-quantity').parent().removeClass('has-error');
+            if (data.status) {
+                $('#conten-ajax .calculator-info').html(data.data);
+            } else {
+                messageError = data.message_error;
+                if(messageError.material_quantity) {
+                    $('#error-material-quantity').text(messageError.material_quantity);
+                    $('#error-material-quantity').parent().addClass('has-error');
+                }
+                if(messageError.buy_price) {
+                    $('.error-dtb_item_buy_price').text(messageError.buy_price);
+                    $('.error-dtb_item_buy_price').parent().addClass('has-error');
+                }
+                if(messageError.sell_price) {
+                    $('.error-dtb_item_price').text(messageError.sell_price);
+                    $('.error-dtb_item_price').parent().addClass('has-error');
+                }
+                if(messageError.category_id) {
+                    $('.error-dtb_item_category_id').text(messageError.category_id);
+                    $('.error-dtb_item_category_id').parent().addClass('has-error');
+                }
+                if(messageError.height) {
+                    $('.error-dtb_item_height').text(messageError.height);
+                    $('.error-dtb_item_height').parent().addClass('has-error');
+                }
+                if(messageError.width) {
+                    $('.error-dtb_item_width').text(messageError.width);
+                    $('.error-dtb_item_width').parent().addClass('has-error');
+                }
+                if(messageError.length) {
+                    $('.error-dtb_item_length').text(messageError.length);
+                    $('.error-dtb_item_length').parent().addClass('has-error');
+                }
+                if(messageError.ship_fee) {
+                    $('.error-dtb_item_ship_fee').text(messageError.ship_fee);
+                    $('.error-dtb_item_ship_fee').parent().addClass('has-error');
+                }
+                if(messageError.commodity_weight) {
+                    $('.error-dtb_item_commodity_weight').text(messageError.commodity_weight);
+                    $('.error-dtb_item_commodity_weight').parent().addClass('has-error');
                 }
                 // // if (!isShowCalculate) {
                 //     $('html, body').animate({

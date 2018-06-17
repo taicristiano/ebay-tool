@@ -76,7 +76,7 @@
                                     @include('admin.product.component.item_yahoo_or_amazon_info')
                                 </div>
                                 <div class="{{!empty($data) ? '' : 'display-none'}} margin-20" id="profit-calculation">
-                                    <button type="button" class="btn btn-primary" id="btn-calculator-profit"><i class="fa fa-calculator fa-fw"></i> @lang('view.benefit_calculation')</button>
+                                    <button type="button" class="btn btn-primary display-none" id="btn-calculator-profit"><i class="fa fa-calculator fa-fw"></i> @lang('view.benefit_calculation')</button>
                                 </div>
                                 <div class="calculator-info">
                                     @include('admin.product.component.calculator_info')

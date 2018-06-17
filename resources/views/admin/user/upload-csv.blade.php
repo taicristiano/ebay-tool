@@ -18,7 +18,7 @@
                         <form class="form-inline" enctype="multipart/form-data" role="form" method="POST" action="{{ route('admin.user.upload-csv') }}">
                             @csrf
                             <p class="col-xs-12 col-md-8 col-md-offset-1">&#60;&#60;{{ __('view.csv_create_many') }}&#62;&#62;</p>
-                            <div class="input-group image-preview col-xs-12 col-md-8 col-md-offset-1" data-original-title="" title="">
+                            <div class="input-group col-xs-12 col-md-8 col-md-offset-1" data-original-title="" title="">
                                 <input type="text" class="form-control" id="file_name_csv" disabled="disabled">
                                 <span class="input-group-btn">
                                     <div class="btn btn-default custom-btn-choose-file">

@@ -1,7 +1,6 @@
 <div class="box box-success" id="item-calculator-info">
-    <div class="box-header with-border">@lang('view.product_details')</div>
+    <div class="box-header with-border">@lang('view.product_profit')</div>
     <div class="box-body">
-        @if($data['istTypeAmazon'])
         <label class="form-group-custom">@lang('view.product_size')</label>
         <div class="row row-custom">
             <div class="col-md-4 col-sm-4 col-xs-12">
@@ -24,9 +23,10 @@
             <div class="col-md-6 col-sm-6 col-xs-6">
                 <label for="dtb_item[commodity_weight]">@lang('view.commodity_weight') <span class="text-danger">(*)</span></label>
                 <div class="form-group input-group">
-                    {!! Form::text("dtb_item[commodity_weight]", isset($data['dtb_item']['commodity_weight']) ? $data['dtb_item']['commodity_weight'] : '', ['class' => 'specific-name form-control commodity_weight', 'readonly' => true, 'id' => 'commodity-weight']) !!}
+                    {!! Form::text("dtb_item[commodity_weight]", isset($data['dtb_item']['commodity_weight']) ? $data['dtb_item']['commodity_weight'] : '', ['class' => 'specific-name form-control commodity_weight', 'id' => 'commodity-weight']) !!}
                     <span class="input-group-addon background-disable">@lang('view.g')</span>
                 </div>
+                <p class="error-validate text-danger display-nones error-dtb_item_commodity_weight"></p>
             </div>
             <div class="col-md-6 col-sm-6 col-xs-6">
                 <label for="dtb_item[material_quantity]">@lang('view.material_quantity')</span></label>
@@ -38,20 +38,20 @@
             </div>
         </div>
         <div class="form-group form-group-custom setting-shipping-option">
-            <label for="dtb_item[setting_shipping_option]">@lang('view.setting_shipping_option') <span class="text-danger">(*)</span></label>
-            {!! Form::select("dtb_item[setting_shipping_option]", $data['setting_shipping_option'], isset($data['setting_shipping_selected']) ? $data['setting_shipping_selected'] : '', ['class' => 'form-control', 'id' => 'setting-shipping']) !!}
-            {!! $errors->first("dtb_item[setting_shipping_option]") ? '
-            <p class="text-danger">'. $errors->first("dtb_item[setting_shipping_option]") .'</p>
+            <label for="dtb_item[temp_shipping_method]">@lang('view.setting_shipping_option') <span class="text-danger">(*)</span></label>
+            {!! Form::select("dtb_item[temp_shipping_method]", $data['setting_shipping_option'], isset($data['setting_shipping_selected']) ? $data['setting_shipping_selected'] : '', ['class' => 'form-control', 'id' => 'setting-shipping']) !!}
+            {!! $errors->first("dtb_item[temp_shipping_method]") ? '
+            <p class="text-danger">'. $errors->first("dtb_item[temp_shipping_method]") .'</p>
             ' : ''!!}
         </div>
         <div class="form-group-custom">
             <label for="dtb_item[ship_fee]">@lang('view.ship_fee') <span class="text-danger">(*)</span></label>
             <div class="form-group input-group">
-                {!! Form::text("dtb_item[ship_fee]", isset($data['dtb_item']['ship_fee']) ? $data['dtb_item']['ship_fee'] : '', ['class' => 'form-control', 'readonly' => true, 'id' => 'ship_fee']) !!}
+                {!! Form::text("dtb_item[ship_fee]", isset($data['dtb_item']['ship_fee']) ? $data['dtb_item']['ship_fee'] : '', ['class' => 'form-control', 'id' => 'ship_fee']) !!}
                 <span class="input-group-addon background-disable">@lang('view.man')</span>
             </div>
+            <p class="error-validate text-danger error-dtb_item_ship_fee"></p>
         </div>
-        @endif
         <div class="form-group-custom">
             <label for="dtb_item[ebay_fee]">@lang('view.ebay_fee') <span class="text-danger">(*)</span></label>
             <div class="form-group input-group">

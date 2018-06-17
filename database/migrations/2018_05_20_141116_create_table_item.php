@@ -17,6 +17,8 @@ class CreateTableItem extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('dtb_user')->onDelete('cascade');
+            $table->unsignedInteger('temp_shipping_method');
+            $table->foreign('temp_shipping_method')->references('id')->on('dtb_setting_shipping')->onDelete('cascade');
             $table->string('original_id', 20);
             $table->string('item_id', 20);
             $table->smallInteger('original_type');
@@ -27,6 +29,7 @@ class CreateTableItem extends Migration
             $table->string('condition_id', 20)->nullable();
             $table->string('condition_name', 200)->nullable();
             $table->text('condition_des')->nullable();
+            $table->text('item_des')->nullable();
             $table->double('price', 10, 2)->nullable();
             $table->string('duration', 10)->nullable();
             $table->smallInteger('quantity')->nullable();
@@ -45,6 +48,9 @@ class CreateTableItem extends Migration
             $table->float('pack_material_weight', 10, 2)->nullable();
             $table->float('buy_price', 10, 2)->nullable();
             $table->double('ship_fee', 10, 2)->nullable();
+            $table->float('temp_profit', 10, 2)->nullable();
+            $table->float('max_price', 10, 2)->nullable();
+            $table->float('min_price', 10, 2)->nullable();
             $table->string('keyword', 50)->nullable();
             $table->dateTime('last_mornitoring_date')->nullable();
             $table->softDeletes();

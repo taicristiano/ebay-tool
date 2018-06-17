@@ -20,7 +20,7 @@
             <p class="error-validate text-danger error-dtb_item_jan_upc "></p>
         </div>
         <div class="form-group form-group-custom">
-            <label for="dtb_item[condition_id]">@lang('view.category') <span class="text-danger">(*)</span></label>
+            <label for="dtb_item[condition_id]">@lang('view.condition_name') <span class="text-danger">(*)</span></label>
             {!! Form::select("dtb_item[condition_id]", $conditionIdList, isset($data['dtb_item']['condition_id']) ? $data['dtb_item']['condition_id'] : '', ['class' => 'form-control', 'id' => 'condition-id']) !!}
         </div>
         <div class="form-group form-group-custom">
@@ -118,7 +118,8 @@
 
                 <div class="form-group form-group-custom">
                     <label for="dtb_item[quantity]">@lang('view.quantity') <span class="text-danger">(*)</span></label>
-                    {!! Form::text("dtb_item[quantity]", isset($data['dtb_item']['quantity']) ? $data['dtb_item']['quantity'] : '', ['class' => 'form-control', 'readonly' => true]) !!}
+                    {!! Form::text("dtb_item[quantity]", isset($data['dtb_item']['quantity']) ? $data['dtb_item']['quantity'] : '', ['class' => 'form-control']) !!}
+                    <p class="error-validate text-danger error-dtb_quantity"></p>
                 </div>
                 <div class="form-group form-group-custom">
                     <label for="dtb_item[shipping_policy_id]">@lang('view.shipping_policy') <span class="text-danger">(*)</span></label>

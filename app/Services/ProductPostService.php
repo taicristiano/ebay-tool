@@ -206,7 +206,6 @@ class ProductPostService extends CommonService
                 $response['message_error'] = Lang::get('view.item_not_found');
                 return response()->json($response);
             }
-
             $arrayImage  = [];
             foreach ($data as $key => $item) {
                 if (!empty($item['ns2:SmallImage']['ns2:URL'])) {
@@ -241,7 +240,6 @@ class ProductPostService extends CommonService
                 }
             }
         }
-
         if (!count($arrayImage)) {
             $response['message_error'] = Lang::get('view.item_not_found');
             return response()->json($response);
@@ -268,17 +266,18 @@ class ProductPostService extends CommonService
         Session::forget($keyImageFromApi);
         Session::push($keyImageFromApi, $arrayImageFormApi);
 
-        $data['dtb_item']['commodity_weight'] = round($commodityWeight * 453.59237, 2);
-        $data['dtb_item']['length']           = $length;
-        $data['dtb_item']['height']           = $height;
-        $data['dtb_item']['width']            = $width;
-        $data['dtb_item']['buy_price']        = $price;
+        $result['dtb_item']['commodity_weight'] = round($commodityWeight * 453.59237, 2);
+        $result['dtb_item']['length']           = $length;
+        $result['dtb_item']['height']           = $height;
+        $result['dtb_item']['width']            = $width;
+        $result['dtb_item']['buy_price']        = $price;
         $response['is_type_amazon']           = $isTypeAmazon;
         $response['status']                   = true;
         $response['image']                    = $arrayImage;
-        $response['data']                     = view('admin.product.component.item_yahoo_or_amazon_info', compact('data', 'arrayImage'))->render();
+        $response['data']                     = view('admin.product.component.item_yahoo_or_amazon_info', compact('result', 'arrayImage'))->render();
         return response()->json($response);
     }
+
 
     /**
      * calculator profit
@@ -570,7 +569,9 @@ class ProductPostService extends CommonService
                 'pack_material_weight'  => !empty($data['dtb_item']['material_quantity']) ? $data['dtb_item']['material_quantity'] : null,
                 'buy_price'             => $data['dtb_item']['buy_price'],
                 'ship_fee'              => isset($data['dtb_item']['ship_fee']) ? $data['dtb_item']['ship_fee'] : null,
-                'last_mornitoring_date' => $dateNow
+                'last_mornitoring_date' => $dateNow,
+                'temp_shipping_method'  => $data['dtb_item']['temp_shipping_method'],
+                'temp_profit'           => $data['dtb_item']['profit'],
             ];
             if (!empty($input['id'])) {
                 $itemId = $input['id'];
@@ -586,12 +587,13 @@ class ProductPostService extends CommonService
                 $this->updateItemImage($itemId, $data);            
             } else {
                 // call addFixedPriceItem and get ebayItemId
-                $ebayItemId = $this->ebayClient->addFixedPriceItem($data);
+                // $ebayItemId = $this->ebayClient->addFixedPriceItem($data);
                 // insert item
                 $dataItem['user_id']    = Auth::user()->id;
                 $dataItem['created_at'] = $dateNow;
                 $dataItem['updated_at'] = $dateNow;
                 $dataItem['item_id']    = $ebayItemId;
+                $dataItem['item_id']    = 346457567;
                 $itemId = $this->product->insertGetId($dataItem);
                 // insert item image
                 $this->insertItemImage($data, $itemId);
@@ -694,13 +696,15 @@ class ProductPostService extends CommonService
         $data['duration']['option']   = $this->product->getDurationOption();
         $data['dtb_setting_policies'] = $this->getDataSettingPolicies();
         if (empty($data['dtb_item'])) {
-            $userId = Auth::user()->id;
-            $settingData = $this->setting->getSettingOfUser($userId);
-            $data['dtb_item']['duration'] = $settingData->duration;
-            $data['dtb_item']['quantity'] = $settingData->quantity;
-            $category = $this->categoryFee->getFirstItem();
+            $userId                            = Auth::user()->id;
+            $settingData                       = $this->setting->getSettingOfUser($userId);
+            $data['dtb_item']['duration']      = $settingData->duration;
+            $data['dtb_item']['quantity']      = $settingData->quantity;
+            $category                          = $this->categoryFee->getFirstItem();
             $data['dtb_item']['category_id']   = $category->category_id;
             $data['dtb_item']['category_name'] = $category->category_path;
+            $settingShippingOption             = $this->getSettingShippingOfUser($data['dtb_item']);
+            $data['setting_shipping_option']   = $settingShippingOption;
         }
         return $data;
     }

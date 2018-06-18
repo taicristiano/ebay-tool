@@ -15,6 +15,6 @@ return [
     'update_setting_error'   => 'Update setting error',
 
     'deleted_template_success' => 'Deleted template successfully.',
-    'created_template_success' => 'Created template successfully.',
-    'updated_template_success' => 'Updated template successfully.',
+    'created_template_success' => 'テンプレートを登録されました。',
+    'updated_template_success' => 'テンプレートを編集されました。',
 ];

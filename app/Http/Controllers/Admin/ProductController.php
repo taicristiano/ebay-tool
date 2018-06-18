@@ -65,8 +65,8 @@ class ProductController extends AbstractController
             $data = $this->productPostService->formatDataPageProduct(Session::get($this->keyProduct)[0]);
         }
         $conditionIdList = $this->product->getConditionIdList();
-        $originType = $this->product->getOriginType();
-        $data = $this->productPostService->getDataForShowPagePostProduct($data);
+        $originType      = $this->product->getOriginType();
+        $data            = $this->productPostService->getDataForShowPagePostProduct($data);
         return view('admin.product.post', compact('data', 'originType', 'conditionIdList'));
     }
 

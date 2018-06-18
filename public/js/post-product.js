@@ -159,17 +159,15 @@ jQuery(document).ready(function() {
 
     $(document).on("change", ".type", function() {
         var isShowYaohoo = $('#item-yaohoo-or-amazon-content').length;
-        // var isShowCalculate = $('#item-calculator-info').length;
         if (isShowYaohoo || isChangeEbayOrAmazon) {
             isChangeEbayOrAmazon = true;
             getYahooOrAmazonInfo($("#btn-get-yahoo-or-amazon"), true);
         }
     });
 
-    $(document).on("change", "#category-id, #material-quantity, #setting-shipping, #buy_price, #sell_price, #height, #width, #length, #ship_fee", function() {
+    $(document).on("change", "#category-id, #material-quantity, #setting-shipping, #buy_price, #sell_price, #height, #width, #length, #ship_fee, #commodity_weight", function() {
         if ($('#item-calculator-info').length) {
-            refreshProfitInfo();
-            // getCalculateProfitInfo(true, false);
+            refreshProfitInfo(true);
         }
     });
 });
@@ -194,12 +192,9 @@ function getItemEbayInfo()
                 $('#item-ebay-invalid').parent().parent().removeClass('has-error');
                 intSelectCategory();
                 if ($('#sell_price').length && $('#buy_price').length) {
-                    refreshProfitInfo();
-                    getCalculateProfitInfo(false, false);
+                    refreshProfitInfo(false);
                 }
             } else {
-                // $('#conten-ajax .ebay-info').html('');
-                // $('#conten-ajax .calculator-info').html('');
                 $('#item-ebay-invalid').removeClass('display-none');
                 $('#item-ebay-invalid').parent().parent().addClass('has-error');
             }
@@ -273,8 +268,6 @@ function getYahooOrAmazonInfo(button, isChangeType)
                     }, 3000);
                 }
             } else {
-                // $('#conten-ajax .yahoo-or-amazon-info').html('');
-                // $('#conten-ajax .calculator-info').html('');
                 $('#item-yahoo-or-amazon-invalid').text(data.message_error);
                 $('#item-yahoo-or-amazon-invalid').parent().parent().addClass('has-error');
             }
@@ -388,7 +381,7 @@ function getCalculateProfitInfo(isValidate, isChangeType)
     });
 }
 
-function refreshProfitInfo()
+function refreshProfitInfo(isValidate)
 {
     $('body').addClass('loading-ajax');
     isShowCalculate = $('#item-calculator-info').length;
@@ -397,7 +390,7 @@ function refreshProfitInfo()
     var type = $('.type:checked').val();
     var data = {
         _token: token,
-        is_validate: true,
+        is_validate: isValidate,
         is_update: isShowCalculate,
         material_quantity: materialQuantity,
         type: type,

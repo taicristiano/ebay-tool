@@ -28,7 +28,6 @@ class CalculateProfitRequest extends Request
             $rules = [
                 'sell_price'       => 'required|numeric|greater_than_zero',
                 'category_id'      => 'required',
-                'quantity'         => 'required|numeric|greater_than_zero',
                 'ship_fee'         => 'required|numeric|greater_than_zero',
                 'commodity_weight' => 'required|numeric|greater_than_zero',
             ];

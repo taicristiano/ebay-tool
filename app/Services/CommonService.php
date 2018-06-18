@@ -207,11 +207,11 @@ class CommonService
      */
     public function formatDataPageProduct($data)
     {
-        $data['duration']['option'] = $this->product->getDurationOption();
-        $data['duration']['value']  = $data['dtb_item']['duration'];
+        $data['duration']['option']      = $this->product->getDurationOption();
+        $data['duration']['value']       = $data['dtb_item']['duration'];
         $settingShippingOption           = $this->getSettingShippingOfUser($data['dtb_item']);
         $data['setting_shipping_option'] = $settingShippingOption;
-        $data['dtb_setting_policies'] = $this->getDataSettingPolicies();
+        $data['dtb_setting_policies']    = $this->getDataSettingPolicies();
         return $data;
     }
 }

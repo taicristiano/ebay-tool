@@ -266,18 +266,17 @@ class ProductPostService extends CommonService
         Session::forget($keyImageFromApi);
         Session::push($keyImageFromApi, $arrayImageFormApi);
 
-        $result['dtb_item']['commodity_weight'] = round($commodityWeight * 453.59237, 2);
-        $result['dtb_item']['length']           = $length;
-        $result['dtb_item']['height']           = $height;
-        $result['dtb_item']['width']            = $width;
-        $result['dtb_item']['buy_price']        = $price;
-        $response['is_type_amazon']           = $isTypeAmazon;
-        $response['status']                   = true;
-        $response['image']                    = $arrayImage;
-        $response['data']                     = view('admin.product.component.item_yahoo_or_amazon_info', compact('result', 'arrayImage'))->render();
+        $dataResult['dtb_item']['commodity_weight'] = round($commodityWeight * 453.59237, 2);
+        $dataResult['dtb_item']['length']           = $length;
+        $dataResult['dtb_item']['height']           = $height;
+        $dataResult['dtb_item']['width']            = $width;
+        $dataResult['dtb_item']['buy_price']        = $price;
+        $response['is_type_amazon']                 = $isTypeAmazon;
+        $response['status']                         = true;
+        $response['image']                          = $arrayImage;
+        $response['data']                           = view('admin.product.component.item_yahoo_or_amazon_info', compact('dataResult'))->render();
         return response()->json($response);
     }
-
 
     /**
      * calculator profit
@@ -287,11 +286,11 @@ class ProductPostService extends CommonService
     public function calculatorProfit($input)
     {
         $data['istTypeAmazon'] = $input['type'] == $this->product->getOriginTypeAmazon() ? true : false;
-        if ($data['istTypeAmazon']) {
+        // if ($data['istTypeAmazon']) {
             $this->calculatorProfitTypeAmazon($data, $input);
-        } else {
-            $this->calculatorProfitTypeYahoo($data, $input);
-        }
+        // } else {
+            // $this->calculatorProfitTypeYahoo($data, $input);
+        // }
         $response['status'] = true;
         $response['data']   = view('admin.product.component.calculator_info', compact('data'))->render();
         return response()->json($response);
@@ -299,7 +298,7 @@ class ProductPostService extends CommonService
 
     /**
      * calculator profit type amazon
-     * @param  array &$data
+     * @param  array $data
      * @param  array $input
      * @return void
      */
@@ -322,7 +321,7 @@ class ProductPostService extends CommonService
         }
         $data['setting_shipping_selected'] = $optionSelected;
         if (!$input['ship_fee']) {
-            $shippingFee                  = $this->shippingFee->getShippingFeeByShippingId($shippingId[0], $input['commodity_weight']);
+            $shippingFee                  = $this->shippingFee->getShippingFeeByShippingId($shippingId[0], !empty($input['commodity_weight']) ? $input['commodity_weight'] : 0);
             $data['dtb_item']['ship_fee'] = $shippingFee->ship_fee;
         } else {
             $data['dtb_item']['ship_fee'] = $input['ship_fee'];
@@ -336,7 +335,11 @@ class ProductPostService extends CommonService
         $ebayFeeYen                     = round($data['dtb_item']['ebay_fee'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
         $data['dtb_item']['paypal_fee'] = round($settingInfo->paypal_fee_rate  * $sellPriceYen / 100 + $settingInfo->paypal_fixed_fee, 2);
         $data['dtb_item']['buy_price']  = $input['buy_price'];
-        $data['dtb_item']['profit']     = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'] * $settingInfo->gift_discount / 100, 2);
+        if ($data['istTypeAmazon']) {
+            $data['dtb_item']['profit']     = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'] * $settingInfo->gift_discount / 100, 2);
+        } else {
+            $data['dtb_item']['profit']     = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'], 2);
+        }
     }
 
     /**
@@ -592,8 +595,8 @@ class ProductPostService extends CommonService
                 $dataItem['user_id']    = Auth::user()->id;
                 $dataItem['created_at'] = $dateNow;
                 $dataItem['updated_at'] = $dateNow;
-                $dataItem['item_id']    = $ebayItemId;
-                $dataItem['item_id']    = 346457567;
+                // $dataItem['item_id']    = $ebayItemId;
+                $dataItem['item_id']    = 232325454;
                 $itemId = $this->product->insertGetId($dataItem);
                 // insert item image
                 $this->insertItemImage($data, $itemId);
@@ -693,9 +696,10 @@ class ProductPostService extends CommonService
         if (!$data) {
             $data['istTypeAmazon'] = false;
         }
-        $data['duration']['option']   = $this->product->getDurationOption();
-        $data['dtb_setting_policies'] = $this->getDataSettingPolicies();
+        $data['duration']['option']      = $this->product->getDurationOption();
+        $data['dtb_setting_policies']    = $this->getDataSettingPolicies();
         if (empty($data['dtb_item'])) {
+            $settingShippingOption             = $this->getSettingShippingOfUser(null);
             $userId                            = Auth::user()->id;
             $settingData                       = $this->setting->getSettingOfUser($userId);
             $data['dtb_item']['duration']      = $settingData->duration;
@@ -703,9 +707,10 @@ class ProductPostService extends CommonService
             $category                          = $this->categoryFee->getFirstItem();
             $data['dtb_item']['category_id']   = $category->category_id;
             $data['dtb_item']['category_name'] = $category->category_path;
+        } else {
             $settingShippingOption             = $this->getSettingShippingOfUser($data['dtb_item']);
-            $data['setting_shipping_option']   = $settingShippingOption;
         }
+        $data['setting_shipping_option'] = $settingShippingOption;
         return $data;
     }
 

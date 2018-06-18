@@ -5,17 +5,17 @@
         <div class="row row-custom">
             <div class="col-md-4 col-sm-4 col-xs-12">
                 <label for="dtb_item[height]">@lang('view.height')</label>
-                {!! Form::text("dtb_item[height]", isset($data['dtb_item']['height']) ? $data['dtb_item']['height'] : '', ['class' => 'form-control height', 'id' => 'height']) !!}
+                {!! Form::text("dtb_item[height]", !empty($data['dtb_item']['height']) ? $data['dtb_item']['height'] : '', ['class' => 'form-control height', 'id' => 'height']) !!}
                 <p class="error-validate text-danger display-nones error-dtb_item_height"></p>
             </div>
             <div class="col-md-4 col-sm-4 col-xs-12">
                 <label for="dtb_item[width]">@lang('view.width')</label>
-                {!! Form::text("dtb_item[width]", isset($data['dtb_item']['width']) ? $data['dtb_item']['width'] : '', ['class' => 'form-control width', 'id' => 'width']) !!}
+                {!! Form::text("dtb_item[width]", !empty($data['dtb_item']['width']) ? $data['dtb_item']['width'] : '', ['class' => 'form-control width', 'id' => 'width']) !!}
                 <p class="error-validate text-danger display-nones error-dtb_item_width"></p>
             </div>
             <div class="col-md-4 col-sm-4 col-xs-12">
                 <label for="dtb_item[length]">@lang('view.length')</label>
-                {!! Form::text("dtb_item[length]", isset($data['dtb_item']['length']) ? $data['dtb_item']['length'] : '', ['class' => 'form-control length', 'id' => 'length']) !!}
+                {!! Form::text("dtb_item[length]", !empty($data['dtb_item']['length']) ? $data['dtb_item']['length'] : '', ['class' => 'form-control length', 'id' => 'length']) !!}
                 <p class="error-validate text-danger display-nones error-dtb_item_length"></p>
             </div>
         </div>
@@ -23,7 +23,7 @@
             <div class="col-md-6 col-sm-6 col-xs-6">
                 <label for="dtb_item[commodity_weight]">@lang('view.commodity_weight') <span class="text-danger">(*)</span></label>
                 <div class="form-group input-group">
-                    {!! Form::text("dtb_item[commodity_weight]", isset($data['dtb_item']['commodity_weight']) ? $data['dtb_item']['commodity_weight'] : '', ['class' => 'specific-name form-control commodity_weight', 'id' => 'commodity-weight']) !!}
+                    {!! Form::text("dtb_item[commodity_weight]", !empty($data['dtb_item']['commodity_weight']) ? $data['dtb_item']['commodity_weight'] : '', ['class' => 'specific-name form-control commodity_weight', 'id' => 'commodity_weight']) !!}
                     <span class="input-group-addon background-disable">@lang('view.g')</span>
                 </div>
                 <p class="error-validate text-danger display-nones error-dtb_item_commodity_weight"></p>
@@ -31,7 +31,7 @@
             <div class="col-md-6 col-sm-6 col-xs-6">
                 <label for="dtb_item[material_quantity]">@lang('view.material_quantity')</span></label>
                 <div class="form-group input-group">
-                    {!! Form::text("dtb_item[material_quantity]", isset($data['dtb_item']['material_quantity']) ? $data['dtb_item']['material_quantity'] : '', ['class' => 'specific-value form-control', 'id' => 'material-quantity']) !!}
+                    {!! Form::text("dtb_item[material_quantity]", !empty($data['dtb_item']['material_quantity']) ? $data['dtb_item']['material_quantity'] : '', ['class' => 'specific-value form-control', 'id' => 'material-quantity']) !!}
                     <span class="input-group-addon">@lang('view.g')</span>
                 </div>
                 <p class="error-validate text-danger error-dtb_item_material_quantity" id="error-material-quantity"></p>

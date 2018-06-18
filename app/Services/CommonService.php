@@ -214,4 +214,19 @@ class CommonService
         $data['dtb_setting_policies']    = $this->getDataSettingPolicies();
         return $data;
     }
+
+    /**
+     * format setting template
+     * @param  array $settingTemplate
+     * @return array
+     */
+    public function formatSettingTemplate($settingTemplate)
+    {
+        $result = [];
+        foreach ($settingTemplate as $item) {
+            $result[$item['id']] = $item['title'];
+        }
+        return $result;
+    }
+
 }

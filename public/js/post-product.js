@@ -3,6 +3,7 @@ var isChangeItemId = false;
 var isChangeEbayOrAmazon = false;
 
 jQuery(document).ready(function() {
+    $('#item_des').wysihtml5({locale: "ja-JP"});
     intSelectCategory();
     if ($('#item-yaohoo-or-amazon-content').length) {
         if (itemId) {
@@ -124,6 +125,9 @@ jQuery(document).ready(function() {
                                 scrollTop: $("#sell_price").offset().top
                             }, 3000);
                         }
+                    }
+                    if (messageError.regis_limit) {
+                        swal("", messageError.regis_limit, "error");
                     }
                 }
             },

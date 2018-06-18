@@ -126,3 +126,11 @@ body.loading-ajax .modal-loading {
 .width-83 {
     width: 83px !important;
 }
+
+.swal-text {
+    font-size: 15px;
+}
+
+.margin-bottom-10 {
+    margin-bottom: 10px !important;
+}

@@ -14,6 +14,7 @@ use App\Http\Requests\CalculateProfitRequest;
 use App\Http\Requests\PostProductRequest;
 use Illuminate\Support\Facades\Session;
 use App\Models\ItemImage;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 
@@ -28,6 +29,7 @@ class ProductController extends AbstractController
     protected $productListService;
     protected $exchangeRate;
     protected $productEditService;
+    protected $user;
 
     public function __construct(
         ProductPostService $productPostService,
@@ -36,6 +38,7 @@ class ProductController extends AbstractController
         ProductListService $productListService,
         ProductEditService $productEditService,
         ItemImage $itemImage,
+        User $user,
         MtbExchangeRate $exchangeRate
     ) {
         $this->productPostService = $productPostService;
@@ -47,6 +50,7 @@ class ProductController extends AbstractController
         $this->productListService = $productListService;
         $this->exchangeRate       = $exchangeRate;
         $this->productEditService = $productEditService;
+        $this->user               = $user;
     }
 
     /**
@@ -86,6 +90,15 @@ class ProductController extends AbstractController
                 $messageError = $postProductValidate->errors()->messages();
                 $response['message_error'] = $this->productPostService->formatMessageError($messageError);
                 return response()->json($response);
+            }
+            if (empty($data['dtb_item']['id'])
+                && Auth::user()->type == $this->user->getTypeGuestAdmin()
+            ) {
+                $resultCheck = $this->productPostService->checkRegistLimit();
+                if (!$resultCheck['status']) {
+                    $response['message_error']['regis_limit'] = $resultCheck['messages'];
+                    return response()->json($response);
+                }
             }
             $dataSession = [];
             $keySession  = $this->keyProduct;

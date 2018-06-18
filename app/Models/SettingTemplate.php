@@ -34,4 +34,17 @@ class SettingTemplate extends AbstractModel
     {
         return $this->select(['id', 'title', 'created_at', 'updated_at'])->where('user_id', $userId)->paginate();
     }
+
+    /**
+     * get by user id
+     * @param  integer $userId
+     * @return array
+     */
+    public function getByUserId($userId)
+    {
+        return $this->select('id', 'title', 'content')
+            ->whereUserId($userId)
+            ->get()
+            ->toArray();
+    }
 }

@@ -8,6 +8,7 @@
 <link href="{{asset('lib/jquery-upload/css/jquery.fileuploader-theme-thumbnails.css')}}" type="text/css" rel="stylesheet"/>
 <link href="{{asset('lib/jquery-upload/css/jquery.fileuploader.min.css')}}" type="text/css" rel="stylesheet"/>
 <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
 @endsection
 @section('content')
 <div class="content-wrapper">
@@ -102,6 +103,8 @@
 <script src="{{asset('adminlte/plugins/iCheck/icheck.min.js')}}"></script>
 <script src="{{ asset('js/post-product.js') }}"></script>
 <script src="{{ asset('adminlte/plugins/select2/select2.min.js') }}"></script>
+<script src="{{asset('lib/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{ asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>
 <script>
     var urlGetItemEbayInfo          = "{{ route('admin.product.api-get-item-ebay-info') }}";
     var urlGetItemYahooOrAmazonInfo = "{{ route('admin.product.api-get-item-yahoo-or-amazon-info') }}";

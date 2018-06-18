@@ -168,4 +168,5 @@ return [
     'page_not_found'                        => 'Page not found',
     'product_image_details'                 => '商品画像',
     'product_profit'                        => '粗利計算',
+    'setting_template'                      => '商品説明'
 ];

@@ -15,7 +15,9 @@ use App\Models\ShippingFee;
 use App\Models\CategoryFee;
 use App\Models\MtbStore;
 use App\Models\MtbExchangeRate;
+use App\Models\Authorization;
 use App\Models\ItemSpecific;
+use App\Models\SettingTemplate;
 use App\Models\ItemImage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -40,6 +42,8 @@ class ProductPostService extends CommonService
     protected $fullPathUpload;
     protected $pathStorageFile;
     protected $keyProductEdit;
+    protected $authorization;
+    protected $settingTemplate;
 
     public function __construct(
         Setting $setting,
@@ -52,6 +56,8 @@ class ProductPostService extends CommonService
         MtbExchangeRate $exchangeRate,
         ItemSpecific $itemSpecific,
         ItemImage $itemImage,
+        Authorization $authorization,
+        SettingTemplate $settingTemplate,
         EbayClient $ebayClient
     ) {
         $this->setting             = $setting;
@@ -65,6 +71,7 @@ class ProductPostService extends CommonService
         $this->itemSpecific        = $itemSpecific;
         $this->itemImage           = $itemImage;
         $this->ebayClient          = $ebayClient;
+        $this->authorization       = $authorization;
         $this->keyProduct          = Item::SESSION_KEY_PRODUCT_INFO;
         $this->keyProductEdit      = Item::SESSION_KEY_PRODUCT_EDIT_INFO;
         $this->keyImageFromApi     = ItemImage::SESSION_KEY_IMAGE_FROM_API;
@@ -72,6 +79,7 @@ class ProductPostService extends CommonService
         $this->pathUpload          = $this->itemImage->getPathUploadFile();
         $this->fullPathUpload      = $this->itemImage->getfullPathUploadFile();
         $this->pathStorageFile     = $this->itemImage->getPathStorageFile();
+        $this->settingTemplate     = $settingTemplate;
     }
 
     /**
@@ -693,14 +701,17 @@ class ProductPostService extends CommonService
      */
     public function getDataForShowPagePostProduct($data)
     {
+        $userId = Auth::user()->id;
         if (!$data) {
             $data['istTypeAmazon'] = false;
         }
         $data['duration']['option']      = $this->product->getDurationOption();
         $data['dtb_setting_policies']    = $this->getDataSettingPolicies();
+        $settingTemplate                 = $this->settingTemplate->getByUserId($userId);
+        $data['setting_template']        = $this->formatSettingTemplate($settingTemplate);
         if (empty($data['dtb_item'])) {
+            $data['dtb_item']['item_des']      = !empty($settingTemplate[0]['content']) ? $settingTemplate[0]['content']: null;
             $settingShippingOption             = $this->getSettingShippingOfUser(null);
-            $userId                            = Auth::user()->id;
             $settingData                       = $this->setting->getSettingOfUser($userId);
             $data['dtb_item']['duration']      = $settingData->duration;
             $data['dtb_item']['quantity']      = $settingData->quantity;
@@ -773,5 +784,28 @@ class ProductPostService extends CommonService
         foreach ($imageDelete as $key => $item) {
             Storage::delete($this->pathUpload . $item);
         }
+    }
+
+    /**
+     * check regis limit
+     * @return array
+     */
+    public function checkRegistLimit()
+    {
+        $result['status'] = false;
+        $userId               = Auth::user()->id;
+        $authorization        = $this->authorization->findByUserId($userId);
+        $allItemOfUser        = $this->product->countByUserId($userId);
+        $allItemSellingOfUser = $this->product->countIntemSellingByUserId($userId);
+        if ($allItemOfUser > $authorization->regist_limit) {
+            $result['messages'] = Lang::get('message.the_number_of_items_registered_has_exceeded_the_limit');
+            return $result;
+        }
+        if ($allItemSellingOfUser > $authorization->post_limit) {
+            $result['messages'] = Lang::get('message.the_number_of_items_under_exhibition_exceeded_the_limit');
+            return $result;
+        }
+        $result['status'] = true;
+        return $result;
     }
 }

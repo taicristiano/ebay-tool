@@ -39,6 +39,10 @@
                                                 <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['item_name'] }}</label>
                                             </div>
                                             <div class="form-group form-group-custom">
+                                                <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.setting_template')</label>
+                                                <label class="col-md-6 col-sm-6 col-xs-6">{!! nl2br($data['dtb_item']['item_des']) !!}</label>
+                                            </div>
+                                            <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.category')</label>
                                                 <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['category_name'] }}</label>
                                             </div>
@@ -130,10 +134,9 @@
                                     <div class="box box-success" id="item-calculator-info">
                                         <div class="box-header with-border">@lang('view.product_profit')</div>
                                         <div class="box-body">
-                                            @if($data['istTypeAmazon'])
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.product_size')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['height'] }}@lang('view.height') x {{ $data['dtb_item']['width'] }}@lang('view.width') x {{ $data['dtb_item']['length'] }}@lang('view.length')</label>
+                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['height'] ? $data['dtb_item']['height'] : 0 }}@lang('view.height') x {{ $data['dtb_item']['width'] ? $data['dtb_item']['width'] : 0 }}@lang('view.width') x {{ $data['dtb_item']['length'] ? $data['dtb_item']['length'] : 0 }}@lang('view.length')</label>
                                             </div>
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.commodity_weight')</label>
@@ -151,7 +154,6 @@
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.ship_fee')</label>
                                                 <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['ship_fee'] }} @lang('view.man')</label>
                                             </div>
-                                            @endif
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.ebay_fee')</label>
                                                 <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['ebay_fee'] }} @lang('view.man')</label>

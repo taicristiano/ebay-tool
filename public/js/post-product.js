@@ -3,7 +3,7 @@ var isChangeItemId = false;
 var isChangeEbayOrAmazon = false;
 
 jQuery(document).ready(function() {
-    $('#item_des').wysihtml5({locale: "ja-JP"});
+    $('#item_des, #condition_des').wysihtml5({locale: "ja-JP"});
     intSelectCategory();
     if ($('#item-yaohoo-or-amazon-content').length) {
         if (itemId) {
@@ -220,7 +220,7 @@ function getItemEbayInfo()
                 if ($('#sell_price').length && $('#buy_price').length) {
                     refreshProfitInfo(false);
                 }
-                $('#item_des').wysihtml5({locale: "ja-JP"});
+                $('#item_des, #condition_des').wysihtml5({locale: "ja-JP"});
             } else {
                 $('#item-ebay-invalid').removeClass('display-none');
                 $('#item-ebay-invalid').parent().parent().addClass('has-error');

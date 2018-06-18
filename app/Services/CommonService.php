@@ -212,6 +212,9 @@ class CommonService
         $settingShippingOption           = $this->getSettingShippingOfUser($data['dtb_item']);
         $data['setting_shipping_option'] = $settingShippingOption;
         $data['dtb_setting_policies']    = $this->getDataSettingPolicies();
+        $userId                          = Auth::user()->id;
+        $settingTemplate                 = $this->settingTemplate->getByUserId($userId);
+        $data['setting_template']        = $this->formatSettingTemplate($settingTemplate);
         return $data;
     }
 

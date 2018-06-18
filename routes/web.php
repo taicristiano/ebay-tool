@@ -100,6 +100,7 @@ Route::group([
         Route::post('end-item', 'ProductController@endItem')->name('end-item');
         Route::get('edit/{itemId}', 'ProductController@showPageEditProduct')->name('edit-item');
         Route::get('edit/{itemId}/confirm', 'ProductController@showEditConfirm')->name('show-edit-confirm');
+        Route::post('get-setting-template', 'ProductController@getSettingTemplate')->name('get-setting-template');
     });
 
     // setting template

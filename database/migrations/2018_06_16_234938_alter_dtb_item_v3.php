@@ -30,6 +30,10 @@ class AlterDtbItemV3 extends Migration
             if (!Schema::hasColumn('dtb_item', 'item_des')) {
                 $table->text('item_des')->nullable();
             }
+            if (!Schema::hasColumn('dtb_item', 'setting_template_id')) {
+                $table->unsignedInteger('setting_template_id')->default(1);
+                $table->foreign('setting_template_id')->references('id')->on('dtb_setting_template')->onDelete('cascade');
+            }
         });
     }
 

@@ -267,7 +267,6 @@ class ProductController extends AbstractController
         $products        = $this->product->getListProduct($request->all(), $userId);
         $pathStorageFile = $this->itemImage->getPathStorageFile();
         $originType      = $this->product->getOriginType();
-        // $category = $this->category->getAll();
         return view('admin.product.list', compact('products', 'pathStorageFile', 'originType', 'exchangeRate'));
     }
 
@@ -338,5 +337,21 @@ class ProductController extends AbstractController
         $conditionIdList = $this->product->getConditionIdList();
         $originType      = $this->product->getOriginType();
         return view('admin.product.post', compact('data', 'originType', 'conditionIdList'));
+    }
+
+    /**
+     * get setting template
+     * @param  Request $request
+     * @return Illuminate\Http\Response
+     */
+    public function getSettingTemplate(Request $request)
+    {
+        try {
+            return $this->productPostService->getSettingTemplate($request->setting_template_id);
+        } catch (Exception $ex) {
+            Log::error($ex);
+            $response['status'] = false;
+            return response()->json($response);
+        }
     }
 }

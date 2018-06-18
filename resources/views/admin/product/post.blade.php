@@ -26,7 +26,8 @@
                                 <div class="col-xs-12 col-md-4">
                                     <div class="form-group">
                                         <div class="col-xs-12 col-md-8">
-                                            {!! Form::text('item_id', !empty($data['item_id']) ? $data['item_id'] : '110327763724', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'item_id']) !!}
+                                            {{-- 110327763724 --}}
+                                            {!! Form::text('item_id', '', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'item_id']) !!}
                                             <p class="text-danger display-none invalid" id="item-ebay-invalid">@lang('view.item_not_found')</p>
                                         </div>
                                         <div class="col-xs-12 col-md-4">
@@ -57,7 +58,7 @@
                                 <div class="col-xs-12 col-md-4">
                                     <div class="form-group">
                                         <div class="col-xs-12 col-md-8">
-                                            {!! Form::text('id_ebay_or_amazon', !empty($data['original_id']) ? $data['original_id'] : 'B01GUPMJMA', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
+                                            {!! Form::text('id_ebay_or_amazon', !empty($data['dtb_item']['original_id']) ? $data['dtb_item']['original_id'] : '', ['class' => 'form-control', 'placeholder' => __('view.original_id'), 'id' => 'id_ebay_or_amazon']) !!}
                                             <p class="text-danger invalid" id="item-yahoo-or-amazon-invalid"></p>
                                         </div>
                                         <div class="col-xs-12 col-md-4">
@@ -113,6 +114,7 @@
     var numberSpecificItem          = '{{ !empty($data['dtb_item_specifics']) ? count($data['dtb_item_specifics']) : 1 }}';
     var urlGetImageInit             = "{{route('admin.product.get-image-init', ['itemId' => null])}}";
     var urlSearchCategory           = "{{route('admin.product.search-category')}}";
+    var urlGetTemplateContent       = "{{route('admin.product.get-setting-template')}}";
     var itemId                      = {{ !empty($data['dtb_item']['id']) ? $data['dtb_item']['id'] : 'null'}};
     // $('input[type="radio"].minimal').iCheck({
         // radioClass: 'iradio_minimal-blue'

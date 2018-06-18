@@ -12,7 +12,9 @@
         <div class="form-group form-group-custom">
             <label for="dtb_item[setting_template_id]">@lang('view.setting_template') <span class="text-danger">(*)</span></label>
             {!! Form::select("dtb_item[setting_template_id]", $data['setting_template'], isset($data['dtb_item']['setting_template_id']) ? $data['dtb_item']['setting_template_id'] : '', ['class' => 'form-control margin-bottom-10', 'id' => 'setting_template_id']) !!}
-            {{ Form::textarea('dtb_item[item_des]', isset($data['dtb_item']['item_des']) ? $data['dtb_item']['item_des'] : '', ['size' => '30x5', 'class' => 'form-control', 'id' => 'item_des']) }}
+            <div id="setting-template">
+	            {{ Form::textarea('dtb_item[item_des]', isset($data['dtb_item']['item_des']) ? $data['dtb_item']['item_des'] : '', ['size' => '30x5', 'class' => 'form-control', 'id' => 'item_des']) }}
+            </div>
         </div>
         <div class="form-group form-group-custom">
             <label for="dtb_item[category_id]">@lang('view.category') <span class="text-danger">(*)</span></label>

@@ -11,6 +11,7 @@ use App\Models\MtbExchangeRate;
 use App\Models\MtbStore;
 use App\Models\Setting;
 use App\Models\CategoryFee;
+use App\Models\SettingTemplate;
 use Illuminate\Support\Facades\Auth;
 
 class ProductEditService extends CommonService
@@ -25,6 +26,7 @@ class ProductEditService extends CommonService
     protected $setting;
     protected $mtbStore;
     protected $categoryFee;
+    protected $settingTemplate;
 
     public function __construct(
         Item $product,
@@ -35,6 +37,7 @@ class ProductEditService extends CommonService
         Setting $setting,
         MtbStore $mtbStore,
         CategoryFee $categoryFee,
+        SettingTemplate $settingTemplate,
         MtbExchangeRate $exchangeRate
     ) {
         $this->product         = $product;
@@ -47,6 +50,7 @@ class ProductEditService extends CommonService
         $this->setting         = $setting;
         $this->mtbStore        = $mtbStore;
         $this->categoryFee     = $categoryFee;
+        $this->settingTemplate = $settingTemplate;
     }
 
     /**
@@ -56,23 +60,28 @@ class ProductEditService extends CommonService
      */
     public function getDataForShowPageEditProduct($item)
     {
-        $data['dtb_item']                      = $item;
-        $data['item_id']                       = $item['item_id'];
-        $data['dtb_item']['commodity_weight']  = $item['item_weight'];
-        $data['dtb_item']['material_quantity'] = $item['pack_material_weight'];
-        $data['dtb_item']['length']            = $item['item_length'];
-        $data['dtb_item']['height']            = $item['item_height'];
-        $data['dtb_item']['width']             = $item['item_width'];
-        $itemSpecific                          = $this->itemSpecific->getByItemId($item['id']);
-        $data['dtb_item_specifics']            = $this->formatDataItemSpecifics($itemSpecific);
-        $data['duration']['option']            = $this->product->getDurationOption();
-        $data['dtb_setting_policies']          = $this->getDataSettingPolicies();
-        $data['istTypeAmazon']                 = $item['original_type'] == $this->product->getOriginTypeAmazon() ? true : false;
+        $data['dtb_item']                        = $item;
+        $data['item_id']                         = $item['item_id'];
+        $data['dtb_item']['commodity_weight']    = $item['item_weight'];
+        $data['dtb_item']['material_quantity']   = $item['pack_material_weight'];
+        $data['dtb_item']['length']              = $item['item_length'];
+        $data['dtb_item']['height']              = $item['item_height'];
+        $data['dtb_item']['width']               = $item['item_width'];
+        $data['dtb_item']['item_des']            = $item['item_des'];
+        $data['dtb_item']['type']                = $item['original_type'];
+        $itemSpecific                            = $this->itemSpecific->getByItemId($item['id']);
+        $data['dtb_item_specifics']              = $this->formatDataItemSpecifics($itemSpecific);
+        $data['duration']['option']              = $this->product->getDurationOption();
+        $data['dtb_setting_policies']            = $this->getDataSettingPolicies();
+        $data['istTypeAmazon']                   = $item['original_type'] == $this->product->getOriginTypeAmazon() ? true : false;
         $this->calculatorProfitTypeAmazon($data);
         // if ($data['istTypeAmazon']) {
         // } else {
             // $this->calculatorProfitTypeYahoo($data);
         // }
+        $userId                   = Auth::user()->id;
+        $settingTemplate          = $this->settingTemplate->getByUserId($userId);
+        $data['setting_template'] = $this->formatSettingTemplate($settingTemplate);
         return $data;
     }
 

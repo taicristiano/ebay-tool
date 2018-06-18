@@ -174,6 +174,28 @@ jQuery(document).ready(function() {
             refreshProfitInfo(true);
         }
     });
+    $(document).on("change", "#setting_template_id", function() {
+        $('body').addClass('loading-ajax');
+        var data = {
+            _token: token,
+            setting_template_id: $('#setting_template_id').val()
+        };
+        $.ajax({
+            url: urlGetTemplateContent,
+            type: 'post',
+            dataType: 'json',
+            data: data,
+            success: function (data) {
+                if (data.status) {
+                    $('#setting-template').html(data.html);
+                    $('#item_des').wysihtml5({locale: "ja-JP"});
+                }
+            },
+            complete: function () {
+                $('body').removeClass('loading-ajax');
+            }
+        });
+    });
 });
 
 function getItemEbayInfo()
@@ -198,6 +220,7 @@ function getItemEbayInfo()
                 if ($('#sell_price').length && $('#buy_price').length) {
                     refreshProfitInfo(false);
                 }
+                $('#item_des').wysihtml5({locale: "ja-JP"});
             } else {
                 $('#item-ebay-invalid').removeClass('display-none');
                 $('#item-ebay-invalid').parent().parent().addClass('has-error');

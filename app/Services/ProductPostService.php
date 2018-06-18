@@ -138,8 +138,11 @@ class ProductPostService extends CommonService
 
         //data dtb_setting_policies
         $result['dtb_setting_policies'] = $this->getDataSettingPolicies();
-        $result['duration']['option'] = $this->product->getDurationOption();
-
+        $result['duration']['option']   = $this->product->getDurationOption();
+        $userId                         = Auth::user()->id;
+        $settingTemplate                = $this->settingTemplate->getByUserId($userId);
+        $result['setting_template']     = $this->formatSettingTemplate($settingTemplate);
+        $result['dtb_item']['item_des'] = !empty($settingTemplate[0]['content']) ? $settingTemplate[0]['content']: null;
         return $result;
     }
 
@@ -558,7 +561,7 @@ class ProductPostService extends CommonService
             $data     = Session::get($keyProduct)[0];
             $dateNow  = date('Y-m-d H:i:s');
             $dataItem = [
-                'original_id'           => $data['dtb_item']['original_id'],
+                'original_id'           => !empty($data['dtb_item']['original_id']) ? $data['dtb_item']['original_id'] : null,
                 'original_type'         => $data['dtb_item']['type'],
                 'item_name'             => $data['dtb_item']['item_name'],
                 'category_id'           => $data['dtb_item']['category_id'],
@@ -583,6 +586,9 @@ class ProductPostService extends CommonService
                 'last_mornitoring_date' => $dateNow,
                 'temp_shipping_method'  => $data['dtb_item']['temp_shipping_method'],
                 'temp_profit'           => $data['dtb_item']['profit'],
+                'item_des'              => $data['dtb_item']['item_des'],
+                'setting_template_id'   => $data['dtb_item']['setting_template_id'],
+                'updated_at'            => $dateNow,
             ];
             if (!empty($input['id'])) {
                 $itemId = $input['id'];
@@ -598,13 +604,11 @@ class ProductPostService extends CommonService
                 $this->updateItemImage($itemId, $data);            
             } else {
                 // call addFixedPriceItem and get ebayItemId
-                // $ebayItemId = $this->ebayClient->addFixedPriceItem($data);
+                $ebayItemId = $this->ebayClient->addFixedPriceItem($data);
                 // insert item
                 $dataItem['user_id']    = Auth::user()->id;
                 $dataItem['created_at'] = $dateNow;
-                $dataItem['updated_at'] = $dateNow;
-                // $dataItem['item_id']    = $ebayItemId;
-                $dataItem['item_id']    = 232325454;
+                $dataItem['item_id']    = $ebayItemId;
                 $itemId = $this->product->insertGetId($dataItem);
                 // insert item image
                 $this->insertItemImage($data, $itemId);
@@ -807,5 +811,18 @@ class ProductPostService extends CommonService
         }
         $result['status'] = true;
         return $result;
+    }
+
+    /**
+     * get setting template
+     * @param  integer $settingTemplateId
+     * @return json
+     */
+    public function getSettingTemplate($settingTemplateId)
+    {
+        $settingTemplate = $this->settingTemplate->findById($settingTemplateId);
+        $response['status'] = true;
+        $response['html']   = view('admin.product.component.setting_template', compact('settingTemplate'))->render();
+        return response()->json($response);
     }
 }

@@ -24,7 +24,7 @@
                 <label for="dtb_item[commodity_weight]">@lang('view.commodity_weight') <span class="text-danger">(*)</span></label>
                 <div class="form-group input-group">
                     {!! Form::text("dtb_item[commodity_weight]", !empty($data['dtb_item']['commodity_weight']) ? $data['dtb_item']['commodity_weight'] : '', ['class' => 'specific-name form-control commodity_weight', 'id' => 'commodity_weight']) !!}
-                    <span class="input-group-addon background-disable">@lang('view.g')</span>
+                    <span class="input-group-addon">@lang('view.g')</span>
                 </div>
                 <p class="error-validate text-danger display-nones error-dtb_item_commodity_weight"></p>
             </div>
@@ -48,7 +48,7 @@
             <label for="dtb_item[ship_fee]">@lang('view.ship_fee') <span class="text-danger">(*)</span></label>
             <div class="form-group input-group">
                 {!! Form::text("dtb_item[ship_fee]", isset($data['dtb_item']['ship_fee']) ? $data['dtb_item']['ship_fee'] : '', ['class' => 'form-control', 'id' => 'ship_fee']) !!}
-                <span class="input-group-addon background-disable">@lang('view.man')</span>
+                <span class="input-group-addon">@lang('view.man')</span>
             </div>
             <p class="error-validate text-danger error-dtb_item_ship_fee"></p>
         </div>

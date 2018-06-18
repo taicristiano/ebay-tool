@@ -14,6 +14,7 @@ use App\Http\Requests\CalculateProfitRequest;
 use App\Http\Requests\PostProductRequest;
 use Illuminate\Support\Facades\Session;
 use App\Models\ItemImage;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 
@@ -28,6 +29,7 @@ class ProductController extends AbstractController
     protected $productListService;
     protected $exchangeRate;
     protected $productEditService;
+    protected $user;
 
     public function __construct(
         ProductPostService $productPostService,
@@ -36,6 +38,7 @@ class ProductController extends AbstractController
         ProductListService $productListService,
         ProductEditService $productEditService,
         ItemImage $itemImage,
+        User $user,
         MtbExchangeRate $exchangeRate
     ) {
         $this->productPostService = $productPostService;
@@ -47,6 +50,7 @@ class ProductController extends AbstractController
         $this->productListService = $productListService;
         $this->exchangeRate       = $exchangeRate;
         $this->productEditService = $productEditService;
+        $this->user               = $user;
     }
 
     /**
@@ -65,8 +69,8 @@ class ProductController extends AbstractController
             $data = $this->productPostService->formatDataPageProduct(Session::get($this->keyProduct)[0]);
         }
         $conditionIdList = $this->product->getConditionIdList();
-        $originType = $this->product->getOriginType();
-        $data = $this->productPostService->getDataForShowPagePostProduct($data);
+        $originType      = $this->product->getOriginType();
+        $data            = $this->productPostService->getDataForShowPagePostProduct($data);
         return view('admin.product.post', compact('data', 'originType', 'conditionIdList'));
     }
 
@@ -86,6 +90,15 @@ class ProductController extends AbstractController
                 $messageError = $postProductValidate->errors()->messages();
                 $response['message_error'] = $this->productPostService->formatMessageError($messageError);
                 return response()->json($response);
+            }
+            if (empty($data['dtb_item']['id'])
+                && Auth::user()->type == $this->user->getTypeGuestAdmin()
+            ) {
+                $resultCheck = $this->productPostService->checkRegistLimit();
+                if (!$resultCheck['status']) {
+                    $response['message_error']['regis_limit'] = $resultCheck['messages'];
+                    return response()->json($response);
+                }
             }
             $dataSession = [];
             $keySession  = $this->keyProduct;
@@ -254,7 +267,6 @@ class ProductController extends AbstractController
         $products        = $this->product->getListProduct($request->all(), $userId);
         $pathStorageFile = $this->itemImage->getPathStorageFile();
         $originType      = $this->product->getOriginType();
-        // $category = $this->category->getAll();
         return view('admin.product.list', compact('products', 'pathStorageFile', 'originType', 'exchangeRate'));
     }
 
@@ -325,5 +337,21 @@ class ProductController extends AbstractController
         $conditionIdList = $this->product->getConditionIdList();
         $originType      = $this->product->getOriginType();
         return view('admin.product.post', compact('data', 'originType', 'conditionIdList'));
+    }
+
+    /**
+     * get setting template
+     * @param  Request $request
+     * @return Illuminate\Http\Response
+     */
+    public function getSettingTemplate(Request $request)
+    {
+        try {
+            return $this->productPostService->getSettingTemplate($request->setting_template_id);
+        } catch (Exception $ex) {
+            Log::error($ex);
+            $response['status'] = false;
+            return response()->json($response);
+        }
     }
 }

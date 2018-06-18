@@ -101,7 +101,7 @@
                                 </div>
                                 <div class="yahoo-or-amazon-info">
                                     <div class="box box-success" id="item-yaohoo-or-amazon-content">
-                                        <div class="box-header with-border">@lang('view.product_details')</div>
+                                        <div class="box-header with-border">@lang('view.product_image_details')</div>
                                         <div class="box-body">
                                             @if(isset($data['dtb_item']['buy_price']))
                                             <p>@lang('view.buy_price'): <span id="buy_price">{{ $data['dtb_item']['buy_price'] }} @lang('view.man')</span></p>
@@ -128,7 +128,7 @@
                                 </div>
                                 <div class="calculator-info">
                                     <div class="box box-success" id="item-calculator-info">
-                                        <div class="box-header with-border">@lang('view.product_details')</div>
+                                        <div class="box-header with-border">@lang('view.product_profit')</div>
                                         <div class="box-body">
                                             @if($data['istTypeAmazon'])
                                             <div class="form-group form-group-custom">
@@ -145,7 +145,7 @@
                                             </div>
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.setting_shipping_option')</label>
-                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['setting_shipping_option'] }}</label>
+                                                <label class="col-md-6 col-sm-6 col-xs-6">{{ $data['dtb_item']['temp_shipping_method'] }}</label>
                                             </div>
                                             <div class="form-group form-group-custom">
                                                 <label class="col-md-6 col-sm-6 col-xs-6">@lang('view.ship_fee')</label>

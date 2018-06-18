@@ -15,7 +15,9 @@ use App\Models\ShippingFee;
 use App\Models\CategoryFee;
 use App\Models\MtbStore;
 use App\Models\MtbExchangeRate;
+use App\Models\Authorization;
 use App\Models\ItemSpecific;
+use App\Models\SettingTemplate;
 use App\Models\ItemImage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -40,6 +42,8 @@ class ProductPostService extends CommonService
     protected $fullPathUpload;
     protected $pathStorageFile;
     protected $keyProductEdit;
+    protected $authorization;
+    protected $settingTemplate;
 
     public function __construct(
         Setting $setting,
@@ -52,6 +56,8 @@ class ProductPostService extends CommonService
         MtbExchangeRate $exchangeRate,
         ItemSpecific $itemSpecific,
         ItemImage $itemImage,
+        Authorization $authorization,
+        SettingTemplate $settingTemplate,
         EbayClient $ebayClient
     ) {
         $this->setting             = $setting;
@@ -65,6 +71,7 @@ class ProductPostService extends CommonService
         $this->itemSpecific        = $itemSpecific;
         $this->itemImage           = $itemImage;
         $this->ebayClient          = $ebayClient;
+        $this->authorization       = $authorization;
         $this->keyProduct          = Item::SESSION_KEY_PRODUCT_INFO;
         $this->keyProductEdit      = Item::SESSION_KEY_PRODUCT_EDIT_INFO;
         $this->keyImageFromApi     = ItemImage::SESSION_KEY_IMAGE_FROM_API;
@@ -72,6 +79,7 @@ class ProductPostService extends CommonService
         $this->pathUpload          = $this->itemImage->getPathUploadFile();
         $this->fullPathUpload      = $this->itemImage->getfullPathUploadFile();
         $this->pathStorageFile     = $this->itemImage->getPathStorageFile();
+        $this->settingTemplate     = $settingTemplate;
     }
 
     /**
@@ -130,8 +138,11 @@ class ProductPostService extends CommonService
 
         //data dtb_setting_policies
         $result['dtb_setting_policies'] = $this->getDataSettingPolicies();
-        $result['duration']['option'] = $this->product->getDurationOption();
-
+        $result['duration']['option']   = $this->product->getDurationOption();
+        $userId                         = Auth::user()->id;
+        $settingTemplate                = $this->settingTemplate->getByUserId($userId);
+        $result['setting_template']     = $this->formatSettingTemplate($settingTemplate);
+        $result['dtb_item']['item_des'] = !empty($settingTemplate[0]['content']) ? $settingTemplate[0]['content']: null;
         return $result;
     }
 
@@ -206,7 +217,6 @@ class ProductPostService extends CommonService
                 $response['message_error'] = Lang::get('view.item_not_found');
                 return response()->json($response);
             }
-
             $arrayImage  = [];
             foreach ($data as $key => $item) {
                 if (!empty($item['ns2:SmallImage']['ns2:URL'])) {
@@ -241,7 +251,6 @@ class ProductPostService extends CommonService
                 }
             }
         }
-
         if (!count($arrayImage)) {
             $response['message_error'] = Lang::get('view.item_not_found');
             return response()->json($response);
@@ -268,15 +277,15 @@ class ProductPostService extends CommonService
         Session::forget($keyImageFromApi);
         Session::push($keyImageFromApi, $arrayImageFormApi);
 
-        $data['dtb_item']['commodity_weight'] = round($commodityWeight * 453.59237, 2);
-        $data['dtb_item']['length']           = $length;
-        $data['dtb_item']['height']           = $height;
-        $data['dtb_item']['width']            = $width;
-        $data['dtb_item']['buy_price']        = $price;
-        $response['is_type_amazon']           = $isTypeAmazon;
-        $response['status']                   = true;
-        $response['image']                    = $arrayImage;
-        $response['data']                     = view('admin.product.component.item_yahoo_or_amazon_info', compact('data', 'arrayImage'))->render();
+        $dataResult['dtb_item']['commodity_weight'] = round($commodityWeight * 453.59237, 2);
+        $dataResult['dtb_item']['length']           = $length;
+        $dataResult['dtb_item']['height']           = $height;
+        $dataResult['dtb_item']['width']            = $width;
+        $dataResult['dtb_item']['buy_price']        = $price;
+        $response['is_type_amazon']                 = $isTypeAmazon;
+        $response['status']                         = true;
+        $response['image']                          = $arrayImage;
+        $response['data']                           = view('admin.product.component.item_yahoo_or_amazon_info', compact('dataResult'))->render();
         return response()->json($response);
     }
 
@@ -288,11 +297,11 @@ class ProductPostService extends CommonService
     public function calculatorProfit($input)
     {
         $data['istTypeAmazon'] = $input['type'] == $this->product->getOriginTypeAmazon() ? true : false;
-        if ($data['istTypeAmazon']) {
+        // if ($data['istTypeAmazon']) {
             $this->calculatorProfitTypeAmazon($data, $input);
-        } else {
-            $this->calculatorProfitTypeYahoo($data, $input);
-        }
+        // } else {
+            // $this->calculatorProfitTypeYahoo($data, $input);
+        // }
         $response['status'] = true;
         $response['data']   = view('admin.product.component.calculator_info', compact('data'))->render();
         return response()->json($response);
@@ -300,7 +309,7 @@ class ProductPostService extends CommonService
 
     /**
      * calculator profit type amazon
-     * @param  array &$data
+     * @param  array $data
      * @param  array $input
      * @return void
      */
@@ -323,7 +332,7 @@ class ProductPostService extends CommonService
         }
         $data['setting_shipping_selected'] = $optionSelected;
         if (!$input['ship_fee']) {
-            $shippingFee                  = $this->shippingFee->getShippingFeeByShippingId($shippingId[0], $input['commodity_weight']);
+            $shippingFee                  = $this->shippingFee->getShippingFeeByShippingId($shippingId[0], !empty($input['commodity_weight']) ? $input['commodity_weight'] : 0);
             $data['dtb_item']['ship_fee'] = $shippingFee->ship_fee;
         } else {
             $data['dtb_item']['ship_fee'] = $input['ship_fee'];
@@ -337,7 +346,11 @@ class ProductPostService extends CommonService
         $ebayFeeYen                     = round($data['dtb_item']['ebay_fee'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
         $data['dtb_item']['paypal_fee'] = round($settingInfo->paypal_fee_rate  * $sellPriceYen / 100 + $settingInfo->paypal_fixed_fee, 2);
         $data['dtb_item']['buy_price']  = $input['buy_price'];
-        $data['dtb_item']['profit']     = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'] * $settingInfo->gift_discount / 100, 2);
+        if ($data['istTypeAmazon']) {
+            $data['dtb_item']['profit']     = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'] * $settingInfo->gift_discount / 100, 2);
+        } else {
+            $data['dtb_item']['profit']     = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'], 2);
+        }
     }
 
     /**
@@ -548,7 +561,7 @@ class ProductPostService extends CommonService
             $data     = Session::get($keyProduct)[0];
             $dateNow  = date('Y-m-d H:i:s');
             $dataItem = [
-                'original_id'           => $data['dtb_item']['original_id'],
+                'original_id'           => !empty($data['dtb_item']['original_id']) ? $data['dtb_item']['original_id'] : null,
                 'original_type'         => $data['dtb_item']['type'],
                 'item_name'             => $data['dtb_item']['item_name'],
                 'category_id'           => $data['dtb_item']['category_id'],
@@ -570,7 +583,12 @@ class ProductPostService extends CommonService
                 'pack_material_weight'  => !empty($data['dtb_item']['material_quantity']) ? $data['dtb_item']['material_quantity'] : null,
                 'buy_price'             => $data['dtb_item']['buy_price'],
                 'ship_fee'              => isset($data['dtb_item']['ship_fee']) ? $data['dtb_item']['ship_fee'] : null,
-                'last_mornitoring_date' => $dateNow
+                'last_mornitoring_date' => $dateNow,
+                'temp_shipping_method'  => $data['dtb_item']['temp_shipping_method'],
+                'temp_profit'           => $data['dtb_item']['profit'],
+                'item_des'              => $data['dtb_item']['item_des'],
+                'setting_template_id'   => $data['dtb_item']['setting_template_id'],
+                'updated_at'            => $dateNow,
             ];
             if (!empty($input['id'])) {
                 $itemId = $input['id'];
@@ -590,7 +608,6 @@ class ProductPostService extends CommonService
                 // insert item
                 $dataItem['user_id']    = Auth::user()->id;
                 $dataItem['created_at'] = $dateNow;
-                $dataItem['updated_at'] = $dateNow;
                 $dataItem['item_id']    = $ebayItemId;
                 $itemId = $this->product->insertGetId($dataItem);
                 // insert item image
@@ -688,20 +705,27 @@ class ProductPostService extends CommonService
      */
     public function getDataForShowPagePostProduct($data)
     {
+        $userId = Auth::user()->id;
         if (!$data) {
             $data['istTypeAmazon'] = false;
         }
-        $data['duration']['option']   = $this->product->getDurationOption();
-        $data['dtb_setting_policies'] = $this->getDataSettingPolicies();
+        $data['duration']['option']      = $this->product->getDurationOption();
+        $data['dtb_setting_policies']    = $this->getDataSettingPolicies();
+        $settingTemplate                 = $this->settingTemplate->getByUserId($userId);
+        $data['setting_template']        = $this->formatSettingTemplate($settingTemplate);
         if (empty($data['dtb_item'])) {
-            $userId = Auth::user()->id;
-            $settingData = $this->setting->getSettingOfUser($userId);
-            $data['dtb_item']['duration'] = $settingData->duration;
-            $data['dtb_item']['quantity'] = $settingData->quantity;
-            $category = $this->categoryFee->getFirstItem();
+            $data['dtb_item']['item_des']      = !empty($settingTemplate[0]['content']) ? $settingTemplate[0]['content']: null;
+            $settingShippingOption             = $this->getSettingShippingOfUser(null);
+            $settingData                       = $this->setting->getSettingOfUser($userId);
+            $data['dtb_item']['duration']      = $settingData->duration;
+            $data['dtb_item']['quantity']      = $settingData->quantity;
+            $category                          = $this->categoryFee->getFirstItem();
             $data['dtb_item']['category_id']   = $category->category_id;
             $data['dtb_item']['category_name'] = $category->category_path;
+        } else {
+            $settingShippingOption             = $this->getSettingShippingOfUser($data['dtb_item']);
         }
+        $data['setting_shipping_option'] = $settingShippingOption;
         return $data;
     }
 
@@ -764,5 +788,41 @@ class ProductPostService extends CommonService
         foreach ($imageDelete as $key => $item) {
             Storage::delete($this->pathUpload . $item);
         }
+    }
+
+    /**
+     * check regis limit
+     * @return array
+     */
+    public function checkRegistLimit()
+    {
+        $result['status'] = false;
+        $userId               = Auth::user()->id;
+        $authorization        = $this->authorization->findByUserId($userId);
+        $allItemOfUser        = $this->product->countByUserId($userId);
+        $allItemSellingOfUser = $this->product->countIntemSellingByUserId($userId);
+        if ($allItemOfUser > $authorization->regist_limit) {
+            $result['messages'] = Lang::get('message.the_number_of_items_registered_has_exceeded_the_limit');
+            return $result;
+        }
+        if ($allItemSellingOfUser > $authorization->post_limit) {
+            $result['messages'] = Lang::get('message.the_number_of_items_under_exhibition_exceeded_the_limit');
+            return $result;
+        }
+        $result['status'] = true;
+        return $result;
+    }
+
+    /**
+     * get setting template
+     * @param  integer $settingTemplateId
+     * @return json
+     */
+    public function getSettingTemplate($settingTemplateId)
+    {
+        $settingTemplate = $this->settingTemplate->findById($settingTemplateId);
+        $response['status'] = true;
+        $response['html']   = view('admin.product.component.setting_template', compact('settingTemplate'))->render();
+        return response()->json($response);
     }
 }

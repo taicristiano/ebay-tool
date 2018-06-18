@@ -92,4 +92,15 @@ class Authorization extends AbstractModel
     {
         return (bool) $this->monitoring;
     }
+
+    /**
+     * find by user id
+     * @param  integer $userId
+     * @return object
+     */
+    public function findByUserId($userId)
+    {
+        return $this->whereUserId($userId)
+            ->first();
+    }
 }

@@ -25,4 +25,6 @@ return [
     'deleted_shipping_success' => 'Deleted shipping successfully.',
     'created_shipping_success' => 'テンプレートを登録されました。',
     'updated_shipping_success' => 'テンプレートを編集されました。',
+    'the_number_of_items_registered_has_exceeded_the_limit' => '登録商品数が制限を超えました。管理者とご確認ください。',
+    'the_number_of_items_under_exhibition_exceeded_the_limit' => '出品中の商品数が制限を超えました。管理者とご確認ください。',
 ];

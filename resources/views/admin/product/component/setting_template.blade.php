@@ -1,0 +1,1 @@
+{{ Form::textarea('dtb_item[item_des]', !empty($settingTemplate->content) ? $settingTemplate->content : '', ['size' => '30x5', 'class' => 'form-control', 'id' => 'item_des']) }}

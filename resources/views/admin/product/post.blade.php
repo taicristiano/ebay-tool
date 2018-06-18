@@ -8,6 +8,7 @@
 <link href="{{asset('lib/jquery-upload/css/jquery.fileuploader-theme-thumbnails.css')}}" type="text/css" rel="stylesheet"/>
 <link href="{{asset('lib/jquery-upload/css/jquery.fileuploader.min.css')}}" type="text/css" rel="stylesheet"/>
 <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
 @endsection
 @section('content')
 <div class="content-wrapper">
@@ -25,7 +26,8 @@
                                 <div class="col-xs-12 col-md-4">
                                     <div class="form-group">
                                         <div class="col-xs-12 col-md-8">
-                                            {!! Form::text('item_id', !empty($data['item_id']) ? $data['item_id'] : '110327763724', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'item_id']) !!}
+                                            {{-- 110327763724 --}}
+                                            {!! Form::text('item_id', '', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'item_id']) !!}
                                             <p class="text-danger display-none invalid" id="item-ebay-invalid">@lang('view.item_not_found')</p>
                                         </div>
                                         <div class="col-xs-12 col-md-4">
@@ -56,7 +58,7 @@
                                 <div class="col-xs-12 col-md-4">
                                     <div class="form-group">
                                         <div class="col-xs-12 col-md-8">
-                                            {!! Form::text('id_ebay_or_amazon', !empty($data['original_id']) ? $data['original_id'] : 'B01GUPMJMA', ['class' => 'form-control', 'placeholder' => __('view.itemID'), 'id' => 'id_ebay_or_amazon']) !!}
+                                            {!! Form::text('id_ebay_or_amazon', !empty($data['dtb_item']['original_id']) ? $data['dtb_item']['original_id'] : '', ['class' => 'form-control', 'placeholder' => __('view.original_id'), 'id' => 'id_ebay_or_amazon']) !!}
                                             <p class="text-danger invalid" id="item-yahoo-or-amazon-invalid"></p>
                                         </div>
                                         <div class="col-xs-12 col-md-4">
@@ -76,7 +78,7 @@
                                     @include('admin.product.component.item_yahoo_or_amazon_info')
                                 </div>
                                 <div class="{{!empty($data) ? '' : 'display-none'}} margin-20" id="profit-calculation">
-                                    <button type="button" class="btn btn-primary" id="btn-calculator-profit"><i class="fa fa-calculator fa-fw"></i> @lang('view.benefit_calculation')</button>
+                                    <button type="button" class="btn btn-primary display-none" id="btn-calculator-profit"><i class="fa fa-calculator fa-fw"></i> @lang('view.benefit_calculation')</button>
                                 </div>
                                 <div class="calculator-info">
                                     @include('admin.product.component.calculator_info')
@@ -102,6 +104,8 @@
 <script src="{{asset('adminlte/plugins/iCheck/icheck.min.js')}}"></script>
 <script src="{{ asset('js/post-product.js') }}"></script>
 <script src="{{ asset('adminlte/plugins/select2/select2.min.js') }}"></script>
+<script src="{{asset('lib/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{ asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>
 <script>
     var urlGetItemEbayInfo          = "{{ route('admin.product.api-get-item-ebay-info') }}";
     var urlGetItemYahooOrAmazonInfo = "{{ route('admin.product.api-get-item-yahoo-or-amazon-info') }}";
@@ -110,6 +114,7 @@
     var numberSpecificItem          = '{{ !empty($data['dtb_item_specifics']) ? count($data['dtb_item_specifics']) : 1 }}';
     var urlGetImageInit             = "{{route('admin.product.get-image-init', ['itemId' => null])}}";
     var urlSearchCategory           = "{{route('admin.product.search-category')}}";
+    var urlGetTemplateContent       = "{{route('admin.product.get-setting-template')}}";
     var itemId                      = {{ !empty($data['dtb_item']['id']) ? $data['dtb_item']['id'] : 'null'}};
     // $('input[type="radio"].minimal').iCheck({
         // radioClass: 'iradio_minimal-blue'

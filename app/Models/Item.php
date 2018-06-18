@@ -222,4 +222,26 @@ class Item extends AbstractModel
     {
         return $this->find($id)->toArray();
     }
+
+    /**
+     * count by user id
+     * @return integer
+     */
+    public function countByUserId($userId)
+    {
+        return $this->whereUserId($userId)
+            ->count();
+    }
+
+    /**
+     * count item selling by user id
+     * @param  integer $userId
+     * @return integer
+     */
+    public function countIntemSellingByUserId($userId)
+    {
+        return $this->whereUserId($userId)
+            ->whereStatus($this->getStatusSelling())
+            ->count();
+    }
 }

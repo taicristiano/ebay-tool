@@ -1,6 +1,6 @@
 jQuery(document).ready(function() {
     $(document).on("click", "#save", function() {
-        swal("この商品を投稿しますでしょうか？", {
+        swal("入力内容を確認し、出品しますか？", {
             buttons: {
                 cancel: "Cancel",
                 catch: {

@@ -161,9 +161,9 @@ class CommonService
      */
     public function getSettingShippingOfUser($input)
     {
-        $height                = $input['height'];
-        $width                 = $input['width'];
-        $length                = $input['length'];
+        $height                = !empty($input['height']) ? $input['height'] : 0;
+        $width                 = !empty($input['width']) ? $input['width'] : 0;
+        $length                = !empty($input['length']) ? $input['length'] : 0;
         $sizeOfProduct         = $length + $height + $width;
         $userId                = Auth::user()->id;
         $settingShipping       = $this->settingShipping->getSettingShippingOfUser($userId);
@@ -207,13 +207,29 @@ class CommonService
      */
     public function formatDataPageProduct($data)
     {
-        $data['duration']['option'] = $this->product->getDurationOption();
-        $data['duration']['value']  = $data['dtb_item']['duration'];
-        if ($data['dtb_item']['type'] == $this->product->getOriginTypeAmazon()) {
-            $settingShippingOption           = $this->getSettingShippingOfUser($data['dtb_item']);
-            $data['setting_shipping_option'] = $settingShippingOption;
-        }
-        $data['dtb_setting_policies'] = $this->getDataSettingPolicies();
+        $data['duration']['option']      = $this->product->getDurationOption();
+        $data['duration']['value']       = $data['dtb_item']['duration'];
+        $settingShippingOption           = $this->getSettingShippingOfUser($data['dtb_item']);
+        $data['setting_shipping_option'] = $settingShippingOption;
+        $data['dtb_setting_policies']    = $this->getDataSettingPolicies();
+        $userId                          = Auth::user()->id;
+        $settingTemplate                 = $this->settingTemplate->getByUserId($userId);
+        $data['setting_template']        = $this->formatSettingTemplate($settingTemplate);
         return $data;
     }
+
+    /**
+     * format setting template
+     * @param  array $settingTemplate
+     * @return array
+     */
+    public function formatSettingTemplate($settingTemplate)
+    {
+        $result = [];
+        foreach ($settingTemplate as $item) {
+            $result[$item['id']] = $item['title'];
+        }
+        return $result;
+    }
+
 }

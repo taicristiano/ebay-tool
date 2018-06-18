@@ -37,7 +37,7 @@
                     <thead>
                         <tr>
                             <th>{{ __('view.user.user_code') }}</th>
-                            <th>{{ __('view.user.user_name') }}</th>
+                            <th>{{ __('view.user.customer_name') }}</th>
                             <th>{{ __('view.user.name_kana') }}</th>
                             <th>{{ __('view.user.email') }}</th>
                             <th>{{ __('view.user.tel') }}</th>

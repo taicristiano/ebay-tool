@@ -27,4 +27,9 @@ return [
     'updated_shipping_success' => 'テンプレートを編集されました。',
     'the_number_of_items_registered_has_exceeded_the_limit' => '登録商品数が制限を超えました。管理者とご確認ください。',
     'the_number_of_items_under_exhibition_exceeded_the_limit' => '出品中の商品数が制限を超えました。管理者とご確認ください。',
+
+    'access_token_not_found'    => '設定画面でebay連携を行うのが必要です。ご確認ください。',
+    'paypal_email_not_found'    => 'Paypalメールを入力するのが必要です。ご確認ください。',
+    'return_policy_not_found'   => 'Return policyを入力するのが必要です。ご確認ください。',
+    'shipping_policy_not_found' => 'Shipping policyを入力するのが必要です。ご確認ください。',
 ];

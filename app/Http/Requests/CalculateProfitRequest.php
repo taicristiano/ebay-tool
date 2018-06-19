@@ -34,7 +34,7 @@ class CalculateProfitRequest extends Request
             if ($data['is_update']) {
                 $rules['buy_price'] = 'required|numeric|greater_than_zero';
                 // if ($data['type'] == Item::ORIGIN_TYPE_AMAZON) {
-                $rules['material_quantity'] = 'material_quantity';
+                $rules['material_quantity'] = 'nullable|numeric|greater_than_zero';
                 $rules['height']            = 'nullable|numeric|greater_than_zero';
                 $rules['width']             = 'nullable|numeric|greater_than_zero';
                 $rules['length']            = 'nullable|numeric|greater_than_zero';
@@ -53,17 +53,26 @@ class CalculateProfitRequest extends Request
     public static function messagesValidates()
     {
         return [
-            'material_quantity.numeric' => trans('validation.post-product.the_material_quantity_field_must_be_number'),
-            'sell_price.required'       => trans('validation.post-product.the_price_field_is_required'),
-            'sell_price.numeric'        => trans('validation.post-product.the_price_field_must_be_number'),
-            'buy_price.required'        => trans('validation.post-product.the_buy_price_field_is_required'),
-            'buy_price.numeric'         => trans('validation.post-product.the_buy_price_must_be_number'),
-            'length.numeric'            => trans('validation.post-product.the_length_product_field_must_be_number'),
-            'length.greater_than_zero'  => trans('validation.post-product.the_length_product_field_must_be_greater_than_zero'),
-            'width.numeric'             => trans('validation.post-product.the_width_product_field_must_be_number'),
-            'width.greater_than_zero'   => trans('validation.post-product.the_width_product_field_must_be_greater_than_zero'),
-            'height.numeric'            => trans('validation.post-product.the_height_product_field_must_be_number'),
-            'height.greater_than_zero'  => trans('validation.post-product.the_height_product_field_must_be_greater_than_zero'),
+            'sell_price.required'                 => trans('validation.post-product.the_sell_price_field_is_required'),
+            'sell_price.numeric'                  => trans('validation.post-product.the_sell_price_field_must_be_number'),
+            'sell_price.greater_than_zero'        => trans('validation.post-product.the_sell_price_field_must_be_greater_than_zero'),
+            'ship_fee.required'                   => trans('validation.post-product.the_ship_fee_field_is_required'),
+            'ship_fee.numeric'                    => trans('validation.post-product.the_ship_fee_field_must_be_number'),
+            'ship_fee.greater_than_zero'          => trans('validation.post-product.the_ship_fee_field_must_be_greater_than_zero'),
+            'commodity_weight.required'           => trans('validation.post-product.the_commodity_weight_field_is_required'),
+            'commodity_weight.numeric'            => trans('validation.post-product.the_commodity_weight_field_must_be_number'),
+            'commodity_weight.greater_than_zero'  => trans('validation.post-product.the_commodity_weight_field_must_be_greater_than_zero'),
+            'material_quantity.numeric'           => trans('validation.post-product.the_material_quantity_field_must_be_number'),
+            'material_quantity.greater_than_zero' => trans('validation.post-product.the_material_quantity_field_must_be_greater_than_zero'),
+            'buy_price.required'                  => trans('validation.post-product.the_buy_price_field_is_required'),
+            'buy_price.numeric'                   => trans('validation.post-product.the_buy_price_field_must_be_number'),
+            'buy_price.greater_than_zero'         => trans('validation.post-product.the_buy_price_field_must_be_greater_than_zero'),
+            'length.numeric'                      => trans('validation.post-product.the_length_product_field_must_be_number'),
+            'length.greater_than_zero'            => trans('validation.post-product.the_length_product_field_must_be_greater_than_zero'),
+            'width.numeric'                       => trans('validation.post-product.the_width_product_field_must_be_number'),
+            'width.greater_than_zero'             => trans('validation.post-product.the_width_product_field_must_be_greater_than_zero'),
+            'height.numeric'                      => trans('validation.post-product.the_height_product_field_must_be_number'),
+            'height.greater_than_zero'            => trans('validation.post-product.the_height_product_field_must_be_greater_than_zero'),
         ];
     }
 

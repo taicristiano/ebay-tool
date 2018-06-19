@@ -32,7 +32,7 @@ class EbayClient extends CommonService
 
         // add base params
         $itemNode->addChild('Title', htmlspecialchars($data['dtb_item']['item_name']));
-        $itemNode->addChild('Description', htmlspecialchars($data['dtb_item']['condition_des']));
+        $itemNode->addChild('Description', htmlspecialchars($data['dtb_item']['item_des']));
         $itemNode->addChild('ConditionID', $data['dtb_item']['condition_id']);
         $itemNode->addChild('ConditionDisplayName', htmlspecialchars($data['dtb_item']['condition_name']));
         $itemNode->addChild('StartPrice', $data['dtb_item']['price']);

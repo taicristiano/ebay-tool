@@ -11,12 +11,14 @@ use App\Models\Item;
 use App\Models\CategoryFee;
 use App\Models\MtbExchangeRate;
 use App\Http\Requests\CalculateProfitRequest;
+use App\Http\Requests\ItemSettingRequest;
 use App\Http\Requests\PostProductRequest;
 use Illuminate\Support\Facades\Session;
 use App\Models\ItemImage;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Lang;
 
 class ProductController extends AbstractController
 {
@@ -352,6 +354,44 @@ class ProductController extends AbstractController
             Log::error($ex);
             $response['status'] = false;
             return response()->json($response);
+        }
+    }
+
+    /**
+     * show page setting product
+     * @param  integer $itemId
+     * @return view
+     */
+    public function showPageSettingProduct($itemId)
+    {
+        $item = $this->product->findById($itemId);
+        if (!$item) {
+            return view('not-found');
+        }
+        $priceMonitoringSetting = $this->product->getPriceMonitoringSetting();
+        return view('admin.product.setting', compact('item', 'priceMonitoringSetting'));
+    }
+
+    /**
+     * setting update
+     * @param  ItemSettingRequest $request
+     * @param  integer             $itemId
+     * @return redirect
+     */
+    public function settingUpdate(ItemSettingRequest $request, $itemId)
+    {
+        try {
+            $item = $this->product->findById($itemId);
+            if (!$item) {
+                return view('not-found');
+            }
+            $data = $request->all();
+            $this->product->updateItem($itemId, $data);
+            return redirect()->back()
+                ->with('message', Lang::get('message.update_setting_success'));
+        } catch (Exception $ex) {
+            return redirect()->back()
+                ->with('error', Lang::get('message.update_setting_error'));
         }
     }
 }

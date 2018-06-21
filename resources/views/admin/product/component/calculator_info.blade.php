@@ -19,7 +19,7 @@
                 <p class="error-validate text-danger display-nones error-dtb_item_length"></p>
             </div>
         </div>
-        <div class="specific-itemssss">
+        <div class="row row-custom">
             <div class="col-md-6 col-sm-6 col-xs-6">
                 <label for="dtb_item[commodity_weight]">@lang('view.commodity_weight') <span class="text-danger">(*)</span></label>
                 <div class="form-group input-group">

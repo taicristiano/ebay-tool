@@ -58,7 +58,7 @@
                                 <div class="col-xs-12 col-md-4">
                                     <div class="form-group">
                                         <div class="col-xs-12 col-md-8">
-                                            {!! Form::text('id_ebay_or_amazon', !empty($data['dtb_item']['original_id']) ? $data['dtb_item']['original_id'] : '', ['class' => 'form-control', 'placeholder' => __('view.original_id'), 'id' => 'id_ebay_or_amazon']) !!}
+                                            {!! Form::text('id_ebay_or_amazon', !empty($data['dtb_item']['original_id']) ? $data['dtb_item']['original_id'] : '', ['class' => 'form-control', 'placeholder' => __('view.original_id_yahoo'), 'id' => 'id_ebay_or_amazon', 'data-placeholder-yahoo' => __('view.original_id_yahoo'), 'data-placeholder-amazon' => __('view.original_id_amazon')]) !!}
                                             <p class="text-danger invalid" id="item-yahoo-or-amazon-invalid"></p>
                                         </div>
                                         <div class="col-xs-12 col-md-4">

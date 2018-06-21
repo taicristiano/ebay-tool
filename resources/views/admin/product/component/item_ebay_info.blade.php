@@ -120,7 +120,7 @@
             <div class="box-body">
                 <div class="form-group form-group-custom">
                     <label for="dtb_item[duration]">@lang('view.sale_period') <span class="text-danger">(*)</span></label>
-                    {!! Form::select("dtb_item[duration]", $data['duration']['option'], isset($data['dtb_item']['duration']) ? $data['dtb_item']['duration'] : '', ['class' => 'form-control']) !!}
+                    {!! Form::select("dtb_item[duration]", $data['duration']['option'], isset($data['dtb_item']['duration']) ? $data['dtb_item']['duration'] : '', ['class' => 'form-control', 'id' => 'duration']) !!}
                 </div>
 
                 <div class="form-group form-group-custom">
@@ -130,11 +130,11 @@
                 </div>
                 <div class="form-group form-group-custom">
                     <label for="dtb_item[shipping_policy_id]">@lang('view.shipping_policy') <span class="text-danger">(*)</span></label>
-                    {!! Form::select("dtb_item[shipping_policy_id]", $data['dtb_setting_policies']['shipping'], isset($data['dtb_setting_policies']['shipping']) ? $data['dtb_setting_policies']['shipping'] : '', ['class' => 'form-control']) !!}
+                    {!! Form::select("dtb_item[shipping_policy_id]", $data['dtb_setting_policies']['shipping'], isset($data['dtb_item']['shipping_policy_id']) ? $data['dtb_item']['shipping_policy_id'] : '', ['class' => 'form-control', 'id' => 'shipping_policy_id']) !!}
                 </div>
                 <div class="form-group form-group-custom">
                     <label for="dtb_item[return_policy_id]">@lang('view.return_policy') <span class="text-danger">(*)</span></label>
-                    {!! Form::select("dtb_item[return_policy_id]", $data['dtb_setting_policies']['return'], isset($data['dtb_setting_policies']['return']) ? $data['dtb_setting_policies']['return'] : '', ['class' => 'form-control']) !!}
+                    {!! Form::select("dtb_item[return_policy_id]", $data['dtb_setting_policies']['return'], isset($data['dtb_item']['return_policy_id']) ? $data['dtb_item']['return_policy_id'] : '', ['class' => 'form-control', 'id' => 'return_policy_id']) !!}
                 </div>
             </div>
         </div>

@@ -3,6 +3,7 @@ var isChangeItemId = false;
 var isChangeEbayOrAmazon = false;
 
 jQuery(document).ready(function() {
+    initSelect2FullItem();
     $('#item_des, #condition_des').wysihtml5({locale: "ja-JP"});
     intSelectCategory();
     if ($('#item-yaohoo-or-amazon-content').length) {
@@ -162,6 +163,11 @@ jQuery(document).ready(function() {
     });
 
     $(document).on("change", ".type", function() {
+        if ($(this).val() == 1) {
+            $('#id_ebay_or_amazon').attr('placeholder', $('#id_ebay_or_amazon').data('placeholder-yahoo'));
+        } else {
+            $('#id_ebay_or_amazon').attr('placeholder', $('#id_ebay_or_amazon').data('placeholder-amazon'));
+        }
         var isShowYaohoo = $('#item-yaohoo-or-amazon-content').length;
         if (isShowYaohoo || isChangeEbayOrAmazon) {
             isChangeEbayOrAmazon = true;
@@ -171,7 +177,7 @@ jQuery(document).ready(function() {
 
     $(document).on("change", "#category-id, #material-quantity, #setting-shipping, #buy_price, #sell_price, #height, #width, #length, #ship_fee, #commodity_weight", function() {
         if ($('#item-calculator-info').length) {
-            refreshProfitInfo(true);
+            refreshProfitInfo(true, $(this).attr('id'));
         }
     });
     $(document).on("change", "#setting_template_id", function() {
@@ -217,8 +223,9 @@ function getItemEbayInfo()
                 $('#item-ebay-invalid').addClass('display-none');
                 $('#item-ebay-invalid').parent().parent().removeClass('has-error');
                 intSelectCategory();
+                initSelect2();
                 if ($('#sell_price').length && $('#buy_price').length) {
-                    refreshProfitInfo(false);
+                    refreshProfitInfo(false, null);
                 }
                 $('#item_des, #condition_des').wysihtml5({locale: "ja-JP"});
             } else {
@@ -316,6 +323,7 @@ function getCalculateProfitInfo(isValidate, isChangeType)
     var type = $('.type:checked').val();
     var data = {
         _token: token,
+        item_change: null,
         is_validate: isValidate,
         is_update: isShowCalculate,
         material_quantity: materialQuantity,
@@ -356,6 +364,7 @@ function getCalculateProfitInfo(isValidate, isChangeType)
             $('#error-material-quantity').parent().removeClass('has-error');
             if (data.status) {
                 $('#conten-ajax .calculator-info').html(data.data);
+                initSelect2SettingShipping();
             } else {
                 messageError = data.message_error;
                 if(messageError.material_quantity) {
@@ -408,7 +417,7 @@ function getCalculateProfitInfo(isValidate, isChangeType)
     });
 }
 
-function refreshProfitInfo(isValidate)
+function refreshProfitInfo(isValidate, item_change)
 {
     $('body').addClass('loading-ajax');
     isShowCalculate = $('#item-calculator-info').length;
@@ -417,6 +426,7 @@ function refreshProfitInfo(isValidate)
     var type = $('.type:checked').val();
     var data = {
         _token: token,
+        item_change: item_change,
         is_validate: isValidate,
         is_update: isShowCalculate,
         material_quantity: materialQuantity,
@@ -457,6 +467,7 @@ function refreshProfitInfo(isValidate)
             $('#error-material-quantity').parent().removeClass('has-error');
             if (data.status) {
                 $('#conten-ajax .calculator-info').html(data.data);
+                initSelect2SettingShipping();
             } else {
                 messageError = data.message_error;
                 if(messageError.material_quantity) {
@@ -521,6 +532,7 @@ function resetSpecificiItemNone()
 function intSelectCategory()
 {
     $('#category-id').select2({
+        placeholder: "Select 商品カテゴリ",
         ajax: {
             url: urlSearchCategory,
             dataType: 'json',
@@ -542,5 +554,37 @@ function intSelectCategory()
                 };
             }
         }
+    });
+}
+
+function initSelect2FullItem()
+{
+    initSelect2SettingShipping();
+    initSelect2();
+    
+}
+function initSelect2()
+{
+    $('#setting_template_id').select2({
+        placeholder: "Select 商品説明",
+    });
+    $('#condition-id').select2({
+        placeholder: "Select 商品状態",
+    });
+    $('#shipping_policy_id').select2({
+        placeholder: "Select Shippingポリシー",
+    });
+    $('#return_policy_id').select2({
+        placeholder: "Select Returnポリシー",
+    });
+    $('#duration').select2({
+        placeholder: "Select 販売期間",
+    });
+}
+
+function initSelect2SettingShipping()
+{
+    $('#setting-shipping').select2({
+        placeholder: "Select 発送方法",
     });
 }

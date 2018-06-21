@@ -138,3 +138,7 @@ body.loading-ajax .modal-loading {
 .content-header .alert {
     margin-top: 20px;
 }
+
+#setting-template {
+    margin-top: 20px !important;
+}

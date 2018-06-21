@@ -135,9 +135,9 @@ class CommonService
     {
         $userId            = Auth::user()->id;
         $settingPolicyData = $this->settingPolicy->getSettingPolicyOfUser($userId);
-        $shippingType      = [];
-        $paymentType       = [];
-        $returnType        = [];
+        $shippingType[null] = null;
+        $paymentType[null]  = null;
+        $returnType[null]   = null;
         foreach ($settingPolicyData as $key => $policy) {
             if ($policy->policy_type == SettingPolicy::TYPE_SHIPPING) {
                 $shippingType[$policy->id] = $policy->policy_name;
@@ -167,7 +167,7 @@ class CommonService
         $sizeOfProduct         = $length + $height + $width;
         $userId                = Auth::user()->id;
         $settingShipping       = $this->settingShipping->getSettingShippingOfUser($userId);
-        $settingShippingOption = [];
+        $settingShippingOption[null] = null;
         foreach ($settingShipping as $key => $item) {
             $sideMaxSize = $item->side_max_size;
             if ($sizeOfProduct <= $item->max_size &&
@@ -178,7 +178,7 @@ class CommonService
                 $settingShippingOption[$item->id] = $item->shipping_name;
             }
         }
-        if (!$settingShippingOption) {
+        if (count($settingShippingOption) == 1) {
             $settingShipping = $this->settingShipping->findSettingShippingMaxSizeOfUser($userId);
             $settingShippingOption[$settingShipping->id] = $settingShipping->shipping_name;
         }
@@ -225,7 +225,7 @@ class CommonService
      */
     public function formatSettingTemplate($settingTemplate)
     {
-        $result = [];
+        $result[null] = null;
         foreach ($settingTemplate as $item) {
             $result[$item['id']] = $item['title'];
         }

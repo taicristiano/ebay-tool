@@ -16,6 +16,11 @@ class EbayClient extends CommonService
     const RESPONSE_ERROR   = 'Failure';
 
     /**
+     * error code throw
+     */
+    const ERROR_CODE = 400;
+
+    /**
      * add fixed price item
      * @param array $data
      * @return integer ItemID
@@ -25,7 +30,7 @@ class EbayClient extends CommonService
         $xmlBody = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><AddFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"></AddFixedPriceItemRequest>');
 
         if (!$ebayAccessToken = Auth::user()->ebay_access_token) {
-            throw new Exception("Access token not found.");
+            throw new Exception(__('message.access_token_not_found'), static::ERROR_CODE);
         }
         $xmlBody->addChild('RequesterCredentials')->addChild('eBayAuthToken', $ebayAccessToken);
         $itemNode = $xmlBody->addChild('Item');
@@ -44,7 +49,7 @@ class EbayClient extends CommonService
 
         // add  payment method
         if (!$paypalEmail = Setting::getPaymentEmailByUserId(Auth::id())) {
-            throw new Exception("PayPal email not found.");
+            throw new Exception(__('message.paypal_email_not_found'), static::ERROR_CODE);
         }
         $itemNode->addChild('PaymentMethods', 'PayPal');
         $itemNode->addChild('PayPalEmailAddress', $paypalEmail);
@@ -64,7 +69,7 @@ class EbayClient extends CommonService
 
         // add return policy
         if (empty($data['dtb_item']['return_policy_id']) || !$returnPolicyData = SettingPolicy::getPolicyContent($data['dtb_item']['return_policy_id'])) {
-            throw new Exception('ReturnPolicy not found.');
+            throw new Exception(__('message.return_policy_not_found'), static::ERROR_CODE);
         }
         $returnPolicyNode = $itemNode->addChild('ReturnPolicy');
         $returnPolicyNode->addChild('ReturnsAcceptedOption', $returnPolicyData['returnPolicyInfo']['returnsAcceptedOption']);
@@ -74,7 +79,7 @@ class EbayClient extends CommonService
 
         // add shipping policy
         if (empty($data['dtb_item']['shipping_policy_id']) || !$shippingData = SettingPolicy::getPolicyContent($data['dtb_item']['shipping_policy_id'])) {
-            throw new Exception('ShippingPolicy not found.');
+            throw new Exception(__('message.shipping_policy_not_found'), static::ERROR_CODE);
         }
         $itemNode->addChild('DispatchTimeMax', $shippingData['shippingPolicyInfo']['dispatchTimeMax']);
         $shippingNode = $itemNode->addChild('ShippingDetails');
@@ -102,7 +107,7 @@ class EbayClient extends CommonService
         $response = simplexml_load_string($response->getBody()->getContents());
         // if have errors
         if ((string) $response->Ack == static::RESPONSE_ERROR) {
-            throw new Exception((string) $response->Errors->ShortMessage, (int) $response->Errors->ErrorCode);
+            throw new Exception((string) $response->Errors->ShortMessage, static::ERROR_CODE);
         }
         return (int) $response->ItemID;
     }

@@ -44,7 +44,7 @@ function postProduct()
             if (data.status) {
                 swal("", "Post product success!", "success");
             } else {
-                swal("", "Post product error!", "error");
+                swal("", data.message, "error");
             }
         },
         complete: function () {

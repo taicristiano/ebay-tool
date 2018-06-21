@@ -18,7 +18,7 @@ class EbayClient extends CommonService
     /**
      * error code throw
      */
-    const ERROR_CODE = 400;
+    const ERROR_CODE = 1000;
 
     /**
      * add fixed price item

@@ -88,7 +88,7 @@
                                     <td class="width-83 ">
                                         <div class="btn-group btn-group-sm" role="group" aria-label="...">
                                             <a href="{{ route('admin.product.edit-item', ['itemId' => $item->id]) }}" class="btn btn-info"><i class="fa fa-edit"></i></a>
-                                            <a href="" class="btn btn-primary"><i class="fa fa-cog"></i></a>
+                                            <a href="{{ route('admin.product.show-page-setting', ['itemId' => $item->id]) }}" class="btn btn-primary"><i class="fa fa-cog"></i></a>
                                         </div>
                                     </td>
                                 </tr>

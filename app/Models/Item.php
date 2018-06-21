@@ -36,6 +36,9 @@ class Item extends AbstractModel
     const STATUS_EXPIRE  = 3;
     const STATUS_SOLD    = 4;
 
+    const PURCHASE_PRICE_MONITORING = 1;
+    const PURCHASE_PRICE_TRACKING   = 2;
+    const FIXED_PRICE               = 3;
     /**
      * get status selling
      * @return integer
@@ -117,11 +120,24 @@ class Item extends AbstractModel
     public function getDurationOption()
     {
         return [
-            self::VALUE_DURATION_3_DAY => self::NAME_DURATION_3_DAY,
-            self::VALUE_DURATION_5_DAY => self::NAME_DURATION_5_DAY,
-            self::VALUE_DURATION_7_DAY => self::NAME_DURATION_7_DAY,
+            self::VALUE_DURATION_3_DAY  => self::NAME_DURATION_3_DAY,
+            self::VALUE_DURATION_5_DAY  => self::NAME_DURATION_5_DAY,
+            self::VALUE_DURATION_7_DAY  => self::NAME_DURATION_7_DAY,
             self::VALUE_DURATION_10_DAY => self::NAME_DURATION_10_DAY,
             self::VALUE_DURATION_30_DAY => self::NAME_DURATION_30_DAY,
+        ];
+    }
+
+    /**
+     * get price monitoring setting
+     * @return array
+     */
+    public function getPriceMonitoringSetting()
+    {
+        return [
+            self::PURCHASE_PRICE_MONITORING => trans('view.purchase_price_monitoring'),
+            self::PURCHASE_PRICE_TRACKING   => trans('view.purchase_price_tracking'),
+            self::FIXED_PRICE               => trans('view.fixed_price')
         ];
     }
 

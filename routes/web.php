@@ -101,6 +101,8 @@ Route::group([
         Route::get('edit/{itemId}', 'ProductController@showPageEditProduct')->name('edit-item');
         Route::get('edit/{itemId}/confirm', 'ProductController@showEditConfirm')->name('show-edit-confirm');
         Route::post('get-setting-template', 'ProductController@getSettingTemplate')->name('get-setting-template');
+        Route::get('setting/{itemId}', 'ProductController@showPageSettingProduct')->name('show-page-setting');
+        Route::post('setting/{itemId}', 'ProductController@settingUpdate')->name('update-setting');
     });
 
     // setting template

@@ -134,3 +134,7 @@ body.loading-ajax .modal-loading {
 .margin-bottom-10 {
     margin-bottom: 10px !important;
 }
+
+.content-header .alert {
+    margin-top: 20px;
+}

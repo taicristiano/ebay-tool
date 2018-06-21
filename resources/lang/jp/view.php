@@ -168,5 +168,11 @@ return [
     'page_not_found'                        => 'Page not found',
     'product_image_details'                 => '商品画像',
     'product_profit'                        => '粗利計算',
-    'setting_template'                      => '商品説明'
+    'setting_template'                      => '商品説明',
+    'purchase_price_monitoring'             => '仕入れ価格監視',
+    'purchase_price_tracking'               => '仕入れ価格追従',
+    'fixed_price'                           => '固定価格',
+    'product_setting'                       => 'Product setting',
+    'purchase_allowance_price'              => '■仕入れ許容価格',
+    'price_monitoring_setting'              => '■価格モニタリング設定',
 ];

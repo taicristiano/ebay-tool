@@ -621,6 +621,10 @@ class ProductPostService extends CommonService
             $response['status'] = true;
             return response()->json($response);
         } catch (Exception $ex) {
+            $response['message'] = 'Post product error!';
+            if ($ex->getCode() == EbayClient::ERROR_CODE) {
+                $response['message'] = $ex->getMessage();
+            }
             DB::rollback();
             Log::error($ex);
             $response['status'] = false;

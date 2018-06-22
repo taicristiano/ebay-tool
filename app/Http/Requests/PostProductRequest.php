@@ -25,14 +25,20 @@ class PostProductRequest extends Request
     public static function rules($data)
     {
         $rules = [
-            'dtb_item.item_name'        => 'required',
-            'dtb_item.condition_des'    => 'required',
-            'dtb_item.jan_upc'          => 'required',
-            'dtb_item.price'            => 'required|numeric|greater_than_zero',
-            'dtb_item.buy_price'        => 'required|numeric|greater_than_zero',
-            'dtb_item.quantity'         => 'required|numeric|greater_than_zero',
-            'dtb_item.ship_fee'         => 'required|numeric|greater_than_zero',
-            'dtb_item.commodity_weight' => 'required|numeric|greater_than_zero',
+            'dtb_item.item_name'            => 'required',
+            'dtb_item.condition_des'        => 'required',
+            'dtb_item.item_des'             => 'required',
+            'dtb_item.shipping_policy_id'   => 'required',
+            'dtb_item.condition_id'         => 'required',
+            'dtb_item.category_id'          => 'required',
+            'dtb_item.return_policy_id'     => 'required',
+            'dtb_item.jan_upc'              => 'required',
+            'dtb_item.temp_shipping_method' => 'required',
+            'dtb_item.price'                => 'required|numeric|greater_than_zero',
+            'dtb_item.buy_price'            => 'required|numeric|greater_than_zero',
+            'dtb_item.quantity'             => 'required|numeric|greater_than_zero',
+            'dtb_item.ship_fee'             => 'required|numeric|greater_than_zero',
+            'dtb_item.commodity_weight'     => 'required|numeric|greater_than_zero',
         ];
         // if ($data['dtb_item']['type'] == Item::ORIGIN_TYPE_AMAZON) {
         $rules['dtb_item.height']            = 'nullable|numeric|greater_than_zero';
@@ -59,6 +65,11 @@ class PostProductRequest extends Request
     {
         $messages = [
             'dtb_item.item_name.required'                 => trans('validation.post-product.the_item_name_field_is_required'),
+            'dtb_item.temp_shipping_method.required'      => trans('validation.post-product.the_temp_shipping_method_field_is_required'),
+            'dtb_item.condition_id.required'              => trans('validation.post-product.the_condition_field_is_required'),
+            'dtb_item.category_id.required'               => trans('validation.post-product.the_category_field_is_required'),
+            'dtb_item.shipping_policy_id.required'        => trans('validation.post-product.the_shipping_policy_field_is_required'),
+            'dtb_item.return_policy_id.required'          => trans('validation.post-product.the_return_policy_field_is_required'),
             'dtb_item.condition_des.required'             => trans('validation.post-product.the_condition_des_field_is_required'),
             'dtb_item.jan_upc.required'                   => trans('validation.post-product.the_jan_upc_field_is_required'),
             'dtb_item.price.required'                     => trans('validation.post-product.the_sell_price_field_is_required'),

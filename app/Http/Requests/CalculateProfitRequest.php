@@ -28,6 +28,7 @@ class CalculateProfitRequest extends Request
             $rules = [
                 'sell_price'       => 'required|numeric|greater_than_zero',
                 'category_id'      => 'required',
+                'setting_shipping' => 'required',
                 'ship_fee'         => 'required|numeric|greater_than_zero',
                 'commodity_weight' => 'required|numeric|greater_than_zero',
             ];
@@ -54,6 +55,8 @@ class CalculateProfitRequest extends Request
     {
         return [
             'sell_price.required'                 => trans('validation.post-product.the_sell_price_field_is_required'),
+            'category_id.required'                => trans('validation.post-product.the_category_field_is_required'),
+            'setting_shipping.required'           => trans('validation.post-product.the_temp_shipping_method_field_is_required'),
             'sell_price.numeric'                  => trans('validation.post-product.the_sell_price_field_must_be_number'),
             'sell_price.greater_than_zero'        => trans('validation.post-product.the_sell_price_field_must_be_greater_than_zero'),
             'ship_fee.required'                   => trans('validation.post-product.the_ship_fee_field_is_required'),

@@ -211,6 +211,7 @@ class CommonService
         $data['duration']['value']       = $data['dtb_item']['duration'];
         $settingShippingOption           = $this->getSettingShippingOfUser($data['dtb_item']);
         $data['setting_shipping_option'] = $settingShippingOption;
+        $data['setting_shipping_selected'] = $data['dtb_item']['temp_shipping_method'];
         $data['dtb_setting_policies']    = $this->getDataSettingPolicies();
         $userId                          = Auth::user()->id;
         $settingTemplate                 = $this->settingTemplate->getByUserId($userId);
@@ -232,4 +233,28 @@ class CommonService
         return $result;
     }
 
+    /**
+     * calculator profit detail
+     * @param  array $data
+     * @return void
+     */
+    public function calculatorDetail(&$data)
+    {
+        $exchangeRate                   = $this->exchangeRate->getExchangeRateLatest();
+        $userId                         = Auth::user()->id;
+        $settingInfo                    = $this->setting->getSettingOfUser($userId);
+        $storeIdOfUser                  = $settingInfo->store_id;
+        $stores                         = $this->mtbStore->getAllStore();
+        $storeInfo                      = $this->formatStoreInfo($stores);
+        $typeFee                        = $storeInfo[$storeIdOfUser];
+        $sellPriceYen                   = round($data['dtb_item']['price'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
+        $data['dtb_item']['ebay_fee']   = round($data['dtb_item']['price'] * $this->categoryFee->getCategoryFeeByCategoryId($data['dtb_item']['category_id'])->$typeFee / 100, 2);
+        $ebayFeeYen                     = round($data['dtb_item']['ebay_fee'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
+        $data['dtb_item']['paypal_fee'] = round($settingInfo->paypal_fee_rate  * $sellPriceYen / 100 + $settingInfo->paypal_fixed_fee, 2);
+        if ($data['istTypeAmazon']) {
+            $data['dtb_item']['profit'] = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'] * $settingInfo->gift_discount / 100, 2);
+        } else {
+            $data['dtb_item']['profit'] = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'], 2);
+        }
+    }
 }

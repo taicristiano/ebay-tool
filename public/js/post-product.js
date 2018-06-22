@@ -4,7 +4,7 @@ var isChangeEbayOrAmazon = false;
 
 jQuery(document).ready(function() {
     initSelect2FullItem();
-    $('#item_des, #condition_des').wysihtml5({locale: "ja-JP"});
+    $('#item_des').wysihtml5({locale: "ja-JP"});
     intSelectCategory();
     if ($('#item-yaohoo-or-amazon-content').length) {
         if (itemId) {
@@ -193,6 +193,7 @@ jQuery(document).ready(function() {
             data: data,
             success: function (data) {
                 if (data.status) {
+                    $('#setting-template').removeClass('has-error');
                     $('#setting-template').html(data.html);
                     $('#item_des').wysihtml5({locale: "ja-JP"});
                 }
@@ -227,7 +228,7 @@ function getItemEbayInfo()
                 if ($('#sell_price').length && $('#buy_price').length) {
                     refreshProfitInfo(false, null);
                 }
-                $('#item_des, #condition_des').wysihtml5({locale: "ja-JP"});
+                $('#item_des').wysihtml5({locale: "ja-JP"});
             } else {
                 $('#item-ebay-invalid').removeClass('display-none');
                 $('#item-ebay-invalid').parent().parent().addClass('has-error');
@@ -456,6 +457,8 @@ function refreshProfitInfo(isValidate, item_change)
             $('.error-dtb_item_category_id').text('');
             $('.error-dtb_item_ship_fee').text('');
             $('.error-dtb_item_commodity_weight').text('');
+            $('.error-dtb_item_temp_shipping_method').text('');
+            $('.error-dtb_item_temp_shipping_method').parent().removeClass('has-error');
             $('.error-dtb_item_category_id').parent().removeClass('has-error');
             $('.error-dtb_item_price').parent().removeClass('has-error');
             $('.error-dtb_item_buy_price').parent().removeClass('has-error');
@@ -505,6 +508,10 @@ function refreshProfitInfo(isValidate, item_change)
                 if(messageError.commodity_weight) {
                     $('.error-dtb_item_commodity_weight').text(messageError.commodity_weight);
                     $('.error-dtb_item_commodity_weight').parent().addClass('has-error');
+                }
+                if(messageError.setting_shipping) {
+                    $('.error-dtb_item_temp_shipping_method').text(messageError.setting_shipping);
+                    $('.error-dtb_item_temp_shipping_method').parent().addClass('has-error');
                 }
                 // // if (!isShowCalculate) {
                 //     $('html, body').animate({

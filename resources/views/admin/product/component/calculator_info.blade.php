@@ -40,9 +40,7 @@
         <div class="form-group form-group-custom setting-shipping-option">
             <label for="dtb_item[temp_shipping_method]">@lang('view.setting_shipping_option') <span class="text-danger">(*)</span></label>
             {!! Form::select("dtb_item[temp_shipping_method]", $data['setting_shipping_option'], isset($data['setting_shipping_selected']) ? $data['setting_shipping_selected'] : '', ['class' => 'form-control', 'id' => 'setting-shipping']) !!}
-            {!! $errors->first("dtb_item[temp_shipping_method]") ? '
-            <p class="text-danger">'. $errors->first("dtb_item[temp_shipping_method]") .'</p>
-            ' : ''!!}
+            <p class="error-validate text-danger display-nones error-dtb_item_temp_shipping_method"></p>
         </div>
         <div class="form-group-custom">
             <label for="dtb_item[ship_fee]">@lang('view.ship_fee') <span class="text-danger">(*)</span></label>

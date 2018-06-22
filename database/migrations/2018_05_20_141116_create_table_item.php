@@ -21,7 +21,7 @@ class CreateTableItem extends Migration
             $table->foreign('temp_shipping_method')->references('id')->on('dtb_setting_shipping')->onDelete('cascade');
             $table->string('original_id', 20)->nullable();
             $table->string('item_id', 20);
-            $table->smallInteger('original_type');
+            $table->smallInteger('original_type')->nullable();
             $table->string('item_name', 200)->nullable();
             $table->string('category_id', 20)->nullable();
             $table->string('category_name', 200)->nullable();
@@ -55,6 +55,7 @@ class CreateTableItem extends Migration
             $table->unsignedInteger('setting_template_id');
             $table->foreign('setting_template_id')->references('id')->on('dtb_setting_template')->onDelete('cascade');
             $table->dateTime('last_mornitoring_date')->nullable();
+            $table->smallInteger('monitor_type')->default(1);
             $table->softDeletes();
             $table->timestamps();
         });

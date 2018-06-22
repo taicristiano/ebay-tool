@@ -41,20 +41,39 @@
                                         if (!empty($data['dtb_item']['type'])) {
                                             $typeCheck = $data['dtb_item']['type'];
                                         }
+                                        $isDislayInputEbayOrAmazon = false;
                                     @endphp
                                     <div class="form-group">
                                         <div class="col-md-1">
                                         </div>
                                         @foreach($originType as $key => $type)
-                                        <div class="col-xs-6 col-md-5">
-                                            <input type="radio" name="type" class="minimal type" {{$key == $typeCheck ? 'checked' :''}} value="{{$key}}">
-                                            {{$type}}
-                                        </div>
+                                            @php $isDislayEbayOrAmazon = false @endphp
+                                            @if (!$isGuestAdmin)
+                                                @php 
+                                                    $isDislayEbayOrAmazon = true;
+                                                    $isDislayInputEbayOrAmazon = true;
+                                                @endphp
+                                            @else
+                                                @if (($key == 1 && $authorzation->yahoo_info) || ($key == 2 && $authorzation->amazon_info))
+                                                    @php
+                                                        $isDislayEbayOrAmazon = true;
+                                                        $isDislayInputEbayOrAmazon = true;
+                                                    @endphp
+                                                @endif
+                                            @endif
+
+                                            @if ($isDislayEbayOrAmazon)
+                                                <div class="col-xs-6 col-md-5">
+                                                    <input type="radio" name="type" class="minimal type" {{$key == $typeCheck ? 'checked' :''}} value="{{$key}}">
+                                                    {{$type}}
+                                                </div>
+                                            @endif
                                         @endforeach
                                     </div>
                                 </div>
                                 {{-- B00RF2ZNI0 --}}
                                 {{-- s583357763 --}}
+                                @if($isDislayInputEbayOrAmazon)
                                 <div class="col-xs-12 col-md-4">
                                     <div class="form-group">
                                         <div class="col-xs-12 col-md-8">
@@ -66,6 +85,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endif
                             </div>
                         </form>
                         <form role="form" id="form-post" enctype="multipart/form-data" method="post" action="{{route('admin.product.post-product-confirm')}}">

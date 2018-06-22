@@ -515,7 +515,7 @@ class ProductPostService extends CommonService
             $dateNow  = date('Y-m-d H:i:s');
             $dataItem = [
                 'original_id'           => !empty($data['dtb_item']['original_id']) ? $data['dtb_item']['original_id'] : null,
-                'original_type'         => $data['dtb_item']['type'],
+                'original_type'         => !empty($data['dtb_item']['type']) ? $data['dtb_item']['type'] : null,
                 'item_name'             => $data['dtb_item']['item_name'],
                 'category_id'           => $data['dtb_item']['category_id'],
                 'category_name'         => $data['dtb_item']['category_name'],
@@ -557,12 +557,11 @@ class ProductPostService extends CommonService
                 $this->updateItemImage($itemId, $data);            
             } else {
                 // call addFixedPriceItem and get ebayItemId
-                // $ebayItemId = $this->ebayClient->addFixedPriceItem($data);
+                $ebayItemId = $this->ebayClient->addFixedPriceItem($data);
                 // insert item
                 $dataItem['user_id']    = Auth::user()->id;
                 $dataItem['created_at'] = $dateNow;
-                // $dataItem['item_id']    = $ebayItemId;
-                $dataItem['item_id']    = '222';
+                $dataItem['item_id']    = $ebayItemId;
                 $itemId = $this->product->insertGetId($dataItem);
                 // insert item image
                 $this->insertItemImage($data, $itemId);

@@ -40,7 +40,10 @@
                                     <th>{{ __('view.sell_price') }}</th>
                                     <th>{{ __('view.original_type') }}</th>
                                     <th>{{ __('view.buy_price') }}</th>
-                                    <th>{{ __('view.shipping_cost') }}</th>
+                                    <th>{{ __('view.ship_fee') }}</th>
+                                    <th>{{ __('view.temp_profit') }}</th>
+                                    <th>{{ __('view.min_max') }}</th>
+                                    <th>{{ __('view.monitor_type') }}</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -84,11 +87,16 @@
                                     <td>{{ $item->price }} @lang('view.usd')</td>
                                     <td>{{ $originType[$item->original_type] }}</td>
                                     <td>{{ $item->buy_price }} @lang('view.man')</td>
-                                    <td>{{ __('view.shipping_cost') }}</td>
+                                    <td>{{ $item->ship_fee }} @lang('view.man')</td>
+                                    <td>{{ $item->temp_profit }} @lang('view.man')</td>
+                                    <td>{{ $item->min_price }}@lang('view.man') 〜 {{ $item->max_price }}@lang('view.man')</td>
+                                    <td>monitor_type</td>
                                     <td class="width-83 ">
                                         <div class="btn-group btn-group-sm" role="group" aria-label="...">
                                             <a href="{{ route('admin.product.edit-item', ['itemId' => $item->id]) }}" class="btn btn-info"><i class="fa fa-edit"></i></a>
+                                            @if ($isMonitoring)
                                             <a href="{{ route('admin.product.show-page-setting', ['itemId' => $item->id]) }}" class="btn btn-primary"><i class="fa fa-cog"></i></a>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

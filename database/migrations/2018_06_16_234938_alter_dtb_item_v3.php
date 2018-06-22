@@ -34,6 +34,9 @@ class AlterDtbItemV3 extends Migration
                 $table->unsignedInteger('setting_template_id')->default(1);
                 $table->foreign('setting_template_id')->references('id')->on('dtb_setting_template')->onDelete('cascade');
             }
+            if (!Schema::hasColumn('dtb_item', 'monitor_type')) {
+                $table->smallInteger('monitor_type')->default(1);
+            }
         });
     }
 

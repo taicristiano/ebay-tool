@@ -177,4 +177,7 @@ return [
     'price_monitoring_setting'              => '■価格モニタリング設定',
     'original_id_yahoo'                     => 'オークションID',
     'original_id_amazon'                    => 'ASIN',
+    'temp_profit'                           => '粗利額',
+    'min_max'                               => '仕入許容価格',
+    'monitor_type'                          => '価格モニタリング設定',
 ];

@@ -85,12 +85,12 @@
                                     </td>
                                     <td>{{ $item->quantity }}</td>
                                     <td>{{ $item->price }} @lang('view.usd')</td>
-                                    <td>{{ $originType[$item->original_type] }}</td>
+                                    <td>{{ $item->original_type ? $originType[$item->original_type] : '' }}</td>
                                     <td>{{ $item->buy_price }} @lang('view.man')</td>
                                     <td>{{ $item->ship_fee }} @lang('view.man')</td>
                                     <td>{{ $item->temp_profit }} @lang('view.man')</td>
                                     <td>{{ $item->min_price }}@lang('view.man') 〜 {{ $item->max_price }}@lang('view.man')</td>
-                                    <td>monitor_type</td>
+                                    <td>{{ $monitoringType[$item->monitor_type] }}</td>
                                     <td class="width-83 ">
                                         <div class="btn-group btn-group-sm" role="group" aria-label="...">
                                             <a href="{{ route('admin.product.edit-item', ['itemId' => $item->id]) }}" class="btn btn-info"><i class="fa fa-edit"></i></a>

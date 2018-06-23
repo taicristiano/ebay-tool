@@ -54,7 +54,7 @@
                                                     $isDislayInputEbayOrAmazon = true;
                                                 @endphp
                                             @else
-                                                @if (($key == 1 && $authorzation->yahoo_info) || ($key == 2 && $authorzation->amazon_info))
+                                                @if (($key == 1 && $authorzation && $authorzation->yahoo_info) || ($key == 2 && $authorzation && $authorzation->amazon_info))
                                                     @php
                                                         $isDislayEbayOrAmazon = true;
                                                         $isDislayInputEbayOrAmazon = true;

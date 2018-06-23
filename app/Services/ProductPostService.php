@@ -296,7 +296,7 @@ class ProductPostService extends CommonService
      */
     public function calculatorProfit($input)
     {
-        $data['istTypeAmazon']                 = $input['type'] == $this->product->getOriginTypeAmazon() ? true : false;
+        $data['istTypeAmazon']                 = (!empty($input['type']) && $input['type'] == $this->product->getOriginTypeAmazon()) ? true : false;
         $userId                                = Auth::user()->id;
         $data['dtb_item']['height']            = $input['height'];
         $data['dtb_item']['width']             = $input['width'];
@@ -340,7 +340,7 @@ class ProductPostService extends CommonService
         unset($data['_token']);
         unset($data['fileuploader-list-files']);
         unset($data['files']);
-        $data['istTypeAmazon'] = $data['dtb_item']['type'] == $this->product->getOriginTypeAmazon() ? true : false;
+        $data['istTypeAmazon'] = (!empty($data['dtb_item']['type']) && $data['dtb_item']['type'] == $this->product->getOriginTypeAmazon()) ? true : false;
         $dataImageOld = [];
         if ($dataSession) {
             for ($i = 0; $i < $dataSession['number_file']; $i++) {
@@ -540,7 +540,7 @@ class ProductPostService extends CommonService
                 'temp_shipping_method'  => $data['dtb_item']['temp_shipping_method'],
                 'temp_profit'           => $data['dtb_item']['profit'],
                 'item_des'              => $data['dtb_item']['item_des'],
-                'setting_template_id'   => $data['dtb_item']['setting_template_id'],
+                'setting_template_id'   => !empty($data['dtb_item']['setting_template_id']) ? $data['dtb_item']['setting_template_id'] : null,
                 'updated_at'            => $dateNow,
             ];
             if (!empty($input['id'])) {

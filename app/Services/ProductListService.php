@@ -5,7 +5,9 @@ namespace App\Services;
 use Excel;
 use Illuminate\Support\Facades\Lang;
 use App\Models\Item;
+use App\Models\User;
 use App\Models\SettingPolicy;
+use App\Models\Authorization;
 use Illuminate\Support\Facades\Auth;
 use SimpleXMLElement;
 
@@ -13,13 +15,19 @@ class ProductListService extends CommonService
 {
     protected $product;
     protected $settingPolicy;
+    protected $user;
+    protected $authorization;
 
     public function __construct(
         Item $product,
+        User $user,
+        Authorization $authorization,
         SettingPolicy $settingPolicy
     ) {
-        $this->product         = $product;
-        $this->settingPolicy   = $settingPolicy;
+        $this->product       = $product;
+        $this->settingPolicy = $settingPolicy;
+        $this->user          = $user;
+        $this->authorization = $authorization;
     }
 
     /**
@@ -149,5 +157,25 @@ class ProductListService extends CommonService
             return true;
         }
         return false;
+    }
+
+    /**
+     * check monitoring
+     * @return boolean
+     */
+    public function checkMonitoring()
+    {
+        if (Auth::user()->type == $this->user->getTypeSupperAdmin()) {
+            return true;
+        } else {
+            $authorzation = $this->authorization->findByUserId($userId);
+            if (!$authorzation) {
+                return true;
+            } elseif ($authorzation->monitoring) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 }

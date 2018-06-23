@@ -52,7 +52,7 @@ class CreateTableItem extends Migration
             $table->float('max_price', 10, 2)->nullable();
             $table->float('min_price', 10, 2)->nullable();
             $table->string('keyword', 50)->nullable();
-            $table->unsignedInteger('setting_template_id');
+            $table->unsignedInteger('setting_template_id')->nullable();
             $table->foreign('setting_template_id')->references('id')->on('dtb_setting_template')->onDelete('cascade');
             $table->dateTime('last_mornitoring_date')->nullable();
             $table->smallInteger('monitor_type')->default(1);

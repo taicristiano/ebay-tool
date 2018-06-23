@@ -24,10 +24,12 @@
                                     <label class="col-md-5 col-sm-5 col-xs-6">@lang('view.item_id')</label>
                                     <label class="col-md-7 col-sm-7 col-xs-6">{{ $data['dtb_item']['item_id'] }}</label>
                                 </div>
+                                @if (!empty($data['dtb_item']['original_id']))
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <label class="col-md-5 col-sm-5 col-xs-6">{{ $data['istTypeAmazon'] ? __('view.amazon') : __('view.yahoo_auction') }}</label>
                                     <label class="col-md-7 col-sm-7 col-xs-6">{{ $data['dtb_item']['original_id'] }}</label>
                                 </div>
+                                @endif
                             </div>
                             <div id="conten-ajax">
                                 <div class="ebay-info">

@@ -82,9 +82,13 @@ jQuery(document).ready(function() {
         var api = $.fileuploader.getInstance('#files');
         var files = [];
         var fileUpload = api.getFiles();
-        fd.append('dtb_item[original_id]', $('#id_ebay_or_amazon').val());
+        if ($('#id_ebay_or_amazon').length) {
+            fd.append('dtb_item[original_id]', $('#id_ebay_or_amazon').val());
+        }
         fd.append('dtb_item[item_id]', $('#item_id').val());
-        fd.append('dtb_item[type]', $('.type:checked').val());
+        if ($('.type').length) {
+            fd.append('dtb_item[type]', $('.type:checked').val());
+        }
         fd.append('dtb_item[category_name]', $( "#category-id option:selected" ).text());
         fd.append('dtb_item[condition_name]', $( "#condition-id option:selected" ).text());
         $.each(fileUpload, function (index, value) {
@@ -321,14 +325,13 @@ function getCalculateProfitInfo(isValidate, isChangeType)
     isShowCalculate = $('#item-calculator-info').length;
     var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : null;
     var token = window.Laravel.csrfToken;
-    var type = $('.type:checked').val();
     var data = {
         _token: token,
         item_change: null,
         is_validate: isValidate,
         is_update: isShowCalculate,
         material_quantity: materialQuantity,
-        type: type,
+        type: $('.type').length ? $('.type:checked').val() : null,
         height: $('#height_hidden').val(),
         width: $('#width_hidden').val(),
         length: $('#length_hidden').val(),
@@ -424,14 +427,13 @@ function refreshProfitInfo(isValidate, item_change)
     isShowCalculate = $('#item-calculator-info').length;
     var materialQuantity = $('#material-quantity').val() ? $('#material-quantity').val() : null;
     var token = window.Laravel.csrfToken;
-    var type = $('.type:checked').val();
     var data = {
         _token: token,
         item_change: item_change,
         is_validate: isValidate,
         is_update: isShowCalculate,
         material_quantity: materialQuantity,
-        type: type,
+        type: $('.type').length ? $('.type:checked').val() : null,
         height: $('#height').val(),
         width: $('#width').val(),
         length: $('#length').val(),

@@ -110,6 +110,15 @@ class User extends Authenticatable
     }
 
     /**
+     * get supper admin type
+     * @return integer
+     */
+    public function getTypeSupperAdmin()
+    {
+        return static::TYPE_SUPER_ADMIN;
+    }
+
+    /**
      * check type setting by type
      * @param  integer  $type
      * @return boolean

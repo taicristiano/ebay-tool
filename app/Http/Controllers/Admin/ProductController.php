@@ -276,8 +276,9 @@ class ProductController extends AbstractController
         $products        = $this->product->getListProduct($request->all(), $userId);
         $pathStorageFile = $this->itemImage->getPathStorageFile();
         $originType      = $this->product->getOriginType();
-        $isMonitoring    = $this->authorization->findByUserId($userId)->monitoring ? true : false;
-        return view('admin.product.list', compact('products', 'pathStorageFile', 'originType', 'exchangeRate', 'isMonitoring'));
+        $isMonitoring = $this->productListService->checkMonitoring();
+        $monitoringType = $this->product->getPriceMonitoringSetting();
+        return view('admin.product.list', compact('products', 'pathStorageFile', 'originType', 'exchangeRate', 'isMonitoring', 'monitoringType'));
     }
 
     /**

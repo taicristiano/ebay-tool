@@ -210,5 +210,10 @@ return [
         'the_max_price_field_is_required'                       => 'the_max_price_field_is_required',
         'the_max_price_field_must_be_number'                    => 'the_max_price_must_be_number',
         'the_max_price_field_must_be_greater_than_zero'         => 'the_max_price_field_must_be_greater_than_zero',
+        'the_condition_field_is_required'                       => 'the_condition_field_is_required',
+        'the_shipping_policy_field_is_required'                 => 'the_shipping_policy_field_is_required',
+        'the_return_policy_field_is_required'                   => 'the_return_policy_field_is_required',
+        'the_temp_shipping_method_field_is_required'            => 'the_temp_shipping_method_field_is_required',
+        'the_category_field_is_required'                        => 'the_category_field_is_required',
     ]
 ];

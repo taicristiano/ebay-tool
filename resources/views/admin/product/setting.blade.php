@@ -37,9 +37,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <label for="duration">@lang('view.price_monitoring_setting') <span class="text-danger">(*)</span></label>
-                            <div class="form-group {{ $errors->first('duration') ? 'has-error' : '' }}">
-                                {!! Form::select("duration", $priceMonitoringSetting, old('duration', isset($setting->duration) ? $setting->duration : ''), ['class' => 'form-control', 'id' => 'duration']) !!}
+                            <label for="monitor_type">@lang('view.price_monitoring_setting') <span class="text-danger">(*)</span></label>
+                            <div class="form-group {{ $errors->first('monitor_type') ? 'has-error' : '' }}">
+                                {!! Form::select("monitor_type", $priceMonitoringSetting, old('monitor_type', isset($item['monitor_type']) ? $item['monitor_type'] : ''), ['class' => 'form-control', 'id' => 'monitor_type']) !!}
                             </div>
                         </div>
                         <div class="box-footer">

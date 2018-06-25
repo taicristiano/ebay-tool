@@ -42,7 +42,7 @@ class SettingTemplate extends AbstractModel
      */
     public function getByUserId($userId)
     {
-        return $this->select('id', 'title', 'content')
+        return $this->select('id', 'title')
             ->whereUserId($userId)
             ->get()
             ->toArray();

@@ -41,24 +41,43 @@
                                         if (!empty($data['dtb_item']['type'])) {
                                             $typeCheck = $data['dtb_item']['type'];
                                         }
+                                        $isDislayInputEbayOrAmazon = false;
                                     @endphp
                                     <div class="form-group">
                                         <div class="col-md-1">
                                         </div>
                                         @foreach($originType as $key => $type)
-                                        <div class="col-xs-6 col-md-5">
-                                            <input type="radio" name="type" class="minimal type" {{$key == $typeCheck ? 'checked' :''}} value="{{$key}}">
-                                            {{$type}}
-                                        </div>
+                                            @php $isDislayEbayOrAmazon = false @endphp
+                                            @if (!$isGuestAdmin)
+                                                @php 
+                                                    $isDislayEbayOrAmazon = true;
+                                                    $isDislayInputEbayOrAmazon = true;
+                                                @endphp
+                                            @else
+                                                @if (($key == 1 && $authorzation && $authorzation->yahoo_info) || ($key == 2 && $authorzation && $authorzation->amazon_info))
+                                                    @php
+                                                        $isDislayEbayOrAmazon = true;
+                                                        $isDislayInputEbayOrAmazon = true;
+                                                    @endphp
+                                                @endif
+                                            @endif
+
+                                            @if ($isDislayEbayOrAmazon)
+                                                <div class="col-xs-6 col-md-5">
+                                                    <input type="radio" name="type" class="minimal type" {{$key == $typeCheck ? 'checked' :''}} value="{{$key}}">
+                                                    {{$type}}
+                                                </div>
+                                            @endif
                                         @endforeach
                                     </div>
                                 </div>
                                 {{-- B00RF2ZNI0 --}}
                                 {{-- s583357763 --}}
+                                @if($isDislayInputEbayOrAmazon)
                                 <div class="col-xs-12 col-md-4">
                                     <div class="form-group">
                                         <div class="col-xs-12 col-md-8">
-                                            {!! Form::text('id_ebay_or_amazon', !empty($data['dtb_item']['original_id']) ? $data['dtb_item']['original_id'] : '', ['class' => 'form-control', 'placeholder' => __('view.original_id'), 'id' => 'id_ebay_or_amazon']) !!}
+                                            {!! Form::text('id_ebay_or_amazon', !empty($data['dtb_item']['original_id']) ? $data['dtb_item']['original_id'] : '', ['class' => 'form-control', 'placeholder' => __('view.original_id_yahoo'), 'id' => 'id_ebay_or_amazon', 'data-placeholder-yahoo' => __('view.original_id_yahoo'), 'data-placeholder-amazon' => __('view.original_id_amazon')]) !!}
                                             <p class="text-danger invalid" id="item-yahoo-or-amazon-invalid"></p>
                                         </div>
                                         <div class="col-xs-12 col-md-4">
@@ -66,6 +85,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endif
                             </div>
                         </form>
                         <form role="form" id="form-post" enctype="multipart/form-data" method="post" action="{{route('admin.product.post-product-confirm')}}">

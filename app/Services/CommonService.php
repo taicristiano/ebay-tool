@@ -135,9 +135,9 @@ class CommonService
     {
         $userId            = Auth::user()->id;
         $settingPolicyData = $this->settingPolicy->getSettingPolicyOfUser($userId);
-        $shippingType      = [];
-        $paymentType       = [];
-        $returnType        = [];
+        $shippingType[null] = null;
+        $paymentType[null]  = null;
+        $returnType[null]   = null;
         foreach ($settingPolicyData as $key => $policy) {
             if ($policy->policy_type == SettingPolicy::TYPE_SHIPPING) {
                 $shippingType[$policy->id] = $policy->policy_name;
@@ -167,7 +167,7 @@ class CommonService
         $sizeOfProduct         = $length + $height + $width;
         $userId                = Auth::user()->id;
         $settingShipping       = $this->settingShipping->getSettingShippingOfUser($userId);
-        $settingShippingOption = [];
+        $settingShippingOption[null] = null;
         foreach ($settingShipping as $key => $item) {
             $sideMaxSize = $item->side_max_size;
             if ($sizeOfProduct <= $item->max_size &&
@@ -178,7 +178,7 @@ class CommonService
                 $settingShippingOption[$item->id] = $item->shipping_name;
             }
         }
-        if (!$settingShippingOption) {
+        if (count($settingShippingOption) == 1) {
             $settingShipping = $this->settingShipping->findSettingShippingMaxSizeOfUser($userId);
             $settingShippingOption[$settingShipping->id] = $settingShipping->shipping_name;
         }
@@ -211,6 +211,7 @@ class CommonService
         $data['duration']['value']       = $data['dtb_item']['duration'];
         $settingShippingOption           = $this->getSettingShippingOfUser($data['dtb_item']);
         $data['setting_shipping_option'] = $settingShippingOption;
+        $data['setting_shipping_selected'] = $data['dtb_item']['temp_shipping_method'];
         $data['dtb_setting_policies']    = $this->getDataSettingPolicies();
         $userId                          = Auth::user()->id;
         $settingTemplate                 = $this->settingTemplate->getByUserId($userId);
@@ -225,11 +226,35 @@ class CommonService
      */
     public function formatSettingTemplate($settingTemplate)
     {
-        $result = [];
+        $result[null] = null;
         foreach ($settingTemplate as $item) {
             $result[$item['id']] = $item['title'];
         }
         return $result;
     }
 
+    /**
+     * calculator profit detail
+     * @param  array $data
+     * @return void
+     */
+    public function calculatorDetail(&$data)
+    {
+        $exchangeRate                   = $this->exchangeRate->getExchangeRateLatest();
+        $userId                         = Auth::user()->id;
+        $settingInfo                    = $this->setting->getSettingOfUser($userId);
+        $storeIdOfUser                  = $settingInfo->store_id;
+        $stores                         = $this->mtbStore->getAllStore();
+        $storeInfo                      = $this->formatStoreInfo($stores);
+        $typeFee                        = $storeInfo[$storeIdOfUser];
+        $sellPriceYen                   = round($data['dtb_item']['price'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
+        $data['dtb_item']['ebay_fee']   = round($data['dtb_item']['price'] * $this->categoryFee->getCategoryFeeByCategoryId($data['dtb_item']['category_id'])->$typeFee / 100, 2);
+        $ebayFeeYen                     = round($data['dtb_item']['ebay_fee'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
+        $data['dtb_item']['paypal_fee'] = round($settingInfo->paypal_fee_rate  * $sellPriceYen / 100 + $settingInfo->paypal_fixed_fee, 2);
+        if ($data['istTypeAmazon']) {
+            $data['dtb_item']['profit'] = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'] * $settingInfo->gift_discount / 100, 2);
+        } else {
+            $data['dtb_item']['profit'] = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'], 2);
+        }
+    }
 }

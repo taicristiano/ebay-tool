@@ -296,84 +296,37 @@ class ProductPostService extends CommonService
      */
     public function calculatorProfit($input)
     {
-        $data['istTypeAmazon'] = $input['type'] == $this->product->getOriginTypeAmazon() ? true : false;
-        // if ($data['istTypeAmazon']) {
-            $this->calculatorProfitTypeAmazon($data, $input);
-        // } else {
-            // $this->calculatorProfitTypeYahoo($data, $input);
-        // }
+        $data['istTypeAmazon']                 = (!empty($input['type']) && $input['type'] == $this->product->getOriginTypeAmazon()) ? true : false;
+        $userId                                = Auth::user()->id;
+        $data['dtb_item']['height']            = $input['height'];
+        $data['dtb_item']['width']             = $input['width'];
+        $data['dtb_item']['length']            = $input['length'];
+        $data['dtb_item']['commodity_weight']  = $input['commodity_weight'];
+        $data['dtb_item']['material_quantity'] = $input['material_quantity'];
+        $totalWeigh                            = $data['dtb_item']['commodity_weight'] + $data['dtb_item']['material_quantity'];
+        $data['setting_shipping_selected']     = $input['setting_shipping'];
+        $settingShippingOption                 = $this->getSettingShippingOfUser($input);
+        $data['setting_shipping_option']       = $settingShippingOption;
+        $data['dtb_item']['buy_price']         = $input['buy_price'];
+        $data['dtb_item']['price']             = $input['sell_price'];
+        $data['dtb_item']['ship_fee']          = $input['ship_fee'];
+        $data['dtb_item']['category_id']       = $input['category_id'];
+
+        if (in_array($input['item_change'], ['category-id', 'sell_price', 'buy_price', 'ship_fee'])) {
+            $this->calculatorDetail($data);
+        } elseif (in_array($input['item_change'], ['material_quantity', 'height', 'width', 'length', 'commodity_weight'])) {
+            $data['dtb_item']['ship_fee'] = null;
+            $data['setting_shipping_selected'] = null;
+        } elseif (in_array($input['item_change'], ['setting-shipping'])) {
+            $shippingFee                       = $this->shippingFee->getShippingFeeByShippingId($input['setting_shipping'], $totalWeigh);
+            $data['dtb_item']['ship_fee']      = $shippingFee->ship_fee;
+            $this->calculatorDetail($data);
+        } else {
+            $this->calculatorDetail($data);
+        }
         $response['status'] = true;
         $response['data']   = view('admin.product.component.calculator_info', compact('data'))->render();
         return response()->json($response);
-    }
-
-    /**
-     * calculator profit type amazon
-     * @param  array $data
-     * @param  array $input
-     * @return void
-     */
-    public function calculatorProfitTypeAmazon(&$data, $input)
-    {
-        $exchangeRate = $this->exchangeRate->getExchangeRateLatest();
-        $userId       = Auth::user()->id;
-        $settingInfo  = $this->setting->getSettingOfUser($userId);
-        $data['dtb_item']['height']           = $input['height'];
-        $data['dtb_item']['width']            = $input['width'];
-        $data['dtb_item']['length']           = $input['length'];
-        $data['dtb_item']['commodity_weight'] = $input['commodity_weight'];
-        $data['dtb_item']['material_quantity'] = $input['material_quantity'];
-        $settingShippingOption                = $this->getSettingShippingOfUser($input);
-        $data['setting_shipping_option']      = $settingShippingOption;
-        $optionSelected                       = $input['setting_shipping'];
-        $shippingId                           = array_keys($settingShippingOption);
-        if (!isset($settingShippingOption[$optionSelected])) {
-            $optionSelected = $shippingId[0];
-        }
-        $data['setting_shipping_selected'] = $optionSelected;
-        if (!$input['ship_fee']) {
-            $shippingFee                  = $this->shippingFee->getShippingFeeByShippingId($shippingId[0], !empty($input['commodity_weight']) ? $input['commodity_weight'] : 0);
-            $data['dtb_item']['ship_fee'] = $shippingFee->ship_fee;
-        } else {
-            $data['dtb_item']['ship_fee'] = $input['ship_fee'];
-        }
-        $storeIdOfUser                  = $settingInfo->store_id;
-        $stores                         = $this->mtbStore->getAllStore();
-        $storeInfo                      = $this->formatStoreInfo($stores);
-        $typeFee                        = $storeInfo[$storeIdOfUser];
-        $sellPriceYen                   = round($input['sell_price'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
-        $data['dtb_item']['ebay_fee']   = round($input['sell_price'] * $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee / 100, 2);
-        $ebayFeeYen                     = round($data['dtb_item']['ebay_fee'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
-        $data['dtb_item']['paypal_fee'] = round($settingInfo->paypal_fee_rate  * $sellPriceYen / 100 + $settingInfo->paypal_fixed_fee, 2);
-        $data['dtb_item']['buy_price']  = $input['buy_price'];
-        if ($data['istTypeAmazon']) {
-            $data['dtb_item']['profit']     = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'] * $settingInfo->gift_discount / 100, 2);
-        } else {
-            $data['dtb_item']['profit']     = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'], 2);
-        }
-    }
-
-    /**
-     * calculator profit type yahoo
-     * @param  array &$data
-     * @param  array $input
-     * @return void
-     */
-    public function calculatorProfitTypeYahoo(&$data, $input)
-    {
-        $userId                         = Auth::user()->id;
-        $exchangeRate                   = $this->exchangeRate->getExchangeRateLatest();
-        $settingInfo                    = $this->setting->getSettingOfUser($userId);
-        $storeIdOfUser                  = $settingInfo->store_id;
-        $stores                         = $this->mtbStore->getAllStore();
-        $storeInfo                      = $this->formatStoreInfo($stores);
-        $typeFee                        = $storeInfo[$storeIdOfUser];
-        $sellPriceYen                   = round($input['sell_price'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
-        $data['dtb_item']['ebay_fee']   = round($input['sell_price'] * $this->categoryFee->getCategoryFeeByCategoryId($input['category_id'])->$typeFee / 100, 2);
-        $ebayFeeYen                     = round($data['dtb_item']['ebay_fee'] * ($exchangeRate->rate - $settingInfo->ex_rate_diff), 2);
-        $data['dtb_item']['paypal_fee'] = round($settingInfo->paypal_fee_rate  * $sellPriceYen / 100, 2);
-        $data['dtb_item']['buy_price']  = $input['buy_price'];
-        $data['dtb_item']['profit']     = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - (float)$data['dtb_item']['buy_price'], 2);
     }
 
     /**
@@ -387,7 +340,7 @@ class ProductPostService extends CommonService
         unset($data['_token']);
         unset($data['fileuploader-list-files']);
         unset($data['files']);
-        $data['istTypeAmazon'] = $data['dtb_item']['type'] == $this->product->getOriginTypeAmazon() ? true : false;
+        $data['istTypeAmazon'] = (!empty($data['dtb_item']['type']) && $data['dtb_item']['type'] == $this->product->getOriginTypeAmazon()) ? true : false;
         $dataImageOld = [];
         if ($dataSession) {
             for ($i = 0; $i < $dataSession['number_file']; $i++) {
@@ -507,10 +460,10 @@ class ProductPostService extends CommonService
         $settingPolicyData = $this->settingPolicy->getSettingPolicyOfUser($userId);
         $data['dtb_item']['duration']             = $this->product->getDurationOption()[$data['dtb_item']['duration']];
         $data['dtb_item']['shipping_policy_name'] = $this->getPolicyNameById(!empty($data['dtb_item']['shipping_policy_id']) ? $data['dtb_item']['shipping_policy_id'] : '', $settingPolicyData);
-        $data['dtb_item']['payment_policy_name']  = $this->getPolicyNameById(!empty($data['dtb_item']['payment_policy_id']) ? $data['dtb_item']['payment_policy_id'] : '', $settingPolicyData);
+        // $data['dtb_item']['payment_policy_name']  = $this->getPolicyNameById(!empty($data['dtb_item']['payment_policy_id']) ? $data['dtb_item']['payment_policy_id'] : '', $settingPolicyData);
         $data['dtb_item']['return_policy_name']   = $this->getPolicyNameById(!empty($data['dtb_item']['return_policy_id']) ? $data['dtb_item']['return_policy_id'] : '', $settingPolicyData);
-        if (isset($data['dtb_item']['setting_shipping_option'])) {
-            $data['dtb_item']['setting_shipping_option'] = $this->settingShipping->findById($data['dtb_item']['setting_shipping_option'])->shipping_name;
+        if (isset($data['dtb_item']['temp_shipping_method'])) {
+            $data['dtb_item']['temp_shipping_method'] = $this->settingShipping->findById($data['dtb_item']['temp_shipping_method'])->shipping_name;
         }
         $data['dtb_item']['condition_name'] = $this->product->getConditionNameById($data['dtb_item']['condition_id']);
         return $data;
@@ -562,7 +515,7 @@ class ProductPostService extends CommonService
             $dateNow  = date('Y-m-d H:i:s');
             $dataItem = [
                 'original_id'           => !empty($data['dtb_item']['original_id']) ? $data['dtb_item']['original_id'] : null,
-                'original_type'         => $data['dtb_item']['type'],
+                'original_type'         => !empty($data['dtb_item']['type']) ? $data['dtb_item']['type'] : null,
                 'item_name'             => $data['dtb_item']['item_name'],
                 'category_id'           => $data['dtb_item']['category_id'],
                 'category_name'         => $data['dtb_item']['category_name'],
@@ -587,7 +540,7 @@ class ProductPostService extends CommonService
                 'temp_shipping_method'  => $data['dtb_item']['temp_shipping_method'],
                 'temp_profit'           => $data['dtb_item']['profit'],
                 'item_des'              => $data['dtb_item']['item_des'],
-                'setting_template_id'   => $data['dtb_item']['setting_template_id'],
+                'setting_template_id'   => !empty($data['dtb_item']['setting_template_id']) ? $data['dtb_item']['setting_template_id'] : null,
                 'updated_at'            => $dateNow,
             ];
             if (!empty($input['id'])) {
@@ -718,14 +671,10 @@ class ProductPostService extends CommonService
         $settingTemplate                 = $this->settingTemplate->getByUserId($userId);
         $data['setting_template']        = $this->formatSettingTemplate($settingTemplate);
         if (empty($data['dtb_item'])) {
-            $data['dtb_item']['item_des']      = !empty($settingTemplate[0]['content']) ? $settingTemplate[0]['content']: null;
             $settingShippingOption             = $this->getSettingShippingOfUser(null);
             $settingData                       = $this->setting->getSettingOfUser($userId);
             $data['dtb_item']['duration']      = $settingData->duration;
             $data['dtb_item']['quantity']      = $settingData->quantity;
-            $category                          = $this->categoryFee->getFirstItem();
-            $data['dtb_item']['category_id']   = $category->category_id;
-            $data['dtb_item']['category_name'] = $category->category_path;
         } else {
             $settingShippingOption             = $this->getSettingShippingOfUser($data['dtb_item']);
         }

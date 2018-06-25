@@ -10,6 +10,7 @@ use App\Services\ProductEditService;
 use App\Models\Item;
 use App\Models\CategoryFee;
 use App\Models\MtbExchangeRate;
+use App\Models\Authorization;
 use App\Http\Requests\CalculateProfitRequest;
 use App\Http\Requests\ItemSettingRequest;
 use App\Http\Requests\PostProductRequest;
@@ -32,6 +33,7 @@ class ProductController extends AbstractController
     protected $exchangeRate;
     protected $productEditService;
     protected $user;
+    protected $authorization;
 
     public function __construct(
         ProductPostService $productPostService,
@@ -41,6 +43,7 @@ class ProductController extends AbstractController
         ProductEditService $productEditService,
         ItemImage $itemImage,
         User $user,
+        Authorization $authorization,
         MtbExchangeRate $exchangeRate
     ) {
         $this->productPostService = $productPostService;
@@ -53,6 +56,7 @@ class ProductController extends AbstractController
         $this->exchangeRate       = $exchangeRate;
         $this->productEditService = $productEditService;
         $this->user               = $user;
+        $this->authorization      = $authorization;
     }
 
     /**
@@ -73,7 +77,10 @@ class ProductController extends AbstractController
         $conditionIdList = $this->product->getConditionIdList();
         $originType      = $this->product->getOriginType();
         $data            = $this->productPostService->getDataForShowPagePostProduct($data);
-        return view('admin.product.post', compact('data', 'originType', 'conditionIdList'));
+        $userId          = Auth::user()->id;
+        $isGuestAdmin    = Auth::user()->type == $this->user->getTypeGuestAdmin();
+        $authorzation    = $this->authorization->findByUserId($userId);
+        return view('admin.product.post', compact('data', 'originType', 'conditionIdList', 'authorzation', 'isGuestAdmin'));
     }
 
 
@@ -269,7 +276,9 @@ class ProductController extends AbstractController
         $products        = $this->product->getListProduct($request->all(), $userId);
         $pathStorageFile = $this->itemImage->getPathStorageFile();
         $originType      = $this->product->getOriginType();
-        return view('admin.product.list', compact('products', 'pathStorageFile', 'originType', 'exchangeRate'));
+        $isMonitoring = $this->productListService->checkMonitoring();
+        $monitoringType = $this->product->getPriceMonitoringSetting();
+        return view('admin.product.list', compact('products', 'pathStorageFile', 'originType', 'exchangeRate', 'isMonitoring', 'monitoringType'));
     }
 
     /**
@@ -338,7 +347,10 @@ class ProductController extends AbstractController
         }
         $conditionIdList = $this->product->getConditionIdList();
         $originType      = $this->product->getOriginType();
-        return view('admin.product.post', compact('data', 'originType', 'conditionIdList'));
+        $userId          = Auth::user()->id;
+        $isGuestAdmin    = Auth::user()->type == 2;
+        $authorzation    = $this->authorization->findByUserId($userId);
+        return view('admin.product.post', compact('data', 'originType', 'conditionIdList', 'authorzation', 'isGuestAdmin'));
     }
 
     /**
@@ -367,6 +379,11 @@ class ProductController extends AbstractController
         $item = $this->product->findById($itemId);
         if (!$item) {
             return view('not-found');
+        }
+        $userId                 = Auth::user()->id;
+        $isMonitoring           = $this->authorization->findByUserId($userId)->monitoring ? true : false;
+        if (!$isMonitoring) {
+            return redirect()->route('admin.product.show-page-product-list');
         }
         $priceMonitoringSetting = $this->product->getPriceMonitoringSetting();
         return view('admin.product.setting', compact('item', 'priceMonitoringSetting'));

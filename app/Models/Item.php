@@ -148,6 +148,7 @@ class Item extends AbstractModel
     public function getConditionIdList()
     {
         return [
+            null => null,
             1000 => 'New',
             1500 => 'New other (see details)',
             1750 => 'New with defects',

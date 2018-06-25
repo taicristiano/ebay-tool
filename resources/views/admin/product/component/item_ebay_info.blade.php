@@ -14,6 +14,7 @@
             {!! Form::select("dtb_item[setting_template_id]", $data['setting_template'], isset($data['dtb_item']['setting_template_id']) ? $data['dtb_item']['setting_template_id'] : '', ['class' => 'form-control margin-bottom-10', 'id' => 'setting_template_id']) !!}
             <div id="setting-template">
 	            {{ Form::textarea('dtb_item[item_des]', isset($data['dtb_item']['item_des']) ? $data['dtb_item']['item_des'] : '', ['size' => '30x5', 'class' => 'form-control', 'id' => 'item_des']) }}
+                <p class="error-validate text-danger error-dtb_item_item_des"></p>
             </div>
         </div>
         <div class="form-group form-group-custom">
@@ -29,6 +30,7 @@
         <div class="form-group form-group-custom">
             <label for="dtb_item[condition_id]">@lang('view.condition_name') <span class="text-danger">(*)</span></label>
             {!! Form::select("dtb_item[condition_id]", $conditionIdList, isset($data['dtb_item']['condition_id']) ? $data['dtb_item']['condition_id'] : '', ['class' => 'form-control', 'id' => 'condition-id']) !!}
+            <p class="error-validate text-danger error-dtb_item_condition_id"></p>
         </div>
         <div class="form-group form-group-custom">
             <label for="dtb_item[condition_des]">@lang('view.condition_des') <span class="text-danger">(*)</span></label>
@@ -120,7 +122,7 @@
             <div class="box-body">
                 <div class="form-group form-group-custom">
                     <label for="dtb_item[duration]">@lang('view.sale_period') <span class="text-danger">(*)</span></label>
-                    {!! Form::select("dtb_item[duration]", $data['duration']['option'], isset($data['dtb_item']['duration']) ? $data['dtb_item']['duration'] : '', ['class' => 'form-control']) !!}
+                    {!! Form::select("dtb_item[duration]", $data['duration']['option'], isset($data['dtb_item']['duration']) ? $data['dtb_item']['duration'] : '', ['class' => 'form-control', 'id' => 'duration']) !!}
                 </div>
 
                 <div class="form-group form-group-custom">
@@ -130,11 +132,13 @@
                 </div>
                 <div class="form-group form-group-custom">
                     <label for="dtb_item[shipping_policy_id]">@lang('view.shipping_policy') <span class="text-danger">(*)</span></label>
-                    {!! Form::select("dtb_item[shipping_policy_id]", $data['dtb_setting_policies']['shipping'], isset($data['dtb_setting_policies']['shipping']) ? $data['dtb_setting_policies']['shipping'] : '', ['class' => 'form-control']) !!}
+                    {!! Form::select("dtb_item[shipping_policy_id]", $data['dtb_setting_policies']['shipping'], isset($data['dtb_item']['shipping_policy_id']) ? $data['dtb_item']['shipping_policy_id'] : '', ['class' => 'form-control', 'id' => 'shipping_policy_id']) !!}
+                    <p class="error-validate text-danger error-dtb_item_shipping_policy_id"></p>
                 </div>
                 <div class="form-group form-group-custom">
                     <label for="dtb_item[return_policy_id]">@lang('view.return_policy') <span class="text-danger">(*)</span></label>
-                    {!! Form::select("dtb_item[return_policy_id]", $data['dtb_setting_policies']['return'], isset($data['dtb_setting_policies']['return']) ? $data['dtb_setting_policies']['return'] : '', ['class' => 'form-control']) !!}
+                    {!! Form::select("dtb_item[return_policy_id]", $data['dtb_setting_policies']['return'], isset($data['dtb_item']['return_policy_id']) ? $data['dtb_item']['return_policy_id'] : '', ['class' => 'form-control', 'id' => 'return_policy_id']) !!}
+                    <p class="error-validate text-danger error-dtb_item_return_policy_id"></p>
                 </div>
             </div>
         </div>

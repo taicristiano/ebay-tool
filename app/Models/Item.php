@@ -261,4 +261,15 @@ class Item extends AbstractModel
             ->whereStatus($this->getStatusSelling())
             ->count();
     }
+
+    /**
+     * find by item id
+     * @param  integer $itemId
+     * @return array
+     */
+    public function findByItemId($itemId)
+    {
+        return $this->whereItemId($itemId)
+            ->first();
+    }
 }

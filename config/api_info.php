@@ -48,4 +48,11 @@ return [
         'X-EBAY-API-CALL-NAME'           => 'AddFixedPriceItem',
         'X-EBAY-API-SITEID'              => 0,
     ],
+
+    'header_api_get_my_ebay_selling' => [
+        'Content-Type'                   => 'text/xml',
+        'X-EBAY-API-COMPATIBILITY-LEVEL' => '967',
+        'X-EBAY-API-CALL-NAME'           => 'GetMyeBaySelling',
+        'X-EBAY-API-SITEID'              => 0,
+    ],
 ];

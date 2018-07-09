@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\ProductPostService;
 use App\Services\ProductListService;
 use App\Services\ProductEditService;
+use App\Services\CheckProductEbayService;
 use App\Models\Item;
 use App\Models\CategoryFee;
 use App\Models\MtbExchangeRate;
@@ -44,7 +45,8 @@ class ProductController extends AbstractController
         ItemImage $itemImage,
         User $user,
         Authorization $authorization,
-        MtbExchangeRate $exchangeRate
+        MtbExchangeRate $exchangeRate,
+        CheckProductEbayService $productEbayService
     ) {
         $this->productPostService = $productPostService;
         $this->product            = $product;
@@ -57,6 +59,8 @@ class ProductController extends AbstractController
         $this->productEditService = $productEditService;
         $this->user               = $user;
         $this->authorization      = $authorization;
+
+        $this->productEbayService = $productEbayService;
     }
 
     /**
@@ -65,6 +69,7 @@ class ProductController extends AbstractController
      */
     public function showPagePostProduct()
     {
+        dd($this->productEbayService->checkOnTheirProductsSoldOnEbayHaveBuyers());
         $hasSettingPolicyData = $this->productPostService->checkHasSettingPolicyData();
         if (!$hasSettingPolicyData) {
             return view('admin.product.none_policy');

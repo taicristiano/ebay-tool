@@ -69,6 +69,959 @@ class CommonService
         $client = new \GuzzleHttp\Client();
         $result = $client->$type($url, $bodyRequest);
         $result = $result ->getBody()->getContents();
+        $result = '<?xml version="1.0" encoding="utf-8"?>
+<GetMyeBaySellingResponse xmlns="urn:ebay:apis:eBLBaseComponents">
+    <!-- Call-specific Output Fields -->
+    <ActiveList>
+        <ItemArray>
+            <Item>
+                <BestOfferDetails>
+                    <BestOfferCount> int </BestOfferCount>
+                </BestOfferDetails>
+                <BuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </BuyItNowPrice>
+                <ClassifiedAdPayPerLeadFee currencyID="CurrencyCodeType"> AmountType (double) </ClassifiedAdPayPerLeadFee>
+                <eBayNotes> string </eBayNotes>
+                <HideFromSearch> boolean </HideFromSearch>
+                <ItemID> ItemIDType (string) </ItemID>
+                <LeadCount> int </LeadCount>
+                <ListingDetails>
+                    <ConvertedBuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedBuyItNowPrice>
+                    <ConvertedReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedReservePrice>
+                    <ConvertedStartPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedStartPrice>
+                    <StartTime> dateTime </StartTime>
+                </ListingDetails>
+                <ListingDuration> token </ListingDuration>
+                <ListingType> ListingTypeCodeType </ListingType>
+                <NewLeadCount> int </NewLeadCount>
+                <PictureDetails> PictureDetailsType </PictureDetails>
+                <PrivateNotes> string </PrivateNotes>
+                <Quantity> int </Quantity>
+                <QuantityAvailable> int </QuantityAvailable>
+                <QuestionCount> long </QuestionCount>
+                <ReasonHideFromSearch> ReasonHideFromSearchCodeType </ReasonHideFromSearch>
+                <ReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ReservePrice>
+                <SellerProfiles>
+                    <SellerPaymentProfile>
+                        <PaymentProfileID> long </PaymentProfileID>
+                        <PaymentProfileName> string </PaymentProfileName>
+                    </SellerPaymentProfile>
+                    <SellerReturnProfile>
+                        <ReturnProfileID> long </ReturnProfileID>
+                        <ReturnProfileName> string </ReturnProfileName>
+                    </SellerReturnProfile>
+                    <SellerShippingProfile>
+                        <ShippingProfileID> long </ShippingProfileID>
+                        <ShippingProfileName> string </ShippingProfileName>
+                    </SellerShippingProfile>
+                </SellerProfiles>
+                <SellingStatus>
+                    <BidCount> int </BidCount>
+                    <BidderCount> long </BidderCount>
+                    <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
+                    <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                    <HighBidder>
+                        <FeedbackRatingStar> FeedbackRatingStarCodeType </FeedbackRatingStar>
+                        <FeedbackScore> int </FeedbackScore>
+                        <UserID> UserIDType (string) </UserID>
+                    </HighBidder>
+                    <PromotionalSaleDetails>
+                        <EndTime> dateTime </EndTime>
+                        <OriginalPrice currencyID="CurrencyCodeType"> AmountType (double) </OriginalPrice>
+                        <StartTime> dateTime </StartTime>
+                    </PromotionalSaleDetails>
+                    <QuantitySold> int </QuantitySold>
+                    <ReserveMet> boolean </ReserveMet>
+                </SellingStatus>
+                <ShippingDetails>
+                    <GlobalShipping> boolean </GlobalShipping>
+                    <ShippingServiceOptions>
+                        <LocalPickup> boolean </LocalPickup>
+                        <ShippingServiceCost currencyID="CurrencyCodeType"> AmountType (double) </ShippingServiceCost>
+                    </ShippingServiceOptions>
+                    <ShippingType> ShippingTypeCodeType </ShippingType>
+                </ShippingDetails>
+                <SKU> SKUType (string) </SKU>
+                <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
+                <TimeLeft> duration </TimeLeft>
+                <Title> string </Title>
+                <Variations>
+                    <Variation>
+                        <PrivateNotes> string </PrivateNotes>
+                        <Quantity> int </Quantity>
+                        <SellingStatus>
+                            <BidCount> int </BidCount>
+                            <BidderCount> long </BidderCount>
+                            <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
+                            <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                            <HighBidder>
+                                <FeedbackRatingStar> FeedbackRatingStarCodeType </FeedbackRatingStar>
+                                <FeedbackScore> int </FeedbackScore>
+                                <UserID> UserIDType (string) </UserID>
+                            </HighBidder>
+                            <PromotionalSaleDetails>
+                                <EndTime> dateTime </EndTime>
+                                <OriginalPrice currencyID="CurrencyCodeType"> AmountType (double) </OriginalPrice>
+                                <StartTime> dateTime </StartTime>
+                            </PromotionalSaleDetails>
+                            <QuantitySold> int </QuantitySold>
+                            <ReserveMet> boolean </ReserveMet>
+                        </SellingStatus>
+                        <SKU> SKUType (string) </SKU>
+                        <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
+                        <VariationSpecifics>
+                            <NameValueList>
+                                <Name> string </Name>
+                                <Value> string </Value>
+                                <!-- ... more Value values allowed here ... -->
+                            </NameValueList>
+                            <!-- ... more NameValueList nodes allowed here ... -->
+                        </VariationSpecifics>
+                        <!-- ... more VariationSpecifics nodes allowed here ... -->
+                        <VariationTitle> string </VariationTitle>
+                        <WatchCount> long </WatchCount>
+                    </Variation>
+                    <!-- ... more Variation nodes allowed here ... -->
+                </Variations>
+                <WatchCount> long </WatchCount>
+            </Item>
+            <!-- ... more Item nodes allowed here ... -->
+        </ItemArray>
+        <PaginationResult>
+            <TotalNumberOfEntries> int </TotalNumberOfEntries>
+            <TotalNumberOfPages> int </TotalNumberOfPages>
+        </PaginationResult>
+    </ActiveList>
+    <DeletedFromSoldList>
+        <OrderTransactionArray>
+            <OrderTransaction>
+                <Order>
+                    <OrderID> OrderIDType (string) </OrderID>
+                    <Subtotal currencyID="CurrencyCodeType"> AmountType (double) </Subtotal>
+                    <TransactionArray>
+                        <Transaction>
+                            <Buyer>
+                                <BuyerInfo>
+                                    <ShippingAddress>
+                                        <PostalCode> string </PostalCode>
+                                    </ShippingAddress>
+                                </BuyerInfo>
+                                <Email> string </Email>
+                                <StaticAlias> string </StaticAlias>
+                                <UserID> UserIDType (string) </UserID>
+                            </Buyer>
+                            <ConvertedTransactionPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedTransactionPrice>
+                            <CreatedDate> dateTime </CreatedDate>
+                            <FeedbackLeft>
+                                FeedbackInfoType
+                                <CommentType> CommentTypeCodeType </CommentType>
+                            </FeedbackLeft>
+                            <FeedbackReceived>
+                                <CommentType> CommentTypeCodeType </CommentType>
+                            </FeedbackReceived>
+                            <IsMultiLegShipping> boolean </IsMultiLegShipping>
+                            <Item>
+                                <BuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </BuyItNowPrice>
+                                <ClassifiedAdPayPerLeadFee currencyID="CurrencyCodeType"> AmountType (double) </ClassifiedAdPayPerLeadFee>
+                                <HideFromSearch> boolean </HideFromSearch>
+                                <ItemID> ItemIDType (string) </ItemID>
+                                <ListingDetails>
+                                    <ConvertedBuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedBuyItNowPrice>
+                                    <ConvertedReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedReservePrice>
+                                    <ConvertedStartPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedStartPrice>
+                                    <EndTime> dateTime </EndTime>
+                                    <StartTime> dateTime </StartTime>
+                                </ListingDetails>
+                                <ListingType> ListingTypeCodeType </ListingType>
+                                <PictureDetails> PictureDetailsType </PictureDetails>
+                                <PrivateNotes> string </PrivateNotes>
+                                <Quantity> int </Quantity>
+                                <QuantityAvailable> int </QuantityAvailable>
+                                <QuestionCount> long </QuestionCount>
+                                <ReasonHideFromSearch> ReasonHideFromSearchCodeType </ReasonHideFromSearch>
+                                <ReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ReservePrice>
+                                <SellerProfiles>
+                                    <SellerPaymentProfile>
+                                        <PaymentProfileID> long </PaymentProfileID>
+                                        <PaymentProfileName> string </PaymentProfileName>
+                                    </SellerPaymentProfile>
+                                    <SellerReturnProfile>
+                                        <ReturnProfileID> long </ReturnProfileID>
+                                        <ReturnProfileName> string </ReturnProfileName>
+                                    </SellerReturnProfile>
+                                    <SellerShippingProfile>
+                                        <ShippingProfileID> long </ShippingProfileID>
+                                        <ShippingProfileName> string </ShippingProfileName>
+                                    </SellerShippingProfile>
+                                </SellerProfiles>
+                                <SellingStatus>
+                                    <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
+                                    <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                                    <QuantitySold> int </QuantitySold>
+                                </SellingStatus>
+                                <ShippingDetails>
+                                    <GlobalShipping> boolean </GlobalShipping>
+                                    <ShippingServiceOptions>
+                                        <LocalPickup> boolean </LocalPickup>
+                                        <ShippingServiceCost currencyID="CurrencyCodeType"> AmountType (double) </ShippingServiceCost>
+                                    </ShippingServiceOptions>
+                                    <!-- ... more ShippingServiceOptions nodes allowed here ... -->
+                                    <ShippingType> ShippingTypeCodeType </ShippingType>
+                                </ShippingDetails>
+                                <SKU> SKUType (string) </SKU>
+                                <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
+                                <TimeLeft> duration </TimeLeft>
+                                <Title> string </Title>
+                                <Variations>
+                                    <Variation>
+                                        <Quantity> int </Quantity>
+                                        <SellingStatus>
+                                            <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
+                                            <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                                            <QuantitySold> int </QuantitySold>
+                                        </SellingStatus>
+                                        <SKU> SKUType (string) </SKU>
+                                        <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
+                                        <VariationSpecifics>
+                                            <NameValueList>
+                                                <Name> string </Name>
+                                                <Value> string </Value>
+                                                <!-- ... more Value values allowed here ... -->
+                                            </NameValueList>
+                                            <!-- ... more NameValueList nodes allowed here ... -->
+                                        </VariationSpecifics>
+                                        <!-- ... more VariationSpecifics nodes allowed here ... -->
+                                        <VariationTitle> string </VariationTitle>
+                                        <WatchCount> long </WatchCount>
+                                    </Variation>
+                                    <!-- ... more Variation nodes allowed here ... -->
+                                </Variations>
+                                <WatchCount> long </WatchCount>
+                            </Item>
+                            <OrderLineItemID> string </OrderLineItemID>
+                            <PaidTime> dateTime </PaidTime>
+                            <PaisaPayID> string </PaisaPayID>
+                            <Platform> TransactionPlatformCodeType </Platform>
+                            <QuantityPurchased> int </QuantityPurchased>
+                            <SellerPaidStatus> PaidStatusCodeType </SellerPaidStatus>
+                            <ShippedTime> dateTime </ShippedTime>
+                            <Status>
+                                <PaymentHoldStatus> PaymentHoldStatusCodeType </PaymentHoldStatus>
+                            </Status>
+                            <TotalPrice currencyID="CurrencyCodeType"> AmountType (double) </TotalPrice>
+                            <TotalTransactionPrice currencyID="CurrencyCodeType"> AmountType (double) </TotalTransactionPrice>
+                            <TransactionID> string </TransactionID>
+                        </Transaction>
+                        <!-- ... more Transaction nodes allowed here ... -->
+                    </TransactionArray>
+                </Order>
+                <Transaction>
+                    <Buyer>
+                        <BuyerInfo>
+                            <ShippingAddress>
+                                <PostalCode> string </PostalCode>
+                            </ShippingAddress>
+                        </BuyerInfo>
+                        <Email> string </Email>
+                        <StaticAlias> string </StaticAlias>
+                        <UserID> UserIDType (string) </UserID>
+                    </Buyer>
+                    <ConvertedTransactionPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedTransactionPrice>
+                    <CreatedDate> dateTime </CreatedDate>
+                    <FeedbackLeft>
+                        <CommentType> CommentTypeCodeType </CommentType>
+                    </FeedbackLeft>
+                    <FeedbackReceived>
+                        <CommentType> CommentTypeCodeType </CommentType>
+                    </FeedbackReceived>
+                    <IsMultiLegShipping> boolean </IsMultiLegShipping>
+                    <Item>
+                        <BuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </BuyItNowPrice>
+                        <ClassifiedAdPayPerLeadFee currencyID="CurrencyCodeType"> AmountType (double) </ClassifiedAdPayPerLeadFee>
+                        <HideFromSearch> boolean </HideFromSearch>
+                        <ItemID> ItemIDType (string) </ItemID>
+                        <ListingDetails>
+                            <ConvertedBuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedBuyItNowPrice>
+                            <ConvertedReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedReservePrice>
+                            <ConvertedStartPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedStartPrice>
+                            <EndTime> dateTime </EndTime>
+                            <StartTime> dateTime </StartTime>
+                        </ListingDetails>
+                        <ListingType> ListingTypeCodeType </ListingType>
+                        <PictureDetails> PictureDetailsType </PictureDetails>
+                        <PrivateNotes> string </PrivateNotes>
+                        <Quantity> int </Quantity>
+                        <QuantityAvailable> int </QuantityAvailable>
+                        <QuestionCount> long </QuestionCount>
+                        <ReasonHideFromSearch> ReasonHideFromSearchCodeType </ReasonHideFromSearch>
+                        <ReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ReservePrice>
+                        <SellerProfiles>
+                            <SellerPaymentProfile>
+                                <PaymentProfileID> long </PaymentProfileID>
+                                <PaymentProfileName> string </PaymentProfileName>
+                            </SellerPaymentProfile>
+                            <SellerReturnProfile>
+                                <ReturnProfileID> long </ReturnProfileID>
+                                <ReturnProfileName> string </ReturnProfileName>
+                            </SellerReturnProfile>
+                            <SellerShippingProfile>
+                                <ShippingProfileID> long </ShippingProfileID>
+                                <ShippingProfileName> string </ShippingProfileName>
+                            </SellerShippingProfile>
+                        </SellerProfiles>
+                        <SellingStatus>
+                            <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
+                            <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                            <QuantitySold> int </QuantitySold>
+                        </SellingStatus>
+                        <ShippingDetails>
+                            <GlobalShipping> boolean </GlobalShipping>
+                            <ShippingServiceOptions>
+                                <LocalPickup> boolean </LocalPickup>
+                                <ShippingServiceCost currencyID="CurrencyCodeType"> AmountType (double) </ShippingServiceCost>
+                            </ShippingServiceOptions>
+                            <!-- ... more ShippingServiceOptions nodes allowed here ... -->
+                            <ShippingType> ShippingTypeCodeType </ShippingType>
+                        </ShippingDetails>
+                        <SKU> SKUType (string) </SKU>
+                        <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
+                        <TimeLeft> duration </TimeLeft>
+                        <Title> string </Title>
+                        <Variations>
+                            <Variation>
+                                <Quantity> int </Quantity>
+                                <SellingStatus>
+                                    <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
+                                    <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                                    <QuantitySold> int </QuantitySold>
+                                </SellingStatus>
+                                <SKU> SKUType (string) </SKU>
+                                <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
+                                <VariationSpecifics>
+                                    <NameValueList>
+                                        <Name> string </Name>
+                                        <Value> string </Value>
+                                        <!-- ... more Value values allowed here ... -->
+                                    </NameValueList>
+                                    <!-- ... more NameValueList nodes allowed here ... -->
+                                </VariationSpecifics>
+                                <!-- ... more VariationSpecifics nodes allowed here ... -->
+                                <VariationTitle> string </VariationTitle>
+                                <WatchCount> long </WatchCount>
+                            </Variation>
+                            <!-- ... more Variation nodes allowed here ... -->
+                        </Variations>
+                        <WatchCount> long </WatchCount>
+                    </Item>
+                    <OrderLineItemID> string </OrderLineItemID>
+                    <PaidTime> dateTime </PaidTime>
+                    <PaisaPayID> string </PaisaPayID>
+                    <Platform> TransactionPlatformCodeType </Platform>
+                    <QuantityPurchased> int </QuantityPurchased>
+                    <SellerPaidStatus> PaidStatusCodeType </SellerPaidStatus>
+                    <ShippedTime> dateTime </ShippedTime>
+                    <Status>
+                        <PaymentHoldStatus> PaymentHoldStatusCodeType </PaymentHoldStatus>
+                    </Status>
+                    <TotalPrice currencyID="CurrencyCodeType"> AmountType (double) </TotalPrice>
+                    <TotalTransactionPrice currencyID="CurrencyCodeType"> AmountType (double) </TotalTransactionPrice>
+                    <TransactionID> string </TransactionID>
+                </Transaction>
+            </OrderTransaction>
+            <!-- ... more OrderTransaction nodes allowed here ... -->
+        </OrderTransactionArray>
+        <PaginationResult>
+            <TotalNumberOfEntries> int </TotalNumberOfEntries>
+            <TotalNumberOfPages> int </TotalNumberOfPages>
+        </PaginationResult>
+    </DeletedFromSoldList>
+    <DeletedFromUnsoldList>
+        <ItemArray>
+            <Item>
+                <BuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </BuyItNowPrice>
+                <ClassifiedAdPayPerLeadFee currencyID="CurrencyCodeType"> AmountType (double) </ClassifiedAdPayPerLeadFee>
+                <HideFromSearch> boolean </HideFromSearch>
+                <ItemID> ItemIDType (string) </ItemID>
+                <ListingDetails>
+                    <ConvertedBuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedBuyItNowPrice>
+                    <ConvertedReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedReservePrice>
+                    <ConvertedStartPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedStartPrice>
+                    <EndTime> dateTime </EndTime>
+                    <StartTime> dateTime </StartTime>
+                </ListingDetails>
+                <ListingType> ListingTypeCodeType </ListingType>
+                <PictureDetails> PictureDetailsType </PictureDetails>
+                <PrivateNotes> string </PrivateNotes>
+                <Quantity> int </Quantity>
+                <QuantityAvailable> int </QuantityAvailable>
+                <QuestionCount> long </QuestionCount>
+                <ReasonHideFromSearch> ReasonHideFromSearchCodeType </ReasonHideFromSearch>
+                <ReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ReservePrice>
+                <SellerProfiles>
+                    <SellerPaymentProfile>
+                        <PaymentProfileID> long </PaymentProfileID>
+                        <PaymentProfileName> string </PaymentProfileName>
+                    </SellerPaymentProfile>
+                    <SellerReturnProfile>
+                        <ReturnProfileID> long </ReturnProfileID>
+                        <ReturnProfileName> string </ReturnProfileName>
+                    </SellerReturnProfile>
+                    <SellerShippingProfile>
+                        <ShippingProfileID> long </ShippingProfileID>
+                        <ShippingProfileName> string </ShippingProfileName>
+                    </SellerShippingProfile>
+                </SellerProfiles>
+                <SellingStatus>
+                    <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
+                    <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                    <QuantitySold> int </QuantitySold>
+                </SellingStatus>
+                <ShippingDetails>
+                    <GlobalShipping> boolean </GlobalShipping>
+                    <ShippingServiceOptions>
+                        <LocalPickup> boolean </LocalPickup>
+                        <ShippingServiceCost currencyID="CurrencyCodeType"> AmountType (double) </ShippingServiceCost>
+                    </ShippingServiceOptions>
+                    <!-- ... more ShippingServiceOptions nodes allowed here ... -->
+                    <ShippingType> ShippingTypeCodeType </ShippingType>
+                </ShippingDetails>
+                <SKU> SKUType (string) </SKU>
+                <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
+                <TimeLeft> duration </TimeLeft>
+                <Title> string </Title>
+                <Variations>
+                    <Variation>
+                        <PrivateNotes> string </PrivateNotes>
+                        <Quantity> int </Quantity>
+                        <SellingStatus>
+                            <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
+                            <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                            <QuantitySold> int </QuantitySold>
+                        </SellingStatus>
+                        <SKU> SKUType (string) </SKU>
+                        <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
+                        <VariationSpecifics>
+                            <NameValueList>
+                                <Name> string </Name>
+                                <Value> string </Value>
+                                <!-- ... more Value values allowed here ... -->
+                            </NameValueList>
+                            <!-- ... more NameValueList nodes allowed here ... -->
+                        </VariationSpecifics>
+                        <!-- ... more VariationSpecifics nodes allowed here ... -->
+                        <VariationTitle> string </VariationTitle>
+                        <WatchCount> long </WatchCount>
+                    </Variation>
+                    <!-- ... more Variation nodes allowed here ... -->
+                </Variations>
+                <WatchCount> long </WatchCount>
+            </Item>
+            <!-- ... more Item nodes allowed here ... -->
+        </ItemArray>
+        <PaginationResult>
+            <TotalNumberOfEntries> int </TotalNumberOfEntries>
+            <TotalNumberOfPages> int </TotalNumberOfPages>
+        </PaginationResult>
+    </DeletedFromUnsoldList>
+    <ScheduledList>
+        <ItemArray>
+            <Item>
+                <BuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </BuyItNowPrice>
+                <ClassifiedAdPayPerLeadFee currencyID="CurrencyCodeType"> AmountType (double) </ClassifiedAdPayPerLeadFee>
+                <eBayNotes> string </eBayNotes>
+                <HideFromSearch> boolean </HideFromSearch>
+                <ItemID> ItemIDType (string) </ItemID>
+                <ListingDetails>
+                    <ConvertedBuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedBuyItNowPrice>
+                    <ConvertedReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedReservePrice>
+                    <ConvertedStartPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedStartPrice>
+                    <StartTime> dateTime </StartTime>
+                </ListingDetails>
+                <ListingDuration> token </ListingDuration>
+                <ListingType> ListingTypeCodeType </ListingType>
+                <PictureDetails> PictureDetailsType </PictureDetails>
+                <PrivateNotes> string </PrivateNotes>
+                <Quantity> int </Quantity>
+                <QuantityAvailable> int </QuantityAvailable>
+                <QuestionCount> long </QuestionCount>
+                <ReasonHideFromSearch> ReasonHideFromSearchCodeType </ReasonHideFromSearch>
+                <ReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ReservePrice>
+                <SellerProfiles>
+                    <SellerPaymentProfile>
+                        <PaymentProfileID> long </PaymentProfileID>
+                        <PaymentProfileName> string </PaymentProfileName>
+                    </SellerPaymentProfile>
+                    <SellerReturnProfile>
+                        <ReturnProfileID> long </ReturnProfileID>
+                        <ReturnProfileName> string </ReturnProfileName>
+                    </SellerReturnProfile>
+                    <SellerShippingProfile>
+                        <ShippingProfileID> long </ShippingProfileID>
+                        <ShippingProfileName> string </ShippingProfileName>
+                    </SellerShippingProfile>
+                </SellerProfiles>
+                <SellingStatus>
+                    <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
+                    <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                    <QuantitySold> int </QuantitySold>
+                    <ReserveMet> boolean </ReserveMet>
+                </SellingStatus>
+                <ShippingDetails>
+                    <GlobalShipping> boolean </GlobalShipping>
+                    <ShippingServiceOptions>
+                        <LocalPickup> boolean </LocalPickup>
+                        <ShippingServiceCost currencyID="CurrencyCodeType"> AmountType (double) </ShippingServiceCost>
+                        <ShippingSurcharge currencyID="CurrencyCodeType"> AmountType (double) </ShippingSurcharge>
+                    </ShippingServiceOptions>
+                    <!-- ... more ShippingServiceOptions nodes allowed here ... -->
+                    <ShippingType> ShippingTypeCodeType </ShippingType>
+                </ShippingDetails>
+                <SKU> SKUType (string) </SKU>
+                <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
+                <TimeLeft> duration </TimeLeft>
+                <Title> string </Title>
+                <Variations>
+                    <Variation>
+                        <PrivateNotes> string </PrivateNotes>
+                        <Quantity> int </Quantity>
+                        <SellingStatus>
+                            <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
+                            <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                            <QuantitySold> int </QuantitySold>
+                            <ReserveMet> boolean </ReserveMet>
+                        </SellingStatus>
+                        <SKU> SKUType (string) </SKU>
+                        <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
+                        <VariationSpecifics>
+                            <NameValueList>
+                                NameValueListType
+                                <Name> string </Name>
+                                <Value> string </Value>
+                                <!-- ... more Value values allowed here ... -->
+                            </NameValueList>
+                            <!-- ... more NameValueList nodes allowed here ... -->
+                        </VariationSpecifics>
+                        <!-- ... more VariationSpecifics nodes allowed here ... -->
+                        <VariationTitle> string </VariationTitle>
+                        <WatchCount> long </WatchCount>
+                    </Variation>
+                    <!-- ... more Variation nodes allowed here ... -->
+                </Variations>
+                <WatchCount> long </WatchCount>
+            </Item>
+            <!-- ... more Item nodes allowed here ... -->
+        </ItemArray>
+        <PaginationResult>
+            <TotalNumberOfEntries> int </TotalNumberOfEntries>
+            <TotalNumberOfPages> int </TotalNumberOfPages>
+        </PaginationResult>
+    </ScheduledList>
+    <SellingSummary>
+        <ActiveAuctionCount> int </ActiveAuctionCount>
+        <AuctionBidCount> int </AuctionBidCount>
+        <AuctionSellingCount> int </AuctionSellingCount>
+        <SoldDurationInDays> int </SoldDurationInDays>
+        <TotalAuctionSellingValue currencyID="CurrencyCodeType"> AmountType (double) </TotalAuctionSellingValue>
+        <TotalSoldCount> int </TotalSoldCount>
+        <TotalSoldValue currencyID="CurrencyCodeType"> AmountType (double) </TotalSoldValue>
+    </SellingSummary>
+    <SoldList>
+        <OrderTransactionArray>
+            <OrderTransaction>
+                <Order>
+                    <OrderID> OrderIDType (string) </OrderID>
+                    <RefundAmount currencyID="CurrencyCodeType"> AmountType (double) </RefundAmount>
+                    <RefundStatus> string </RefundStatus>
+                    <Subtotal currencyID="CurrencyCodeType"> AmountType (double) </Subtotal>
+                    <TransactionArray>
+                        <Transaction>
+                            <Buyer>
+                                <BuyerInfo>
+                                    <ShippingAddress>
+                                        <PostalCode> string </PostalCode>
+                                    </ShippingAddress>
+                                </BuyerInfo>
+                                <Email> string </Email>
+                                <StaticAlias> string </StaticAlias>
+                                <UserID> UserIDType (string) </UserID>
+                            </Buyer>
+                            <ConvertedTransactionPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedTransactionPrice>
+                            <CreatedDate> dateTime </CreatedDate>
+                            <FeedbackLeft>
+                                <CommentType> CommentTypeCodeType </CommentType>
+                            </FeedbackLeft>
+                            <FeedbackReceived>
+                                <CommentType> CommentTypeCodeType </CommentType>
+                            </FeedbackReceived>
+                            <IsMultiLegShipping> boolean </IsMultiLegShipping>
+                            <Item>
+                                <BuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </BuyItNowPrice>
+                                <ClassifiedAdPayPerLeadFee currencyID="CurrencyCodeType"> AmountType (double) </ClassifiedAdPayPerLeadFee>
+                                <HideFromSearch> boolean </HideFromSearch>
+                                <ItemID> ItemIDType (string) </ItemID>
+                                <ListingDetails>
+                                    <ConvertedBuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedBuyItNowPrice>
+                                    <ConvertedReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedReservePrice>
+                                    <ConvertedStartPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedStartPrice>
+                                    <EndTime> dateTime </EndTime>
+                                    <StartTime> dateTime </StartTime>
+                                </ListingDetails>
+                                <ListingType> ListingTypeCodeType </ListingType>
+                                <PictureDetails> PictureDetailsType </PictureDetails>
+                                <PrivateNotes> string </PrivateNotes>
+                                <Quantity> int </Quantity>
+                                <QuantityAvailable> int </QuantityAvailable>
+                                <QuestionCount> long </QuestionCount>
+                                <ReasonHideFromSearch> ReasonHideFromSearchCodeType </ReasonHideFromSearch>
+                                <ReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ReservePrice>
+                                <SellerProfiles>
+                                    <SellerPaymentProfile>
+                                        <PaymentProfileID> long </PaymentProfileID>
+                                        <PaymentProfileName> string </PaymentProfileName>
+                                    </SellerPaymentProfile>
+                                    <SellerReturnProfile>
+                                        <ReturnProfileID> long </ReturnProfileID>
+                                        <ReturnProfileName> string </ReturnProfileName>
+                                    </SellerReturnProfile>
+                                    <SellerShippingProfile>
+                                        <ShippingProfileID> long </ShippingProfileID>
+                                        <ShippingProfileName> string </ShippingProfileName>
+                                    </SellerShippingProfile>
+                                </SellerProfiles>
+                                <SellingStatus>
+                                    <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
+                                    <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                                    <QuantitySold> int </QuantitySold>
+                                    <ReserveMet> boolean </ReserveMet>
+                                </SellingStatus>
+                                <ShippingDetails>
+                                    <GlobalShipping> boolean </GlobalShipping>
+                                    <ShippingServiceOptions>
+                                        <LocalPickup> boolean </LocalPickup>
+                                        <ShippingServiceCost currencyID="CurrencyCodeType"> AmountType (double) </ShippingServiceCost>
+                                    </ShippingServiceOptions>
+                                    <!-- ... more ShippingServiceOptions nodes allowed here ... -->
+                                    <ShippingType> ShippingTypeCodeType </ShippingType>
+                                </ShippingDetails>
+                                <SKU> SKUType (string) </SKU>
+                                <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
+                                <TimeLeft> duration </TimeLeft>
+                                <Title> string </Title>
+                                <Variations>
+                                    <Variation>
+                                        <Quantity> int </Quantity>
+                                        <SellingStatus>
+                                            <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
+                                            <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                                            <QuantitySold> int </QuantitySold>
+                                            <ReserveMet> boolean </ReserveMet>
+                                        </SellingStatus>
+                                        <SKU> SKUType (string) </SKU>
+                                        <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
+                                        <VariationSpecifics>
+                                            <NameValueList>
+                                                <Name> string </Name>
+                                                <Value> string </Value>
+                                                <!-- ... more Value values allowed here ... -->
+                                            </NameValueList>
+                                            <!-- ... more NameValueList nodes allowed here ... -->
+                                        </VariationSpecifics>
+                                        <!-- ... more VariationSpecifics nodes allowed here ... -->
+                                        <VariationTitle> string </VariationTitle>
+                                        <WatchCount> long </WatchCount>
+                                    </Variation>
+                                    <!-- ... more Variation nodes allowed here ... -->
+                                </Variations>
+                                <WatchCount> long </WatchCount>
+                            </Item>
+                            <OrderLineItemID> string </OrderLineItemID>
+                            <PaidTime> dateTime </PaidTime>
+                            <PaisaPayID> string </PaisaPayID>
+                            <PaymentHoldDetails>
+                                <ExpectedReleaseDate> dateTime </ExpectedReleaseDate>
+                                <PaymentHoldReason> PaymentHoldReasonCodeType </PaymentHoldReason>
+                                <RequiredSellerActionArray>
+                                    <RequiredSellerAction> RequiredSellerActionCodeType </RequiredSellerAction>
+                                    <!-- ... more RequiredSellerAction values allowed here ... -->
+                                </RequiredSellerActionArray>
+                            </PaymentHoldDetails>
+                            <Platform> TransactionPlatformCodeType </Platform>
+                            <QuantityPurchased> int </QuantityPurchased>
+                            <SellerPaidStatus> PaidStatusCodeType </SellerPaidStatus>
+                            <ShippedTime> dateTime </ShippedTime>
+                            <Status>
+                                <PaymentHoldStatus> PaymentHoldStatusCodeType </PaymentHoldStatus>
+                            </Status>
+                            <TotalPrice currencyID="CurrencyCodeType"> AmountType (double) </TotalPrice>
+                            <TotalTransactionPrice currencyID="CurrencyCodeType"> AmountType (double) </TotalTransactionPrice>
+                            <TransactionID> string </TransactionID>
+                        </Transaction>
+                        <!-- ... more Transaction nodes allowed here ... -->
+                    </TransactionArray>
+                </Order>
+                <Transaction>
+                    <Buyer>
+                        <BuyerInfo>
+                            <ShippingAddress>
+                                <PostalCode> string </PostalCode>
+                            </ShippingAddress>
+                        </BuyerInfo>
+                        <Email> string </Email>
+                        <StaticAlias> string </StaticAlias>
+                        <UserID> UserIDType (string) </UserID>
+                    </Buyer>
+                    <ConvertedTransactionPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedTransactionPrice>
+                    <CreatedDate> dateTime </CreatedDate>
+                    <FeedbackLeft>
+                        <CommentType> CommentTypeCodeType </CommentType>
+                    </FeedbackLeft>
+                    <FeedbackReceived>
+                        <CommentType> CommentTypeCodeType </CommentType>
+                    </FeedbackReceived>
+                    <IsMultiLegShipping> boolean </IsMultiLegShipping>
+                    <Item>
+                        <BuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </BuyItNowPrice>
+                        <ClassifiedAdPayPerLeadFee currencyID="CurrencyCodeType"> AmountType (double) </ClassifiedAdPayPerLeadFee>
+                        <HideFromSearch> boolean </HideFromSearch>
+                        <ItemID> ItemIDType (string) </ItemID>
+                        <ListingDetails>
+                            <ConvertedBuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedBuyItNowPrice>
+                            <ConvertedReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedReservePrice>
+                            <ConvertedStartPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedStartPrice>
+                            <EndTime> dateTime </EndTime>
+                            <StartTime> dateTime </StartTime>
+                        </ListingDetails>
+                        <ListingType> ListingTypeCodeType </ListingType>
+                        <PictureDetails> PictureDetailsType </PictureDetails>
+                        <PrivateNotes> string </PrivateNotes>
+                        <Quantity> int </Quantity>
+                        <QuantityAvailable> int </QuantityAvailable>
+                        <QuestionCount> long </QuestionCount>
+                        <ReasonHideFromSearch> ReasonHideFromSearchCodeType </ReasonHideFromSearch>
+                        <ReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ReservePrice>
+                        <SellerProfiles>
+                            <SellerPaymentProfile>
+                                <PaymentProfileID> long </PaymentProfileID>
+                                <PaymentProfileName> string </PaymentProfileName>
+                            </SellerPaymentProfile>
+                            <SellerReturnProfile>
+                                <ReturnProfileID> long </ReturnProfileID>
+                                <ReturnProfileName> string </ReturnProfileName>
+                            </SellerReturnProfile>
+                            <SellerShippingProfile>
+                                <ShippingProfileID> long </ShippingProfileID>
+                                <ShippingProfileName> string </ShippingProfileName>
+                            </SellerShippingProfile>
+                        </SellerProfiles>
+                        <SellingStatus>
+                            <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
+                            <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                            <QuantitySold> int </QuantitySold>
+                            <ReserveMet> boolean </ReserveMet>
+                        </SellingStatus>
+                        <ShippingDetails>
+                            <GlobalShipping> boolean </GlobalShipping>
+                            <ShippingServiceOptions>
+                                <LocalPickup> boolean </LocalPickup>
+                                <ShippingServiceCost currencyID="CurrencyCodeType"> AmountType (double) </ShippingServiceCost>
+                            </ShippingServiceOptions>
+                            <!-- ... more ShippingServiceOptions nodes allowed here ... -->
+                            <ShippingType> ShippingTypeCodeType </ShippingType>
+                        </ShippingDetails>
+                        <SKU> SKUType (string) </SKU>
+                        <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
+                        <TimeLeft> duration </TimeLeft>
+                        <Title> string </Title>
+                        <Variations>
+                            <Variation>
+                                <Quantity> int </Quantity>
+                                <SellingStatus>
+                                    <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
+                                    <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                                    <QuantitySold> int </QuantitySold>
+                                    <ReserveMet> boolean </ReserveMet>
+                                </SellingStatus>
+                                <SKU> SKUType (string) </SKU>
+                                <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
+                                <VariationSpecifics>
+                                    <NameValueList>
+                                        <Name> string </Name>
+                                        <Value> string </Value>
+                                        <!-- ... more Value values allowed here ... -->
+                                    </NameValueList>
+                                    <!-- ... more NameValueList nodes allowed here ... -->
+                                </VariationSpecifics>
+                                <!-- ... more VariationSpecifics nodes allowed here ... -->
+                                <VariationTitle> string </VariationTitle>
+                                <WatchCount> long </WatchCount>
+                            </Variation>
+                            <!-- ... more Variation nodes allowed here ... -->
+                        </Variations>
+                        <WatchCount> long </WatchCount>
+                    </Item>
+                    <OrderLineItemID> string </OrderLineItemID>
+                    <PaidTime> dateTime </PaidTime>
+                    <PaisaPayID> string </PaisaPayID>
+                    <PaymentHoldDetails>
+                        <ExpectedReleaseDate> dateTime </ExpectedReleaseDate>
+                        <PaymentHoldReason> PaymentHoldReasonCodeType </PaymentHoldReason>
+                        <RequiredSellerActionArray>
+                            RequiredSellerActionArrayType
+                            <RequiredSellerAction> RequiredSellerActionCodeType </RequiredSellerAction>
+                            <!-- ... more RequiredSellerAction values allowed here ... -->
+                        </RequiredSellerActionArray>
+                    </PaymentHoldDetails>
+                    <Platform> TransactionPlatformCodeType </Platform>
+                    <QuantityPurchased> int </QuantityPurchased>
+                    <SellerPaidStatus> PaidStatusCodeType </SellerPaidStatus>
+                    <ShippedTime> dateTime </ShippedTime>
+                    <Status>
+                        <PaymentHoldStatus> PaymentHoldStatusCodeType </PaymentHoldStatus>
+                    </Status>
+                    <TotalPrice currencyID="CurrencyCodeType"> AmountType (double) </TotalPrice>
+                    <TotalTransactionPrice currencyID="CurrencyCodeType"> AmountType (double) </TotalTransactionPrice>
+                    <TransactionID> string </TransactionID>
+                </Transaction>
+            </OrderTransaction>
+            <!-- ... more OrderTransaction nodes allowed here ... -->
+        </OrderTransactionArray>
+        <PaginationResult>
+            <TotalNumberOfEntries> int </TotalNumberOfEntries>
+            <TotalNumberOfPages> int </TotalNumberOfPages>
+        </PaginationResult>
+    </SoldList>
+    <Summary>
+        <ActiveAuctionCount> int </ActiveAuctionCount>
+        <AmountLimitRemaining currencyID="CurrencyCodeType"> AmountType (double) </AmountLimitRemaining>
+        <AuctionBidCount> int </AuctionBidCount>
+        <AuctionSellingCount> int </AuctionSellingCount>
+        <ClassifiedAdCount> int </ClassifiedAdCount>
+        <ClassifiedAdOfferCount> int </ClassifiedAdOfferCount>
+        <QuantityLimitRemaining> long </QuantityLimitRemaining>
+        <SoldDurationInDays> int </SoldDurationInDays>
+        <TotalAuctionSellingValue currencyID="CurrencyCodeType"> AmountType (double) </TotalAuctionSellingValue>
+        <TotalLeadCount> int </TotalLeadCount>
+        <TotalListingsWithLeads> int </TotalListingsWithLeads>
+        <TotalSoldCount> int </TotalSoldCount>
+        <TotalSoldValue currencyID="CurrencyCodeType"> AmountType (double) </TotalSoldValue>
+    </Summary>
+    <UnsoldList>
+        <ItemArray>
+            <Item>
+                <BuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </BuyItNowPrice>
+                <ClassifiedAdPayPerLeadFee currencyID="CurrencyCodeType"> AmountType (double) </ClassifiedAdPayPerLeadFee>
+                <eBayNotes> string </eBayNotes>
+                <HideFromSearch> boolean </HideFromSearch>
+                <ItemID> ItemIDType (string) </ItemID>
+                <LeadCount> int </LeadCount>
+                <ListingDetails>
+                    <ConvertedBuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedBuyItNowPrice>
+                    <ConvertedReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedReservePrice>
+                    <ConvertedStartPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedStartPrice>
+                    <EndTime> dateTime </EndTime>
+                    <StartTime> dateTime </StartTime>
+                </ListingDetails>
+                <ListingDuration> token </ListingDuration>
+                <ListingType> ListingTypeCodeType </ListingType>
+                <PictureDetails> PictureDetailsType </PictureDetails>
+                <PrivateNotes> string </PrivateNotes>
+                <Quantity> int </Quantity>
+                <QuantityAvailable> int </QuantityAvailable>
+                <QuestionCount> long </QuestionCount>
+                <ReasonHideFromSearch> ReasonHideFromSearchCodeType </ReasonHideFromSearch>
+                <Relisted> boolean </Relisted>
+                <ReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ReservePrice>
+                <SellerProfiles>
+                    <SellerPaymentProfile>
+                        <PaymentProfileID> long </PaymentProfileID>
+                        <PaymentProfileName> string </PaymentProfileName>
+                    </SellerPaymentProfile>
+                    <SellerReturnProfile>
+                        <ReturnProfileID> long </ReturnProfileID>
+                        <ReturnProfileName> string </ReturnProfileName>
+                    </SellerReturnProfile>
+                    <SellerShippingProfile>
+                        <ShippingProfileID> long </ShippingProfileID>
+                        <ShippingProfileName> string </ShippingProfileName>
+                    </SellerShippingProfile>
+                </SellerProfiles>
+                <SellingStatus>
+                    <BidCount> int </BidCount>
+                    <BidderCount> long </BidderCount>
+                    <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
+                    <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                    <QuantitySold> int </QuantitySold>
+                    <ReserveMet> boolean </ReserveMet>
+                </SellingStatus>
+                <ShippingDetails>
+                    <GlobalShipping> boolean </GlobalShipping>
+                    <ShippingServiceOptions>
+                        <LocalPickup> boolean </LocalPickup>
+                        <ShippingServiceCost currencyID="CurrencyCodeType"> AmountType (double) </ShippingServiceCost>
+                    </ShippingServiceOptions>
+                    <!-- ... more ShippingServiceOptions nodes allowed here ... -->
+                    <ShippingType> ShippingTypeCodeType </ShippingType>
+                </ShippingDetails>
+                <SKU> SKUType (string) </SKU>
+                <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
+                <TimeLeft> duration </TimeLeft>
+                <Title> string </Title>
+                <Variations>
+                    <Variation>
+                        <PrivateNotes> string </PrivateNotes>
+                        <Quantity> int </Quantity>
+                        <SellingStatus>
+                            <BidCount> int </BidCount>
+                            <BidderCount> long </BidderCount>
+                            <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
+                            <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                            <QuantitySold> int </QuantitySold>
+                            <ReserveMet> boolean </ReserveMet>
+                        </SellingStatus>
+                        <SKU> SKUType (string) </SKU>
+                        <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
+                        <VariationSpecifics>
+                            <NameValueList>
+                                <Name> string </Name>
+                                <Value> string </Value>
+                                <!-- ... more Value values allowed here ... -->
+                            </NameValueList>
+                            <!-- ... more NameValueList nodes allowed here ... -->
+                        </VariationSpecifics>
+                        <!-- ... more VariationSpecifics nodes allowed here ... -->
+                        <VariationTitle> string </VariationTitle>
+                        <WatchCount> long </WatchCount>
+                    </Variation>
+                    <!-- ... more Variation nodes allowed here ... -->
+                </Variations>
+                <WatchCount> long </WatchCount>
+            </Item>
+            <!-- ... more Item nodes allowed here ... -->
+        </ItemArray>
+        <PaginationResult>
+            <TotalNumberOfEntries> int </TotalNumberOfEntries>
+            <TotalNumberOfPages> int </TotalNumberOfPages>
+        </PaginationResult>
+    </UnsoldList>
+    <!-- Standard Output Fields -->
+    <Ack> AckCodeType </Ack>
+    <Build> string </Build>
+    <CorrelationID> string </CorrelationID>
+    <Errors>
+        <ErrorClassification> ErrorClassificationCodeType </ErrorClassification>
+        <ErrorCode> token </ErrorCode>
+        <ErrorParameters ParamID="string">
+            <Value> string </Value>
+        </ErrorParameters>
+        <!-- ... more ErrorParameters nodes allowed here ... -->
+        <LongMessage> string </LongMessage>
+        <SeverityCode> SeverityCodeType </SeverityCode>
+        <ShortMessage> string </ShortMessage>
+    </Errors>
+    <!-- ... more Errors nodes allowed here ... -->
+    <HardExpirationWarning> string </HardExpirationWarning>
+    <Timestamp> dateTime </Timestamp>
+    <Version> string </Version>
+</GetMyeBaySellingResponse>';
         $xml    = simplexml_load_string($result, "SimpleXMLElement", LIBXML_NOCDATA);
         $json   = json_encode($xml);
         return json_decode($json, true);

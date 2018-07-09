@@ -348,4 +348,15 @@ class User extends Authenticatable
         return $this->where('id', $id)
             ->update($data);
     }
+
+    /**
+     * get user is admin or guest admin
+     * @return array
+     */
+    public function getUserIsAdminOrGuestAdmin()
+    {
+        return $this->whereIn('type', [static::TYPE_GUEST_ADMIN, static::TYPE_SUPER_ADMIN])
+            ->whereNull('deleted_at')
+            ->get();
+    }
 }

@@ -17,6 +17,7 @@ use App\Models\User;
 use App\Models\SoldItem;
 use SimpleXMLElement;
 use Illuminate\Support\Facades\Auth;
+use Goutte\Client;
 
 class CheckProductEbayService extends CommonService
 {
@@ -93,6 +94,19 @@ class CheckProductEbayService extends CommonService
      */
     public function getMyEbaySelling($user)
     {
+        $client = new Client();
+        $crawler = $client->request('GET', 'https://login.yahoo.co.jp/config/login');
+
+        // select the form and fill in some values
+//      $form = $crawler->selectButton('Sign in')->form();
+        $form = $crawler->filterXPath('//*[@id="btnNext"]')->form();
+//      https://symfony.com/doc/current/components/dom_crawler.html
+        // dd($form);
+        $form['login'] = 'cuht1dhedspi';
+        dd($form);
+
+        // submits the given form
+        $crawler = $client->submit($form);
         return $this->callApiGetMyEbaySelling($user);
     }
 

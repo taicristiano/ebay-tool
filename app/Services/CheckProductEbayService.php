@@ -18,6 +18,7 @@ use App\Models\SoldItem;
 use SimpleXMLElement;
 use Illuminate\Support\Facades\Auth;
 use Goutte\Client;
+use Browser\Casper;
 
 class CheckProductEbayService extends CommonService
 {
@@ -81,9 +82,11 @@ class CheckProductEbayService extends CommonService
             // Nếu sản phẩm đó là bày bán bằng tool của mình (check thông qua item_id) và là sản phẩm liên kết đến yahoo aution thì thực hiện mua sản phẩm đó với giá bán ngay lập tức ở yahoo auction (nếu sản phẩm là không có giá bán ngay lập tức thì bỏ qua)                          
             // Sau khi sản phẩm đó được mua trên yahoo auction thì update trường dtb_sold_items.auto_buy_flg = 1
             $soldList = $this->getMyEbaySelling($user);
-            $this->buyYahooAuction($soldList);
+            if (empty($soldList)) {
+                continue;
+            }
+            $this->insertSoldItem($soldList);
             dd($soldList, 2);
-            $this->saveToTableSlodItem($soldList);
         }
     }
 
@@ -94,19 +97,6 @@ class CheckProductEbayService extends CommonService
      */
     public function getMyEbaySelling($user)
     {
-        $client = new Client();
-        $crawler = $client->request('GET', 'https://login.yahoo.co.jp/config/login');
-
-        // select the form and fill in some values
-//      $form = $crawler->selectButton('Sign in')->form();
-        $form = $crawler->filterXPath('//*[@id="btnNext"]')->form();
-//      https://symfony.com/doc/current/components/dom_crawler.html
-        // dd($form);
-        $form['login'] = 'cuht1dhedspi';
-        dd($form);
-
-        // submits the given form
-        $crawler = $client->submit($form);
         return $this->callApiGetMyEbaySelling($user);
     }
 
@@ -123,9 +113,9 @@ class CheckProductEbayService extends CommonService
         $url    = config('api_info.api_common');
         $header = config('api_info.header_api_get_my_ebay_selling');
         $result = $this->callApi($header, $body->asXML(), $url, 'post');
-        if ($result['Ack'] == 'Failure') {
-            return [];
-        }
+        // if ($result['Ack'] == 'Failure') {
+        //     return [];
+        // }
         if (!empty($result['SoldList']) && is_array($result['SoldList'])) {
             return $this->formatDataApiGetMyEbaySelling($result['SoldList']);
         }
@@ -145,9 +135,9 @@ class CheckProductEbayService extends CommonService
                 if (!empty($value['Order'])
                     && !empty($value['Order']['TransactionArray']['Transaction']['Item']['ItemID'])) {
                     $itemDetail = $this->product->findByItemId($value['Order']['TransactionArray']['Transaction']['Item']['ItemID']);
-                    if ($itemDetail) {
-                        $item['item_id']            = $itemDetail->id;
-                        $item['type']               = $itemDetail->type;
+                    if (!$itemDetail) {
+                        // $item['item_id']            = $itemDetail->id;
+                        // $item['type']               = $itemDetail->type;
                         $item['order_id']           = !empty($value['Order']['OrderID']) ? $value['Order']['OrderID'] : '';
                         $item['order_line_id']      = !empty($value['Order']['TransactionArray']['Transaction']['OrderLineItemID']) ? $value['Order']['TransactionArray']['Transaction']['OrderLineItemID'] : '';
                         $item['buyer_postal_code']  = !empty($value['Order']['TransactionArray']['Transaction']['Buyer']['BuyerInfo']['ShippingAddress']['PostalCode']) ? $value['Order']['TransactionArray']['Transaction']['Buyer']['BuyerInfo']['ShippingAddress']['PostalCode'] : '';
@@ -183,14 +173,60 @@ class CheckProductEbayService extends CommonService
      * @param  array $soldList
      * @return void
      */
-    public function buyYahooAuction(&$soldList)
+    public function insertSoldItem(&$soldList)
     {
         foreach ($soldList as &$item) {
-            if ($item['type'] == $this->product->getOriginTypeYahooAuction()) {
+            // if ($item['type'] == $this->product->getOriginTypeYahooAuction()) {
                 // buy yahoo auction
-                $item['auto_buy_flg'] = $this->soldItem->getFlagAutoByFlgDone();
-                unset($item['type']);
-            }
+                if ($this->loginAuction()) {
+                    // buyYahooAuction
+                    if ($this->buyYahooAuction()) {
+                        $item['auto_buy_flg'] = $this->soldItem->getFlagAutoByFlgDone();
+                    }
+                }
+            // }
+            unset($item['type']);
+            $this->saveToTableSlodItem($soldList);
         }
+    }
+
+    public function loginAuction()
+    {
+        // login
+        putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
+        $casper = new Casper('/usr/local/bin/');
+        // cuht2016@gmail.com / miichisoft1234
+        $casper->start('https://login.yahoo.co.jp/config/login');
+        $casper->sendKeys('#username', 'cuht2016@gmail.com');
+        $casper->click('#btnNext');
+        // wait for http request success
+        $casper->wait(3000);
+        $casper->sendKeys('#passwd', 'miichisoft1234');
+        $casper->click('#btnSubmit');
+        $casper->run();
+        if ($casper->getCurrentUrl() == 'https://login.yahoo.co.jp/config/login') {
+            return false;
+        }
+        return true;
+    }
+
+    public function buyYahooAuction()
+    {
+        putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
+        $casper = new Casper('/usr/local/bin/');
+        // cuht2016@gmail.com / miichisoft1234
+        $casper->start('https://page.auctions.yahoo.co.jp/jp/auction/m265693400');
+        // $casper->sendKeys('#username', 'cuht2016@gmail.com');
+        // wait for httprequest success
+        $casper->waitForSelector('.Button--buynow', 3000)->click('.Button--buynow');
+        $casper->wait(10000);
+        // $casper->sendKeys('#passwd', 'miichisoft1234');
+        $casper->waitForSelector('.js-validator-submit', 3000);
+        $casper->click('.js-validator-submit');
+        $casper->run();
+        echo $casper->getHTML();
+        die;
+        // die;
+        dd($casper);
     }
 }

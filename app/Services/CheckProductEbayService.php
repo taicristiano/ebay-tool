@@ -19,6 +19,7 @@ use SimpleXMLElement;
 use Illuminate\Support\Facades\Auth;
 use Goutte\Client;
 use Browser\Casper;
+use Illuminate\Support\Facades\Log;
 
 class CheckProductEbayService extends CommonService
 {
@@ -81,11 +82,13 @@ class CheckProductEbayService extends CommonService
             // Lưu sản phẩm đã bán vào bảng dtb_sold_items.                            
             // Nếu sản phẩm đó là bày bán bằng tool của mình (check thông qua item_id) và là sản phẩm liên kết đến yahoo aution thì thực hiện mua sản phẩm đó với giá bán ngay lập tức ở yahoo auction (nếu sản phẩm là không có giá bán ngay lập tức thì bỏ qua)                          
             // Sau khi sản phẩm đó được mua trên yahoo auction thì update trường dtb_sold_items.auto_buy_flg = 1
-            $soldList = $this->getMyEbaySelling($user);
-            if (empty($soldList)) {
-                continue;
-            }
-            $this->insertSoldItem($soldList);
+            // $soldList = $this->getMyEbaySelling($user);
+            // if (empty($soldList)) {
+            //     continue;
+            // }
+            // $this->insertSoldItem($soldList);
+            var_dump(time());
+            $this->insertSoldItem();
             dd($soldList, 2);
         }
     }
@@ -173,30 +176,44 @@ class CheckProductEbayService extends CommonService
      * @param  array $soldList
      * @return void
      */
-    public function insertSoldItem(&$soldList)
+    public function insertSoldItem()
     {
-        foreach ($soldList as &$item) {
+        // foreach ($soldList as &$item) {
             // if ($item['type'] == $this->product->getOriginTypeYahooAuction()) {
                 // buy yahoo auction
-                if ($this->loginAuction()) {
-                    // buyYahooAuction
-                    if ($this->buyYahooAuction()) {
-                        $item['auto_buy_flg'] = $this->soldItem->getFlagAutoByFlgDone();
+                $arrayItem = ['e288239598', 'm265693400'];
+                $arrayItem = ['e288239598', 'm266086582'];
+                foreach ($arrayItem as $id) {
+                    if ($this->loginAuction()) {
+                        // buyYahooAuction
+                        if ($this->buyYahooAuction($id)) {
+                            Log::info($id);
+                            var_dump($id);
+                            $item['auto_buy_flg'] = $this->soldItem->getFlagAutoByFlgDone();
+                        }
                     }
                 }
+                var_dump(time());
+                dd(2);
             // }
-            unset($item['type']);
-            $this->saveToTableSlodItem($soldList);
-        }
+            // unset($item['type']);
+            // $this->saveToTableSlodItem($soldList);
+        // }
     }
 
     public function loginAuction()
     {
         // login
-        putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
-        $casper = new Casper('/usr/local/bin/');
+        // putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
+        // $casper = new Casper('/usr/local/bin/');
+        putenv("PHANTOMJS_EXECUTABLE=C:/xampp/htdocs/tool/node_modules/phantomjs/lib/phantom/bin/phantomjs");
+        $casper = new Casper('C:/xampp/htdocs/tool/node_modules/casperjs/bin/');
         // cuht2016@gmail.com / miichisoft1234
         $casper->start('https://login.yahoo.co.jp/config/login');
+        $casper->setOptions(array(
+            'ignore-ssl-errors' => 'yes',
+            'cookies-file' => public_path('jsCookies.txt'),
+        ));
         $casper->sendKeys('#username', 'cuht2016@gmail.com');
         $casper->click('#btnNext');
         // wait for http request success
@@ -204,29 +221,43 @@ class CheckProductEbayService extends CommonService
         $casper->sendKeys('#passwd', 'miichisoft1234');
         $casper->click('#btnSubmit');
         $casper->run();
-        if ($casper->getCurrentUrl() == 'https://login.yahoo.co.jp/config/login') {
+        $urlCurrent = $casper->getCurrentUrl();
+        if (empty($urlCurrent) || $urlCurrent == 'https://login.yahoo.co.jp/config/login') {
+            dd($casper);
             return false;
         }
         return true;
     }
 
-    public function buyYahooAuction()
+    public function buyYahooAuction($id)
     {
-        putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
-        $casper = new Casper('/usr/local/bin/');
+        // putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
+        // $casper = new Casper('/usr/local/bin/');
+        putenv("PHANTOMJS_EXECUTABLE=C:/xampp/htdocs/tool/node_modules/phantomjs/lib/phantom/bin/phantomjs");
+        $casper = new Casper('C:/xampp/htdocs/tool/node_modules/casperjs/bin/');
         // cuht2016@gmail.com / miichisoft1234
-        $casper->start('https://page.auctions.yahoo.co.jp/jp/auction/m265693400');
+        $casper->start('https://page.auctions.yahoo.co.jp/jp/auction/'.$id);
         // $casper->sendKeys('#username', 'cuht2016@gmail.com');
         // wait for httprequest success
+        $casper->setOptions(array(
+            'ignore-ssl-errors' => 'yes',
+            'cookies-file' => public_path('jsCookies.txt'),
+        ));
         $casper->waitForSelector('.Button--buynow', 3000)->click('.Button--buynow');
         $casper->wait(10000);
         // $casper->sendKeys('#passwd', 'miichisoft1234');
-        $casper->waitForSelector('.js-validator-submit', 3000);
-        $casper->click('.js-validator-submit');
+        $casper->waitForSelector('#BidModal .js-validator-submit', 3000);
+        $casper->click('#BidModal .js-validator-submit');
         $casper->run();
-        echo $casper->getHTML();
-        die;
-        // die;
-        dd($casper);
+        if ($casper->getCurrentUrl() == 'https://auctions.yahoo.co.jp/jp/show/bid_preview') {
+            $casper->click('input.SubmitBox__button.SubmitBox__button--purchase');
+            $casper->run();
+            if ($casper->getCurrentUrl() == 'https://auctions.yahoo.co.jp/jp/config/placebid') {
+                return true;
+            }
+            dd($casper, 'xo');
+        }
+        dd($casper, 'x1o');
+        return false;
     }
 }

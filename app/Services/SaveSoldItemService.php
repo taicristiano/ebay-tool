@@ -44,7 +44,7 @@ class SaveSoldItemService extends CommonService
             $this->saveToTableSlodItem($soldList);
             $this->user->updateLastMonitoring($user);
         }
-        dd(1111);
+        Log::info('Save sold item success');
     }
 
     /**

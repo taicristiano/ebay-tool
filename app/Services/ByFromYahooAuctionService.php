@@ -40,7 +40,6 @@ class ByFromYahooAuctionService extends CommonService
                     $item['original_id'] = 'e288239598';
                     if ($this->buyYahooAuction($item['original_id'])) {
                         Log::info($item['original_id']);
-                        var_dump($item['original_id']);
                         $value->auto_buy_flg = $this->soldItem->getFlagAutoByFlgDone();
                     } else {
                         $value->auto_buy_flg = $this->soldItem->getFlagAutoByFlgCanNotBuy();
@@ -48,7 +47,7 @@ class ByFromYahooAuctionService extends CommonService
                     $value->save();
                 }
             // }
-            Log::info('success');
+            Log::info('Buy yahoo auction success');
         }
     }
 

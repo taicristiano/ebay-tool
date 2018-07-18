@@ -76,27 +76,27 @@ class CommonService
         <ItemArray>
             <Item>
                 <BestOfferDetails>
-                    <BestOfferCount> int </BestOfferCount>
+                    <BestOfferCount>10</BestOfferCount>
                 </BestOfferDetails>
                 <BuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </BuyItNowPrice>
                 <ClassifiedAdPayPerLeadFee currencyID="CurrencyCodeType"> AmountType (double) </ClassifiedAdPayPerLeadFee>
                 <eBayNotes> string </eBayNotes>
                 <HideFromSearch> boolean </HideFromSearch>
                 <ItemID> ItemIDType (string) </ItemID>
-                <LeadCount> int </LeadCount>
+                <LeadCount>10</LeadCount>
                 <ListingDetails>
                     <ConvertedBuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedBuyItNowPrice>
                     <ConvertedReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedReservePrice>
                     <ConvertedStartPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedStartPrice>
-                    <StartTime> dateTime </StartTime>
+                    <StartTime>2004-08-04T19:09:02.768Z</StartTime>
                 </ListingDetails>
                 <ListingDuration> token </ListingDuration>
                 <ListingType> ListingTypeCodeType </ListingType>
-                <NewLeadCount> int </NewLeadCount>
+                <NewLeadCount>10</NewLeadCount>
                 <PictureDetails> PictureDetailsType </PictureDetails>
                 <PrivateNotes> string </PrivateNotes>
-                <Quantity> int </Quantity>
-                <QuantityAvailable> int </QuantityAvailable>
+                <Quantity>10</Quantity>
+                <QuantityAvailable>10</QuantityAvailable>
                 <QuestionCount> long </QuestionCount>
                 <ReasonHideFromSearch> ReasonHideFromSearchCodeType </ReasonHideFromSearch>
                 <ReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ReservePrice>
@@ -115,21 +115,21 @@ class CommonService
                     </SellerShippingProfile>
                 </SellerProfiles>
                 <SellingStatus>
-                    <BidCount> int </BidCount>
+                    <BidCount>10</BidCount>
                     <BidderCount> long </BidderCount>
                     <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
-                    <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                    <CurrentPrice currencyID="CurrencyCodeType">113434</CurrentPrice>
                     <HighBidder>
                         <FeedbackRatingStar> FeedbackRatingStarCodeType </FeedbackRatingStar>
-                        <FeedbackScore> int </FeedbackScore>
-                        <UserID> UserIDType (string) </UserID>
+                        <FeedbackScore>10</FeedbackScore>
+                        <UserID>1235766</UserID>
                     </HighBidder>
                     <PromotionalSaleDetails>
-                        <EndTime> dateTime </EndTime>
+                        <EndTime>2004-08-04T19:09:02.768Z</EndTime>
                         <OriginalPrice currencyID="CurrencyCodeType"> AmountType (double) </OriginalPrice>
-                        <StartTime> dateTime </StartTime>
+                        <StartTime>2004-08-04T19:09:02.768Z</StartTime>
                     </PromotionalSaleDetails>
-                    <QuantitySold> int </QuantitySold>
+                    <QuantitySold>10</QuantitySold>
                     <ReserveMet> boolean </ReserveMet>
                 </SellingStatus>
                 <ShippingDetails>
@@ -147,23 +147,23 @@ class CommonService
                 <Variations>
                     <Variation>
                         <PrivateNotes> string </PrivateNotes>
-                        <Quantity> int </Quantity>
+                        <Quantity>10</Quantity>
                         <SellingStatus>
-                            <BidCount> int </BidCount>
+                            <BidCount>10</BidCount>
                             <BidderCount> long </BidderCount>
                             <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
-                            <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
+                            <CurrentPrice currencyID="CurrencyCodeType">1234</CurrentPrice>
                             <HighBidder>
                                 <FeedbackRatingStar> FeedbackRatingStarCodeType </FeedbackRatingStar>
-                                <FeedbackScore> int </FeedbackScore>
-                                <UserID> UserIDType (string) </UserID>
+                                <FeedbackScore>10</FeedbackScore>
+                                <UserID>1235766</UserID>
                             </HighBidder>
                             <PromotionalSaleDetails>
-                                <EndTime> dateTime </EndTime>
+                                <EndTime>2004-08-04T19:09:02.768Z</EndTime>
                                 <OriginalPrice currencyID="CurrencyCodeType"> AmountType (double) </OriginalPrice>
-                                <StartTime> dateTime </StartTime>
+                                <StartTime>2004-08-04T19:09:02.768Z</StartTime>
                             </PromotionalSaleDetails>
-                            <QuantitySold> int </QuantitySold>
+                            <QuantitySold>10</QuantitySold>
                             <ReserveMet> boolean </ReserveMet>
                         </SellingStatus>
                         <SKU> SKUType (string) </SKU>
@@ -187,8 +187,8 @@ class CommonService
             <!-- ... more Item nodes allowed here ... -->
         </ItemArray>
         <PaginationResult>
-            <TotalNumberOfEntries> int </TotalNumberOfEntries>
-            <TotalNumberOfPages> int </TotalNumberOfPages>
+            <TotalNumberOfEntries>10</TotalNumberOfEntries>
+            <TotalNumberOfPages>10</TotalNumberOfPages>
         </PaginationResult>
     </ActiveList>
     <DeletedFromSoldList>
@@ -207,10 +207,10 @@ class CommonService
                                 </BuyerInfo>
                                 <Email> string </Email>
                                 <StaticAlias> string </StaticAlias>
-                                <UserID> UserIDType (string) </UserID>
+                                <UserID>1235766</UserID>
                             </Buyer>
                             <ConvertedTransactionPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedTransactionPrice>
-                            <CreatedDate> dateTime </CreatedDate>
+                            <CreatedDate>2004-08-04T19:09:02.768Z</CreatedDate>
                             <FeedbackLeft>
                                 FeedbackInfoType
                                 <CommentType> CommentTypeCodeType </CommentType>
@@ -228,14 +228,14 @@ class CommonService
                                     <ConvertedBuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedBuyItNowPrice>
                                     <ConvertedReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedReservePrice>
                                     <ConvertedStartPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedStartPrice>
-                                    <EndTime> dateTime </EndTime>
-                                    <StartTime> dateTime </StartTime>
+                                    <EndTime>2004-08-04T19:09:02.768Z</EndTime>
+                                    <StartTime>2004-08-04T19:09:02.768Z</StartTime>
                                 </ListingDetails>
                                 <ListingType> ListingTypeCodeType </ListingType>
                                 <PictureDetails> PictureDetailsType </PictureDetails>
                                 <PrivateNotes> string </PrivateNotes>
-                                <Quantity> int </Quantity>
-                                <QuantityAvailable> int </QuantityAvailable>
+                                <Quantity>10</Quantity>
+                                <QuantityAvailable>10</QuantityAvailable>
                                 <QuestionCount> long </QuestionCount>
                                 <ReasonHideFromSearch> ReasonHideFromSearchCodeType </ReasonHideFromSearch>
                                 <ReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ReservePrice>
@@ -255,8 +255,8 @@ class CommonService
                                 </SellerProfiles>
                                 <SellingStatus>
                                     <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
-                                    <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
-                                    <QuantitySold> int </QuantitySold>
+                                    <CurrentPrice currencyID="CurrencyCodeType">11112</CurrentPrice>
+                                    <QuantitySold>10</QuantitySold>
                                 </SellingStatus>
                                 <ShippingDetails>
                                     <GlobalShipping> boolean </GlobalShipping>
@@ -273,11 +273,11 @@ class CommonService
                                 <Title> string </Title>
                                 <Variations>
                                     <Variation>
-                                        <Quantity> int </Quantity>
+                                        <Quantity>10</Quantity>
                                         <SellingStatus>
                                             <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
-                                            <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
-                                            <QuantitySold> int </QuantitySold>
+                                            <CurrentPrice currencyID="CurrencyCodeType">113434</CurrentPrice>
+                                            <QuantitySold>10</QuantitySold>
                                         </SellingStatus>
                                         <SKU> SKUType (string) </SKU>
                                         <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
@@ -298,12 +298,12 @@ class CommonService
                                 <WatchCount> long </WatchCount>
                             </Item>
                             <OrderLineItemID> string </OrderLineItemID>
-                            <PaidTime> dateTime </PaidTime>
+                            <PaidTime>2004-08-04T19:09:02.768Z</PaidTime>
                             <PaisaPayID> string </PaisaPayID>
                             <Platform> TransactionPlatformCodeType </Platform>
-                            <QuantityPurchased> int </QuantityPurchased>
+                            <QuantityPurchased>10</QuantityPurchased>
                             <SellerPaidStatus> PaidStatusCodeType </SellerPaidStatus>
-                            <ShippedTime> dateTime </ShippedTime>
+                            <ShippedTime>2004-08-04T19:09:02.768Z</ShippedTime>
                             <Status>
                                 <PaymentHoldStatus> PaymentHoldStatusCodeType </PaymentHoldStatus>
                             </Status>
@@ -323,10 +323,10 @@ class CommonService
                         </BuyerInfo>
                         <Email> string </Email>
                         <StaticAlias> string </StaticAlias>
-                        <UserID> UserIDType (string) </UserID>
+                        <UserID>1235766</UserID>
                     </Buyer>
                     <ConvertedTransactionPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedTransactionPrice>
-                    <CreatedDate> dateTime </CreatedDate>
+                    <CreatedDate>2004-08-04T19:09:02.768Z</CreatedDate>
                     <FeedbackLeft>
                         <CommentType> CommentTypeCodeType </CommentType>
                     </FeedbackLeft>
@@ -343,14 +343,14 @@ class CommonService
                             <ConvertedBuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedBuyItNowPrice>
                             <ConvertedReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedReservePrice>
                             <ConvertedStartPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedStartPrice>
-                            <EndTime> dateTime </EndTime>
-                            <StartTime> dateTime </StartTime>
+                            <EndTime>2004-08-04T19:09:02.768Z</EndTime>
+                            <StartTime>2004-08-04T19:09:02.768Z</StartTime>
                         </ListingDetails>
                         <ListingType> ListingTypeCodeType </ListingType>
                         <PictureDetails> PictureDetailsType </PictureDetails>
                         <PrivateNotes> string </PrivateNotes>
-                        <Quantity> int </Quantity>
-                        <QuantityAvailable> int </QuantityAvailable>
+                        <Quantity>10</Quantity>
+                        <QuantityAvailable>10</QuantityAvailable>
                         <QuestionCount> long </QuestionCount>
                         <ReasonHideFromSearch> ReasonHideFromSearchCodeType </ReasonHideFromSearch>
                         <ReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ReservePrice>
@@ -370,8 +370,8 @@ class CommonService
                         </SellerProfiles>
                         <SellingStatus>
                             <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
-                            <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
-                            <QuantitySold> int </QuantitySold>
+                            <CurrentPrice currencyID="CurrencyCodeType">113434</CurrentPrice>
+                            <QuantitySold>10</QuantitySold>
                         </SellingStatus>
                         <ShippingDetails>
                             <GlobalShipping> boolean </GlobalShipping>
@@ -388,11 +388,11 @@ class CommonService
                         <Title> string </Title>
                         <Variations>
                             <Variation>
-                                <Quantity> int </Quantity>
+                                <Quantity>10</Quantity>
                                 <SellingStatus>
                                     <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
-                                    <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
-                                    <QuantitySold> int </QuantitySold>
+                                    <CurrentPrice currencyID="CurrencyCodeType">113434</CurrentPrice>
+                                    <QuantitySold>10</QuantitySold>
                                 </SellingStatus>
                                 <SKU> SKUType (string) </SKU>
                                 <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
@@ -413,12 +413,12 @@ class CommonService
                         <WatchCount> long </WatchCount>
                     </Item>
                     <OrderLineItemID> string </OrderLineItemID>
-                    <PaidTime> dateTime </PaidTime>
+                    <PaidTime>2004-08-04T19:09:02.768Z</PaidTime>
                     <PaisaPayID> string </PaisaPayID>
                     <Platform> TransactionPlatformCodeType </Platform>
-                    <QuantityPurchased> int </QuantityPurchased>
+                    <QuantityPurchased>10</QuantityPurchased>
                     <SellerPaidStatus> PaidStatusCodeType </SellerPaidStatus>
-                    <ShippedTime> dateTime </ShippedTime>
+                    <ShippedTime>2004-08-04T19:09:02.768Z</ShippedTime>
                     <Status>
                         <PaymentHoldStatus> PaymentHoldStatusCodeType </PaymentHoldStatus>
                     </Status>
@@ -430,8 +430,8 @@ class CommonService
             <!-- ... more OrderTransaction nodes allowed here ... -->
         </OrderTransactionArray>
         <PaginationResult>
-            <TotalNumberOfEntries> int </TotalNumberOfEntries>
-            <TotalNumberOfPages> int </TotalNumberOfPages>
+            <TotalNumberOfEntries>10</TotalNumberOfEntries>
+            <TotalNumberOfPages>10</TotalNumberOfPages>
         </PaginationResult>
     </DeletedFromSoldList>
     <DeletedFromUnsoldList>
@@ -445,14 +445,14 @@ class CommonService
                     <ConvertedBuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedBuyItNowPrice>
                     <ConvertedReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedReservePrice>
                     <ConvertedStartPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedStartPrice>
-                    <EndTime> dateTime </EndTime>
-                    <StartTime> dateTime </StartTime>
+                    <EndTime>2004-08-04T19:09:02.768Z</EndTime>
+                    <StartTime>2004-08-04T19:09:02.768Z</StartTime>
                 </ListingDetails>
                 <ListingType> ListingTypeCodeType </ListingType>
                 <PictureDetails> PictureDetailsType </PictureDetails>
                 <PrivateNotes> string </PrivateNotes>
-                <Quantity> int </Quantity>
-                <QuantityAvailable> int </QuantityAvailable>
+                <Quantity>10</Quantity>
+                <QuantityAvailable>10</QuantityAvailable>
                 <QuestionCount> long </QuestionCount>
                 <ReasonHideFromSearch> ReasonHideFromSearchCodeType </ReasonHideFromSearch>
                 <ReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ReservePrice>
@@ -472,8 +472,8 @@ class CommonService
                 </SellerProfiles>
                 <SellingStatus>
                     <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
-                    <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
-                    <QuantitySold> int </QuantitySold>
+                    <CurrentPrice currencyID="CurrencyCodeType">113434</CurrentPrice>
+                    <QuantitySold>10</QuantitySold>
                 </SellingStatus>
                 <ShippingDetails>
                     <GlobalShipping> boolean </GlobalShipping>
@@ -491,11 +491,11 @@ class CommonService
                 <Variations>
                     <Variation>
                         <PrivateNotes> string </PrivateNotes>
-                        <Quantity> int </Quantity>
+                        <Quantity>10</Quantity>
                         <SellingStatus>
                             <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
-                            <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
-                            <QuantitySold> int </QuantitySold>
+                            <CurrentPrice currencyID="CurrencyCodeType">113434</CurrentPrice>
+                            <QuantitySold>10</QuantitySold>
                         </SellingStatus>
                         <SKU> SKUType (string) </SKU>
                         <StartPrice currencyID="CurrencyCodeType"> AmountType (double) </StartPrice>
@@ -518,8 +518,8 @@ class CommonService
             <!-- ... more Item nodes allowed here ... -->
         </ItemArray>
         <PaginationResult>
-            <TotalNumberOfEntries> int </TotalNumberOfEntries>
-            <TotalNumberOfPages> int </TotalNumberOfPages>
+            <TotalNumberOfEntries>10</TotalNumberOfEntries>
+            <TotalNumberOfPages>10</TotalNumberOfPages>
         </PaginationResult>
     </DeletedFromUnsoldList>
     <ScheduledList>
@@ -534,14 +534,14 @@ class CommonService
                     <ConvertedBuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedBuyItNowPrice>
                     <ConvertedReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedReservePrice>
                     <ConvertedStartPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedStartPrice>
-                    <StartTime> dateTime </StartTime>
+                    <StartTime>2004-08-04T19:09:02.768Z</StartTime>
                 </ListingDetails>
                 <ListingDuration> token </ListingDuration>
                 <ListingType> ListingTypeCodeType </ListingType>
                 <PictureDetails> PictureDetailsType </PictureDetails>
                 <PrivateNotes> string </PrivateNotes>
-                <Quantity> int </Quantity>
-                <QuantityAvailable> int </QuantityAvailable>
+                <Quantity>10</Quantity>
+                <QuantityAvailable>10</QuantityAvailable>
                 <QuestionCount> long </QuestionCount>
                 <ReasonHideFromSearch> ReasonHideFromSearchCodeType </ReasonHideFromSearch>
                 <ReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ReservePrice>
@@ -561,8 +561,8 @@ class CommonService
                 </SellerProfiles>
                 <SellingStatus>
                     <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
-                    <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
-                    <QuantitySold> int </QuantitySold>
+                    <CurrentPrice currencyID="CurrencyCodeType">113434</CurrentPrice>
+                    <QuantitySold>10</QuantitySold>
                     <ReserveMet> boolean </ReserveMet>
                 </SellingStatus>
                 <ShippingDetails>
@@ -582,11 +582,11 @@ class CommonService
                 <Variations>
                     <Variation>
                         <PrivateNotes> string </PrivateNotes>
-                        <Quantity> int </Quantity>
+                        <Quantity>10</Quantity>
                         <SellingStatus>
                             <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
-                            <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
-                            <QuantitySold> int </QuantitySold>
+                            <CurrentPrice currencyID="CurrencyCodeType">113434</CurrentPrice>
+                            <QuantitySold>10</QuantitySold>
                             <ReserveMet> boolean </ReserveMet>
                         </SellingStatus>
                         <SKU> SKUType (string) </SKU>
@@ -611,24 +611,24 @@ class CommonService
             <!-- ... more Item nodes allowed here ... -->
         </ItemArray>
         <PaginationResult>
-            <TotalNumberOfEntries> int </TotalNumberOfEntries>
-            <TotalNumberOfPages> int </TotalNumberOfPages>
+            <TotalNumberOfEntries>10</TotalNumberOfEntries>
+            <TotalNumberOfPages>10</TotalNumberOfPages>
         </PaginationResult>
     </ScheduledList>
     <SellingSummary>
-        <ActiveAuctionCount> int </ActiveAuctionCount>
-        <AuctionBidCount> int </AuctionBidCount>
-        <AuctionSellingCount> int </AuctionSellingCount>
-        <SoldDurationInDays> int </SoldDurationInDays>
+        <ActiveAuctionCount>10</ActiveAuctionCount>
+        <AuctionBidCount>10</AuctionBidCount>
+        <AuctionSellingCount>10</AuctionSellingCount>
+        <SoldDurationInDays>10</SoldDurationInDays>
         <TotalAuctionSellingValue currencyID="CurrencyCodeType"> AmountType (double) </TotalAuctionSellingValue>
-        <TotalSoldCount> int </TotalSoldCount>
+        <TotalSoldCount>10</TotalSoldCount>
         <TotalSoldValue currencyID="CurrencyCodeType"> AmountType (double) </TotalSoldValue>
     </SellingSummary>
     <SoldList>
         <OrderTransactionArray>
             <OrderTransaction>
                 <Order>
-                    <OrderID> OrderIDType (string) </OrderID>
+                    <OrderID>123456</OrderID>
                     <RefundAmount currencyID="CurrencyCodeType"> AmountType (double) </RefundAmount>
                     <RefundStatus> string </RefundStatus>
                     <Subtotal currencyID="CurrencyCodeType"> AmountType (double) </Subtotal>
@@ -642,10 +642,10 @@ class CommonService
                                 </BuyerInfo>
                                 <Email> string </Email>
                                 <StaticAlias> string </StaticAlias>
-                                <UserID> UserIDType (string) </UserID>
+                                <UserID>1235766</UserID>
                             </Buyer>
                             <ConvertedTransactionPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedTransactionPrice>
-                            <CreatedDate> dateTime </CreatedDate>
+                            <CreatedDate>2004-08-04T19:09:02.768Z</CreatedDate>
                             <FeedbackLeft>
                                 <CommentType> CommentTypeCodeType </CommentType>
                             </FeedbackLeft>
@@ -662,14 +662,14 @@ class CommonService
                                     <ConvertedBuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedBuyItNowPrice>
                                     <ConvertedReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedReservePrice>
                                     <ConvertedStartPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedStartPrice>
-                                    <EndTime> dateTime </EndTime>
-                                    <StartTime> dateTime </StartTime>
+                                    <EndTime>2004-08-04T19:09:02.768Z</EndTime>
+                                    <StartTime>2004-08-04T19:09:02.768Z</StartTime>
                                 </ListingDetails>
                                 <ListingType> ListingTypeCodeType </ListingType>
                                 <PictureDetails> PictureDetailsType </PictureDetails>
                                 <PrivateNotes> string </PrivateNotes>
-                                <Quantity> int </Quantity>
-                                <QuantityAvailable> int </QuantityAvailable>
+                                <Quantity>10</Quantity>
+                                <QuantityAvailable>10</QuantityAvailable>
                                 <QuestionCount> long </QuestionCount>
                                 <ReasonHideFromSearch> ReasonHideFromSearchCodeType </ReasonHideFromSearch>
                                 <ReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ReservePrice>
@@ -689,8 +689,8 @@ class CommonService
                                 </SellerProfiles>
                                 <SellingStatus>
                                     <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
-                                    <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
-                                    <QuantitySold> int </QuantitySold>
+                                    <CurrentPrice currencyID="CurrencyCodeType">113434</CurrentPrice>
+                                    <QuantitySold>10</QuantitySold>
                                     <ReserveMet> boolean </ReserveMet>
                                 </SellingStatus>
                                 <ShippingDetails>
@@ -708,11 +708,11 @@ class CommonService
                                 <Title> string </Title>
                                 <Variations>
                                     <Variation>
-                                        <Quantity> int </Quantity>
+                                        <Quantity>10</Quantity>
                                         <SellingStatus>
                                             <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
-                                            <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
-                                            <QuantitySold> int </QuantitySold>
+                                            <CurrentPrice currencyID="CurrencyCodeType">113434</CurrentPrice>
+                                            <QuantitySold>10</QuantitySold>
                                             <ReserveMet> boolean </ReserveMet>
                                         </SellingStatus>
                                         <SKU> SKUType (string) </SKU>
@@ -734,10 +734,10 @@ class CommonService
                                 <WatchCount> long </WatchCount>
                             </Item>
                             <OrderLineItemID> string </OrderLineItemID>
-                            <PaidTime> dateTime </PaidTime>
+                            <PaidTime>2004-08-04T19:09:02.768Z</PaidTime>
                             <PaisaPayID> string </PaisaPayID>
                             <PaymentHoldDetails>
-                                <ExpectedReleaseDate> dateTime </ExpectedReleaseDate>
+                                <ExpectedReleaseDate>2004-08-04T19:09:02.768Z</ExpectedReleaseDate>
                                 <PaymentHoldReason> PaymentHoldReasonCodeType </PaymentHoldReason>
                                 <RequiredSellerActionArray>
                                     <RequiredSellerAction> RequiredSellerActionCodeType </RequiredSellerAction>
@@ -745,9 +745,9 @@ class CommonService
                                 </RequiredSellerActionArray>
                             </PaymentHoldDetails>
                             <Platform> TransactionPlatformCodeType </Platform>
-                            <QuantityPurchased> int </QuantityPurchased>
+                            <QuantityPurchased>10</QuantityPurchased>
                             <SellerPaidStatus> PaidStatusCodeType </SellerPaidStatus>
-                            <ShippedTime> dateTime </ShippedTime>
+                            <ShippedTime>2004-08-04T19:09:02.768Z</ShippedTime>
                             <Status>
                                 <PaymentHoldStatus> PaymentHoldStatusCodeType </PaymentHoldStatus>
                             </Status>
@@ -767,10 +767,10 @@ class CommonService
                         </BuyerInfo>
                         <Email> string </Email>
                         <StaticAlias> string </StaticAlias>
-                        <UserID> UserIDType (string) </UserID>
+                        <UserID>1235766</UserID>
                     </Buyer>
                     <ConvertedTransactionPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedTransactionPrice>
-                    <CreatedDate> dateTime </CreatedDate>
+                    <CreatedDate>2004-08-04T19:09:02.768Z</CreatedDate>
                     <FeedbackLeft>
                         <CommentType> CommentTypeCodeType </CommentType>
                     </FeedbackLeft>
@@ -787,14 +787,14 @@ class CommonService
                             <ConvertedBuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedBuyItNowPrice>
                             <ConvertedReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedReservePrice>
                             <ConvertedStartPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedStartPrice>
-                            <EndTime> dateTime </EndTime>
-                            <StartTime> dateTime </StartTime>
+                            <EndTime>2004-08-04T19:09:02.768Z</EndTime>
+                            <StartTime>2004-08-04T19:09:02.768Z</StartTime>
                         </ListingDetails>
                         <ListingType> ListingTypeCodeType </ListingType>
                         <PictureDetails> PictureDetailsType </PictureDetails>
                         <PrivateNotes> string </PrivateNotes>
-                        <Quantity> int </Quantity>
-                        <QuantityAvailable> int </QuantityAvailable>
+                        <Quantity>10</Quantity>
+                        <QuantityAvailable>10</QuantityAvailable>
                         <QuestionCount> long </QuestionCount>
                         <ReasonHideFromSearch> ReasonHideFromSearchCodeType </ReasonHideFromSearch>
                         <ReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ReservePrice>
@@ -814,8 +814,8 @@ class CommonService
                         </SellerProfiles>
                         <SellingStatus>
                             <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
-                            <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
-                            <QuantitySold> int </QuantitySold>
+                            <CurrentPrice currencyID="CurrencyCodeType">113434</CurrentPrice>
+                            <QuantitySold>10</QuantitySold>
                             <ReserveMet> boolean </ReserveMet>
                         </SellingStatus>
                         <ShippingDetails>
@@ -833,11 +833,11 @@ class CommonService
                         <Title> string </Title>
                         <Variations>
                             <Variation>
-                                <Quantity> int </Quantity>
+                                <Quantity>10</Quantity>
                                 <SellingStatus>
                                     <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
-                                    <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
-                                    <QuantitySold> int </QuantitySold>
+                                    <CurrentPrice currencyID="CurrencyCodeType">113434</CurrentPrice>
+                                    <QuantitySold>10</QuantitySold>
                                     <ReserveMet> boolean </ReserveMet>
                                 </SellingStatus>
                                 <SKU> SKUType (string) </SKU>
@@ -859,10 +859,10 @@ class CommonService
                         <WatchCount> long </WatchCount>
                     </Item>
                     <OrderLineItemID> string </OrderLineItemID>
-                    <PaidTime> dateTime </PaidTime>
+                    <PaidTime>2004-08-04T19:09:02.768Z</PaidTime>
                     <PaisaPayID> string </PaisaPayID>
                     <PaymentHoldDetails>
-                        <ExpectedReleaseDate> dateTime </ExpectedReleaseDate>
+                        <ExpectedReleaseDate>2004-08-04T19:09:02.768Z</ExpectedReleaseDate>
                         <PaymentHoldReason> PaymentHoldReasonCodeType </PaymentHoldReason>
                         <RequiredSellerActionArray>
                             RequiredSellerActionArrayType
@@ -871,9 +871,9 @@ class CommonService
                         </RequiredSellerActionArray>
                     </PaymentHoldDetails>
                     <Platform> TransactionPlatformCodeType </Platform>
-                    <QuantityPurchased> int </QuantityPurchased>
+                    <QuantityPurchased>10</QuantityPurchased>
                     <SellerPaidStatus> PaidStatusCodeType </SellerPaidStatus>
-                    <ShippedTime> dateTime </ShippedTime>
+                    <ShippedTime>2004-08-04T19:09:02.768Z</ShippedTime>
                     <Status>
                         <PaymentHoldStatus> PaymentHoldStatusCodeType </PaymentHoldStatus>
                     </Status>
@@ -885,23 +885,23 @@ class CommonService
             <!-- ... more OrderTransaction nodes allowed here ... -->
         </OrderTransactionArray>
         <PaginationResult>
-            <TotalNumberOfEntries> int </TotalNumberOfEntries>
-            <TotalNumberOfPages> int </TotalNumberOfPages>
+            <TotalNumberOfEntries>10</TotalNumberOfEntries>
+            <TotalNumberOfPages>10</TotalNumberOfPages>
         </PaginationResult>
     </SoldList>
     <Summary>
-        <ActiveAuctionCount> int </ActiveAuctionCount>
+        <ActiveAuctionCount>10</ActiveAuctionCount>
         <AmountLimitRemaining currencyID="CurrencyCodeType"> AmountType (double) </AmountLimitRemaining>
-        <AuctionBidCount> int </AuctionBidCount>
-        <AuctionSellingCount> int </AuctionSellingCount>
-        <ClassifiedAdCount> int </ClassifiedAdCount>
-        <ClassifiedAdOfferCount> int </ClassifiedAdOfferCount>
+        <AuctionBidCount>10</AuctionBidCount>
+        <AuctionSellingCount>10</AuctionSellingCount>
+        <ClassifiedAdCount>10</ClassifiedAdCount>
+        <ClassifiedAdOfferCount>10</ClassifiedAdOfferCount>
         <QuantityLimitRemaining> long </QuantityLimitRemaining>
-        <SoldDurationInDays> int </SoldDurationInDays>
+        <SoldDurationInDays>10</SoldDurationInDays>
         <TotalAuctionSellingValue currencyID="CurrencyCodeType"> AmountType (double) </TotalAuctionSellingValue>
-        <TotalLeadCount> int </TotalLeadCount>
-        <TotalListingsWithLeads> int </TotalListingsWithLeads>
-        <TotalSoldCount> int </TotalSoldCount>
+        <TotalLeadCount>10</TotalLeadCount>
+        <TotalListingsWithLeads>10</TotalListingsWithLeads>
+        <TotalSoldCount>10</TotalSoldCount>
         <TotalSoldValue currencyID="CurrencyCodeType"> AmountType (double) </TotalSoldValue>
     </Summary>
     <UnsoldList>
@@ -912,20 +912,20 @@ class CommonService
                 <eBayNotes> string </eBayNotes>
                 <HideFromSearch> boolean </HideFromSearch>
                 <ItemID> ItemIDType (string) </ItemID>
-                <LeadCount> int </LeadCount>
+                <LeadCount>10</LeadCount>
                 <ListingDetails>
                     <ConvertedBuyItNowPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedBuyItNowPrice>
                     <ConvertedReservePrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedReservePrice>
                     <ConvertedStartPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedStartPrice>
-                    <EndTime> dateTime </EndTime>
-                    <StartTime> dateTime </StartTime>
+                    <EndTime>2004-08-04T19:09:02.768Z</EndTime>
+                    <StartTime>2004-08-04T19:09:02.768Z</StartTime>
                 </ListingDetails>
                 <ListingDuration> token </ListingDuration>
                 <ListingType> ListingTypeCodeType </ListingType>
                 <PictureDetails> PictureDetailsType </PictureDetails>
                 <PrivateNotes> string </PrivateNotes>
-                <Quantity> int </Quantity>
-                <QuantityAvailable> int </QuantityAvailable>
+                <Quantity>10</Quantity>
+                <QuantityAvailable>10</QuantityAvailable>
                 <QuestionCount> long </QuestionCount>
                 <ReasonHideFromSearch> ReasonHideFromSearchCodeType </ReasonHideFromSearch>
                 <Relisted> boolean </Relisted>
@@ -945,11 +945,11 @@ class CommonService
                     </SellerShippingProfile>
                 </SellerProfiles>
                 <SellingStatus>
-                    <BidCount> int </BidCount>
+                    <BidCount>10</BidCount>
                     <BidderCount> long </BidderCount>
                     <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
-                    <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
-                    <QuantitySold> int </QuantitySold>
+                    <CurrentPrice currencyID="CurrencyCodeType">113434</CurrentPrice>
+                    <QuantitySold>10</QuantitySold>
                     <ReserveMet> boolean </ReserveMet>
                 </SellingStatus>
                 <ShippingDetails>
@@ -968,13 +968,13 @@ class CommonService
                 <Variations>
                     <Variation>
                         <PrivateNotes> string </PrivateNotes>
-                        <Quantity> int </Quantity>
+                        <Quantity>10</Quantity>
                         <SellingStatus>
-                            <BidCount> int </BidCount>
+                            <BidCount>10</BidCount>
                             <BidderCount> long </BidderCount>
                             <ConvertedCurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </ConvertedCurrentPrice>
-                            <CurrentPrice currencyID="CurrencyCodeType"> AmountType (double) </CurrentPrice>
-                            <QuantitySold> int </QuantitySold>
+                            <CurrentPrice currencyID="CurrencyCodeType">113434</CurrentPrice>
+                            <QuantitySold>10</QuantitySold>
                             <ReserveMet> boolean </ReserveMet>
                         </SellingStatus>
                         <SKU> SKUType (string) </SKU>
@@ -998,8 +998,8 @@ class CommonService
             <!-- ... more Item nodes allowed here ... -->
         </ItemArray>
         <PaginationResult>
-            <TotalNumberOfEntries> int </TotalNumberOfEntries>
-            <TotalNumberOfPages> int </TotalNumberOfPages>
+            <TotalNumberOfEntries>10</TotalNumberOfEntries>
+            <TotalNumberOfPages>10</TotalNumberOfPages>
         </PaginationResult>
     </UnsoldList>
     <!-- Standard Output Fields -->
@@ -1019,7 +1019,7 @@ class CommonService
     </Errors>
     <!-- ... more Errors nodes allowed here ... -->
     <HardExpirationWarning> string </HardExpirationWarning>
-    <Timestamp> dateTime </Timestamp>
+    <Timestamp>2004-08-04T19:09:02.768Z</Timestamp>
     <Version> string </Version>
 </GetMyeBaySellingResponse>';
         $xml    = simplexml_load_string($result, "SimpleXMLElement", LIBXML_NOCDATA);
@@ -1209,5 +1209,16 @@ class CommonService
         } else {
             $data['dtb_item']['profit'] = round((float)$sellPriceYen - $ebayFeeYen - $data['dtb_item']['paypal_fee'] - $data['dtb_item']['ship_fee'] - (float)$data['dtb_item']['buy_price'], 2);
         }
+    }
+
+    /**
+     * create date
+     * @param  string $date
+     * @return string
+     */
+    public function createDate($date)
+    {
+        $date = date_create($date);
+        return date_format($date, "Y-m-d H:i:s");
     }
 }

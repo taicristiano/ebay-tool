@@ -56,6 +56,7 @@ class CreateTableItem extends Migration
             $table->foreign('setting_template_id')->references('id')->on('dtb_setting_template')->onDelete('cascade');
             $table->dateTime('last_mornitoring_date')->nullable();
             $table->smallInteger('monitor_type')->default(1);
+            $table->boolean('monitoring_flg')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

@@ -350,13 +350,43 @@ class User extends Authenticatable
     }
 
     /**
-     * get user is admin or guest admin
+     * get user for first crontab
      * @return array
      */
-    public function getUserIsAdminOrGuestAdmin()
+    public function getUserForFirstCrontab()
     {
         return $this->whereIn('type', [static::TYPE_GUEST_ADMIN, static::TYPE_SUPER_ADMIN])
             ->whereNull('deleted_at')
+            ->where('monitoring_flg', 0)
+            ->orderBy('last_monitoring_dt', 'desc')
+            ->limit(20)
             ->get();
+    }
+
+    /**
+     * update user for first crontab
+     * @param array $input
+     * @return integer
+     */
+    public function updateUserForFirstCrontab($input)
+    {
+        return $this->whereIn('type', [static::TYPE_GUEST_ADMIN, static::TYPE_SUPER_ADMIN])
+            ->whereNull('deleted_at')
+            ->where('monitoring_flg', 0)
+            ->orderBy('last_monitoring_dt', 'desc')
+            ->limit(20)
+            ->update($input);
+    }
+
+    /**
+     * update last monitoring
+     * @param  array $user
+     * @return void
+     */
+    public function updateLastMonitoring($user)
+    {
+        $user->monitoring_flg = 0;
+        $user->last_monitoring_dt = date('Y-m-d H:i:s');
+        $user->save();
     }
 }

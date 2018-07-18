@@ -19,7 +19,8 @@ class CreateTableSoldItems extends Migration
             $table->foreign('item_id')->references('id')->on('dtb_item')->onDelete('cascade');
             $table->string('order_id', 50)->nullable();
             $table->string('order_line_id', 50)->default(1);
-            $table->smallInteger('auto_by_flg')->default(0);
+            $table->string('ebay_item_id', 50)->nullable();
+            $table->smallInteger('auto_buy_flg')->default(0);
             $table->string('buyer_postal_code', 10)->nullable();
             $table->string('buyer_email', 50)->nullable();
             $table->string('buyer_static_alias', 50)->nullable();
@@ -27,6 +28,7 @@ class CreateTableSoldItems extends Migration
             $table->double('sold_price', 11, 2)->nullable();
             $table->string('transaction_id', 12)->nullable();
             $table->integer('sold_quantity')->nullable();
+            $table->smallInteger('order_status')->default(0);
             $table->dateTime('paid_time')->nullable();
             $table->integer('ship_cost')->nullable();
             $table->dateTime('order_date')->nullable();

@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use App\Services\ProductPostService;
 use App\Services\ProductListService;
 use App\Services\ProductEditService;
-use App\Services\CheckProductEbayService;
+use App\Services\SaveSoldItemService;
+use App\Services\ByFromYahooAuctionService;
 use App\Models\Item;
 use App\Models\CategoryFee;
 use App\Models\MtbExchangeRate;
@@ -46,7 +47,8 @@ class ProductController extends AbstractController
         User $user,
         Authorization $authorization,
         MtbExchangeRate $exchangeRate,
-        CheckProductEbayService $productEbayService
+        SaveSoldItemService $saveSoldItemService,
+        ByFromYahooAuctionService $byFromYahooAuctionService
     ) {
         $this->productPostService = $productPostService;
         $this->product            = $product;
@@ -60,7 +62,8 @@ class ProductController extends AbstractController
         $this->user               = $user;
         $this->authorization      = $authorization;
 
-        $this->productEbayService = $productEbayService;
+        $this->saveSoldItemService = $saveSoldItemService;
+        $this->byFromYahooAuctionService = $byFromYahooAuctionService;
     }
 
     /**
@@ -69,7 +72,8 @@ class ProductController extends AbstractController
      */
     public function showPagePostProduct()
     {
-        dd($this->productEbayService->checkOnTheirProductsSoldOnEbayHaveBuyers());
+        dd($this->byFromYahooAuctionService->byFromYahooAuction());
+        dd($this->saveSoldItemService->saveSoldItem());
         $hasSettingPolicyData = $this->productPostService->checkHasSettingPolicyData();
         if (!$hasSettingPolicyData) {
             return view('admin.product.none_policy');

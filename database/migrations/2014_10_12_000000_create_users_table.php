@@ -29,6 +29,8 @@ class CreateUsersTable extends Migration
             $table->dateTime('start_date')->nullable();
             $table->string('ebay_access_token', 1024)->nullable();
             $table->dateTime('expire_date')->nullable();
+            $table->boolean('monitoring_flg')->default(false);
+            $table->dateTime('last_monitoring_dt')->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

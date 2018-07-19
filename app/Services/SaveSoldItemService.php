@@ -92,7 +92,7 @@ class SaveSoldItemService extends CommonService
                 if (!empty($value['Order'])
                     && !empty($value['Order']['TransactionArray']['Transaction']['Item']['ItemID'])) {
                     $itemId = $value['Order']['TransactionArray']['Transaction']['Item']['ItemID'];
-                    $itemId = '110327763724';
+                    // $itemId = '110327763724';
                     $itemDetail = $this->product->findByItemId($itemId);
                     if ($itemDetail) {
                         if (!empty($value['Order']['OrderID'])

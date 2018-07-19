@@ -35,6 +35,11 @@ class SoldItem extends AbstractModel
         return self::AUTO_BY_FLG_CAN_NOT_BUY;
     }
 
+    /**
+     * get by input id
+     * @param  array $input
+     * @return array
+     */
     public function getByInputId($input)
     {
         return $this->where('item_id', $input['item_id'])
@@ -44,6 +49,11 @@ class SoldItem extends AbstractModel
             ->first();
     }
 
+    /**
+     * get order status
+     * @param  integer $orderStatus
+     * @return integer
+     */
     public function getOrderStatus($orderStatus)
     {
         if (in_array($orderStatus, ['BuyerHasNotCompletedCheckout', 'NotPaid'])) {

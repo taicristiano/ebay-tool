@@ -8,7 +8,7 @@ use App\Services\ProductPostService;
 use App\Services\ProductListService;
 use App\Services\ProductEditService;
 use App\Services\SaveSoldItemService;
-use App\Services\ByFromYahooAuctionService;
+use App\Services\BuyFromYahooAuctionService;
 use App\Models\Item;
 use App\Models\CategoryFee;
 use App\Models\MtbExchangeRate;
@@ -48,7 +48,7 @@ class ProductController extends AbstractController
         Authorization $authorization,
         MtbExchangeRate $exchangeRate,
         SaveSoldItemService $saveSoldItemService,
-        ByFromYahooAuctionService $byFromYahooAuctionService
+        BuyFromYahooAuctionService $buyFromYahooAuctionService
     ) {
         $this->productPostService = $productPostService;
         $this->product            = $product;
@@ -63,7 +63,7 @@ class ProductController extends AbstractController
         $this->authorization      = $authorization;
 
         $this->saveSoldItemService = $saveSoldItemService;
-        $this->byFromYahooAuctionService = $byFromYahooAuctionService;
+        $this->buyFromYahooAuctionService = $buyFromYahooAuctionService;
     }
 
     /**
@@ -72,7 +72,7 @@ class ProductController extends AbstractController
      */
     public function showPagePostProduct()
     {
-        // dd($this->byFromYahooAuctionService->byFromYahooAuction());
+        // dd($this->buyFromYahooAuctionService->buyFromYahooAuction());
         // dd($this->saveSoldItemService->saveSoldItem());
         $hasSettingPolicyData = $this->productPostService->checkHasSettingPolicyData();
         if (!$hasSettingPolicyData) {

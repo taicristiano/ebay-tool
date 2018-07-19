@@ -11,7 +11,7 @@ use Goutte\Client;
 use Browser\Casper;
 use Illuminate\Support\Facades\Log;
 
-class ByFromYahooAuctionService extends CommonService
+class BuyFromYahooAuctionService extends CommonService
 {
     protected $product;
     protected $user;
@@ -27,7 +27,11 @@ class ByFromYahooAuctionService extends CommonService
         $this->soldItem = $soldItem;
     }
 
-    public function byFromYahooAuction()
+    /**
+     * buy from yahoo auction
+     * @return void
+     */
+    public function buyFromYahooAuction()
     {
         $arrayItem = ['e288239598', 'm265693400'];
         $arrayItem = ['e288239598', 'm266086582'];
@@ -51,14 +55,14 @@ class ByFromYahooAuctionService extends CommonService
         }
     }
 
+    /**
+     * login auction
+     * @return boolean
+     */
     public function loginAuction()
     {
-        // login
-        // putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
-        // $casper = new Casper('/usr/local/bin/');
-        putenv("PHANTOMJS_EXECUTABLE=C:/xampp/htdocs/tool/node_modules/phantomjs/lib/phantom/bin/phantomjs");
-        $casper = new Casper('C:/xampp/htdocs/tool/node_modules/casperjs/bin/');
-        // cuht2016@gmail.com / miichisoft1234
+        putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
+        $casper = new Casper('/usr/local/bin/');
         $casper->start('https://login.yahoo.co.jp/config/login');
         $casper->setOptions(array(
             'ignore-ssl-errors' => 'yes',
@@ -66,7 +70,6 @@ class ByFromYahooAuctionService extends CommonService
         ));
         $casper->sendKeys('#username', 'cuht2016@gmail.com');
         $casper->click('#btnNext');
-        // wait for http request success
         $casper->wait(3000);
         $casper->sendKeys('#passwd', 'miichisoft1234');
         $casper->click('#btnSubmit');
@@ -78,23 +81,22 @@ class ByFromYahooAuctionService extends CommonService
         return true;
     }
 
+    /**
+     * buy yahoo auction
+     * @param  integer $id
+     * @return boolean
+     */
     public function buyYahooAuction($id)
     {
-        // putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
-        // $casper = new Casper('/usr/local/bin/');
-        putenv("PHANTOMJS_EXECUTABLE=C:/xampp/htdocs/tool/node_modules/phantomjs/lib/phantom/bin/phantomjs");
-        $casper = new Casper('C:/xampp/htdocs/tool/node_modules/casperjs/bin/');
-        // cuht2016@gmail.com / miichisoft1234
+        putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
+        $casper = new Casper('/usr/local/bin/');
         $casper->start('https://page.auctions.yahoo.co.jp/jp/auction/'.$id);
-        // $casper->sendKeys('#username', 'cuht2016@gmail.com');
-        // wait for httprequest success
         $casper->setOptions(array(
             'ignore-ssl-errors' => 'yes',
             'cookies-file' => public_path('jsCookies.txt'),
         ));
         $casper->waitForSelector('.Button--buynow', 3000)->click('.Button--buynow');
         $casper->wait(10000);
-        // $casper->sendKeys('#passwd', 'miichisoft1234');
         $casper->waitForSelector('#BidModal .js-validator-submit', 3000);
         $casper->click('#BidModal .js-validator-submit');
         $casper->run();

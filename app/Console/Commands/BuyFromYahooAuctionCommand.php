@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Services\ByFromYahooAuctionService;
+use App\Services\BuyFromYahooAuctionService;
 
 class BuyFromYahooAuctionCommand extends Command
 {
@@ -21,18 +21,18 @@ class BuyFromYahooAuctionCommand extends Command
      */
     protected $description = 'Buy from yahoo auction';
 
-    protected $byFromYahooAuctionService;
+    protected $buyFromYahooAuctionService;
 
     /**
      * Create a new command instance.
      *
-     * @param ByFromYahooAuctionService $byFromYahooAuctionService
+     * @param BuyFromYahooAuctionService $buyFromYahooAuctionService
      * @return void
      */
-    public function __construct(ByFromYahooAuctionService $byFromYahooAuctionService)
+    public function __construct(BuyFromYahooAuctionService $buyFromYahooAuctionService)
     {
         parent::__construct();
-        $this->byFromYahooAuctionService = $byFromYahooAuctionService;
+        $this->buyFromYahooAuctionService = $buyFromYahooAuctionService;
     }
 
     /**
@@ -42,6 +42,6 @@ class BuyFromYahooAuctionCommand extends Command
      */
     public function handle()
     {
-        $this->byFromYahooAuctionService->byFromYahooAuction();
+        $this->buyFromYahooAuctionService->buyFromYahooAuction();
     }
 }

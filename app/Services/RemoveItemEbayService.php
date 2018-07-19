@@ -140,6 +140,12 @@ class RemoveItemEbayService extends CommonService
         Log::info($itemIds);
     }
 
+    /**
+     * slove remove item
+     * @param  array $value
+     * @param  string $token
+     * @return void
+     */
     public function sloveRemoveItem($value, $token)
     {
         $result = $this->endItem($value['item_id'], $token);

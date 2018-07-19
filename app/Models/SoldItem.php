@@ -18,6 +18,15 @@ class SoldItem extends AbstractModel
     const AUTO_BY_FLG_CAN_NOT_BUY = 2;
 
     /**
+     * get flag not yet
+     * @return integer
+     */
+    public function getFlagAutoByFlgNotYet()
+    {
+        return self::AUTO_BY_FLG_NOT_YET;
+    }
+
+    /**
      * get flag auto done
      * @return integer
      */
@@ -73,7 +82,7 @@ class SoldItem extends AbstractModel
      */
     public function getForMonitoringCrontabSecond()
     {
-        return $this->where('auto_buy_flg', 0)
+        return $this->where('auto_buy_flg', $this->getFlagAutoByFlgNotYet())
             ->orderBy('created_at', 'desc')
             ->limit(30)
             ->get();

@@ -33,26 +33,32 @@ class BuyFromYahooAuctionService extends CommonService
      */
     public function buyFromYahooAuction()
     {
+        Log::info('--------------> Start buy from yahoo auction <--------------');
         $arrayItem = ['e288239598', 'm265693400'];
         $arrayItem = ['e288239598', 'm266086582'];
         $soldItems = $this->soldItem->getForMonitoringCrontabSecond();
         foreach ($soldItems as $key => $value) {
             $item = $this->product->findById($value->item_id);
-            if ($item && $item->original_type == $this->product->getOriginTypeYahooAuction()) {
+            if ($item && $item['original_type'] == $this->product->getOriginTypeYahooAuction()) {
                 if ($this->loginAuction()) {
                     // buy yahoo auction
                     // $item['original_id'] = 'e288239598';
                     if ($this->buyYahooAuction($item['original_id'])) {
+                        Log::info('Buy success');
                         Log::info($item['original_id']);
                         $value->auto_buy_flg = $this->soldItem->getFlagAutoByFlgDone();
                     } else {
+                        Log::info('Can not buy');
+                        Log::info($item['original_id']);
                         $value->auto_buy_flg = $this->soldItem->getFlagAutoByFlgCanNotBuy();
                     }
                     $value->save();
+                } else {
+                    Log::info('Login fail');
                 }
             }
-            Log::info('Buy yahoo auction success');
         }
+        Log::info('--------------> Finish buy from yahoo auction <--------------');
     }
 
     /**
@@ -61,8 +67,10 @@ class BuyFromYahooAuctionService extends CommonService
      */
     public function loginAuction()
     {
-        putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
-        $casper = new Casper('/usr/local/bin/');
+        putenv("PHANTOMJS_EXECUTABLE=C:/xampp/htdocs/tool/node_modules/phantomjs/lib/phantom/bin/phantomjs");
+$casper = new Casper('C:/xampp/htdocs/tool/node_modules/casperjs/bin/');
+        // putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
+        // $casper = new Casper('/usr/local/bin/');
         $casper->start('https://login.yahoo.co.jp/config/login');
         $casper->setOptions(array(
             'ignore-ssl-errors' => 'yes',
@@ -88,8 +96,10 @@ class BuyFromYahooAuctionService extends CommonService
      */
     public function buyYahooAuction($id)
     {
-        putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
-        $casper = new Casper('/usr/local/bin/');
+        // putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
+        // $casper = new Casper('/usr/local/bin/');
+        putenv("PHANTOMJS_EXECUTABLE=C:/xampp/htdocs/tool/node_modules/phantomjs/lib/phantom/bin/phantomjs");
+$casper = new Casper('C:/xampp/htdocs/tool/node_modules/casperjs/bin/');
         $casper->start('https://page.auctions.yahoo.co.jp/jp/auction/'.$id);
         $casper->setOptions(array(
             'ignore-ssl-errors' => 'yes',

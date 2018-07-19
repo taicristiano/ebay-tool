@@ -33,18 +33,26 @@ class SaveSoldItemService extends CommonService
      */
     public function saveSoldItem()
     {
+        Log::info('--------------> Start save sold item <--------------');
         $users = $this->user->getUserForFirstCrontab();
-        $this->user->updateUserForFirstCrontab(['monitoring_flg' => 0]);
+        $this->user->updateUserForFirstCrontab(['monitoring_flg' => 1]);
         foreach ($users as $user) {
-            $soldList = $this->getMyEbaySelling($user);
-            if (empty($soldList)) {
+            try {
+                $soldList = $this->getMyEbaySelling($user);
+                if (empty($soldList)) {
+                    $this->user->updateLastMonitoring($user);
+                    continue;
+                }
+                $this->saveToTableSlodItem($soldList);
                 $this->user->updateLastMonitoring($user);
-                continue;
+                Log::info('Save sold detail');
+                Log::info($soldList);
+            } catch (Exception $ex) {
+                Log::info($ex);
+                $this->user->updateLastMonitoring($user);
             }
-            $this->saveToTableSlodItem($soldList);
-            $this->user->updateLastMonitoring($user);
         }
-        Log::info('Save sold item success');
+        Log::info('--------------> Finish save sold item <--------------');
     }
 
     /**

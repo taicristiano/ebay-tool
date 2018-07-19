@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Lang;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SettingPolicy;
+use SimpleXMLElement;
 
 class CommonService
 {
@@ -267,5 +268,33 @@ class CommonService
     {
         $date = date_create($date);
         return date_format($date, "Y-m-d H:i:s");
+    }
+
+    /**
+     * end item ebay
+     * @param  array $data
+     * @param  string $token
+     * @return boolean
+     */
+    public function endItem($data, $token)
+    {
+        $body = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8" ?><EndItemsRequest xmlns="urn:ebay:apis:eBLBaseComponents"></EndItemsRequest>');
+        $body->addChild('RequesterCredentials')->addChild('eBayAuthToken', $token);
+        foreach ($data as $key => $item) {
+            $endItem = $body->addChild('EndItemRequestContainer');
+            $endItem->addChild('MessageID', $key + 1);
+            $endItem->addChild('EndingReason', 'LostOrBroken');
+            $endItem->addChild('ItemID', $item);
+        }
+        $url    = config('api_info.api_common');
+        $header = config('api_info.header_api_end_item');
+        $result = $this->callApi($header, $body->asXML(), $url, 'post');
+        if ($result['Ack'] == 'Failure') {
+            return false;
+        }
+        if ($this->product->endListItem($data) !== false) {
+            return true;
+        }
+        return false;
     }
 }

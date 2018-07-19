@@ -235,9 +235,13 @@ class Item extends AbstractModel
      * @param  integer $id
      * @return object
      */
-    public function findById($id)
+    public function findById($id, $isArray = true)
     {
-        return $this->find($id)->toArray();
+        $condition = $this->find($id);
+        if ($isArray) {
+            return $condition->toArray();
+        }
+        return $condition;
     }
 
     /**
@@ -271,5 +275,16 @@ class Item extends AbstractModel
     {
         return $this->whereItemId($itemId)
             ->first();
+    }
+
+    /**
+     * update status selling
+     * @param  array $itemIds
+     * @return integer
+     */
+    public function updateStatusSelling($itemIds)
+    {
+        return $this->whereIn('id', $itemIds)
+            ->update(['status' => $this->getStatusSelling()]);
     }
 }

@@ -328,7 +328,8 @@ class ProductController extends AbstractController
         $response['status'] = false;
         try {
             $data = $request->all();
-            $response['status'] = $this->productListService->endItem($data);
+            $token = Auth::user()->ebay_access_token;
+            $response['status'] = $this->productListService->endItem($data['item_ids'], $token);
             return response()->json($response);
         } catch (Exception $ex) {
             Log::error($ex);

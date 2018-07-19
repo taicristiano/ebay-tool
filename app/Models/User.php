@@ -389,4 +389,14 @@ class User extends Authenticatable
         $user->last_monitoring_dt = date('Y-m-d H:i:s');
         $user->save();
     }
+
+    /**
+     * find user by id
+     * @param  integer $userId
+     * @return array
+     */
+    public function findById($userId)
+    {
+        return $this->find($userId);
+    }
 }

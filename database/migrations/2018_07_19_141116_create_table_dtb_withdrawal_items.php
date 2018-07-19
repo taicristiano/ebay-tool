@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateTableDtbWithdrawalItems extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('dtb_withdrawal_items', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('item_id')->nullable();
+            $table->foreign('item_id')->references('id')->on('dtb_item')->onDelete('cascade');
+            $table->smallInteger('status')->default(1);
+            $table->softDeletes();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('dtb_withdrawal_items');
+    }
+}

@@ -137,28 +137,6 @@ class ProductListService extends CommonService
         return $this->product->updateItem($id, $data);
     }
 
-    public function endItem($data)
-    {
-        $token = Auth::user()->ebay_access_token;
-        $body = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8" ?><EndItemsRequest xmlns="urn:ebay:apis:eBLBaseComponents"></EndItemsRequest>');
-        $body->addChild('RequesterCredentials')->addChild('eBayAuthToken', $token);
-        foreach ($data['item_ids'] as $key => $item) {
-            $endItem = $body->addChild('EndItemRequestContainer');
-            $endItem->addChild('EndingReason', 'LostOrBroken');
-            $endItem->addChild('ItemID', $item);
-        }
-        $url    = config('api_info.api_common');
-        $header = config('api_info.header_api_end_item');
-        $result = $this->callApi($header, $body->asXML(), $url, 'post');
-        if ($result['Ack'] == 'Failure') {
-            return false;
-        }
-        if ($this->product->endListItem($data['item_ids']) !== false) {
-            return true;
-        }
-        return false;
-    }
-
     /**
      * check monitoring
      * @return boolean

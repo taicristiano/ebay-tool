@@ -72,8 +72,8 @@ class ProductController extends AbstractController
      */
     public function showPagePostProduct()
     {
-        dd($this->byFromYahooAuctionService->byFromYahooAuction());
-        dd($this->saveSoldItemService->saveSoldItem());
+        // dd($this->byFromYahooAuctionService->byFromYahooAuction());
+        // dd($this->saveSoldItemService->saveSoldItem());
         $hasSettingPolicyData = $this->productPostService->checkHasSettingPolicyData();
         if (!$hasSettingPolicyData) {
             return view('admin.product.none_policy');

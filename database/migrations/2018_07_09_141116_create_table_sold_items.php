@@ -28,9 +28,9 @@ class CreateTableSoldItems extends Migration
             $table->double('sold_price', 11, 2)->nullable();
             $table->string('transaction_id', 12)->nullable();
             $table->integer('sold_quantity')->nullable();
-            $table->smallInteger('order_status')->default(0);
+            $table->smallInteger('order_status')->default(1);
             $table->dateTime('paid_time')->nullable();
-            $table->integer('ship_cost')->nullable();
+            $table->double('ship_cost', 11, 2)->nullable();
             $table->dateTime('order_date')->nullable();
             $table->softDeletes();
             $table->timestamps();

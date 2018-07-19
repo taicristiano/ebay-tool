@@ -34,10 +34,10 @@ class ByFromYahooAuctionService extends CommonService
         $soldItems = $this->soldItem->getForMonitoringCrontabSecond();
         foreach ($soldItems as $key => $value) {
             $item = $this->product->findById($value->item_id);
-            // if ($item && $item->original_type == $this->product->getOriginTypeYahooAuction()) {
+            if ($item && $item->original_type == $this->product->getOriginTypeYahooAuction()) {
                 if ($this->loginAuction()) {
                     // buy yahoo auction
-                    $item['original_id'] = 'e288239598';
+                    // $item['original_id'] = 'e288239598';
                     if ($this->buyYahooAuction($item['original_id'])) {
                         Log::info($item['original_id']);
                         $value->auto_buy_flg = $this->soldItem->getFlagAutoByFlgDone();
@@ -46,7 +46,7 @@ class ByFromYahooAuctionService extends CommonService
                     }
                     $value->save();
                 }
-            // }
+            }
             Log::info('Buy yahoo auction success');
         }
     }
@@ -73,7 +73,6 @@ class ByFromYahooAuctionService extends CommonService
         $casper->run();
         $urlCurrent = $casper->getCurrentUrl();
         if (empty($urlCurrent) || $urlCurrent == 'https://login.yahoo.co.jp/config/login') {
-            dd($casper);
             return false;
         }
         return true;

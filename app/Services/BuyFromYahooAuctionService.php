@@ -2,28 +2,21 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use App\Models\Item;
 use App\Models\SoldItem;
-use SimpleXMLElement;
-use Illuminate\Support\Facades\Auth;
-use Goutte\Client;
 use Browser\Casper;
 use Illuminate\Support\Facades\Log;
 
 class BuyFromYahooAuctionService extends CommonService
 {
     protected $product;
-    protected $user;
     protected $soldItem;
 
     public function __construct(
         Item $product,
-        User $user,
         SoldItem $soldItem
     ) {
         $this->product  = $product;
-        $this->user     = $user;
         $this->soldItem = $soldItem;
     }
 
@@ -67,10 +60,10 @@ class BuyFromYahooAuctionService extends CommonService
      */
     public function loginAuction()
     {
-        putenv("PHANTOMJS_EXECUTABLE=C:/xampp/htdocs/tool/node_modules/phantomjs/lib/phantom/bin/phantomjs");
-$casper = new Casper('C:/xampp/htdocs/tool/node_modules/casperjs/bin/');
-        // putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
-        // $casper = new Casper('/usr/local/bin/');
+        // putenv("PHANTOMJS_EXECUTABLE=C:/xampp/htdocs/tool/node_modules/phantomjs/lib/phantom/bin/phantomjs");
+        // $casper = new Casper('C:/xampp/htdocs/tool/node_modules/casperjs/bin/');
+        putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
+        $casper = new Casper('/usr/local/bin/');
         $casper->start('https://login.yahoo.co.jp/config/login');
         $casper->setOptions(array(
             'ignore-ssl-errors' => 'yes',
@@ -96,10 +89,10 @@ $casper = new Casper('C:/xampp/htdocs/tool/node_modules/casperjs/bin/');
      */
     public function buyYahooAuction($id)
     {
-        // putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
-        // $casper = new Casper('/usr/local/bin/');
-        putenv("PHANTOMJS_EXECUTABLE=C:/xampp/htdocs/tool/node_modules/phantomjs/lib/phantom/bin/phantomjs");
-$casper = new Casper('C:/xampp/htdocs/tool/node_modules/casperjs/bin/');
+        // putenv("PHANTOMJS_EXECUTABLE=C:/xampp/htdocs/tool/node_modules/phantomjs/lib/phantom/bin/phantomjs");
+        // $casper = new Casper('C:/xampp/htdocs/tool/node_modules/casperjs/bin/');
+        putenv("PHANTOMJS_EXECUTABLE=/usr/local/bin/phantomjs");
+        $casper = new Casper('/usr/local/bin/');
         $casper->start('https://page.auctions.yahoo.co.jp/jp/auction/'.$id);
         $casper->setOptions(array(
             'ignore-ssl-errors' => 'yes',

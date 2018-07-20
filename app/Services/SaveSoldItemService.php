@@ -5,9 +5,6 @@ namespace App\Services;
 use App\Models\User;
 use App\Models\SoldItem;
 use SimpleXMLElement;
-use Illuminate\Support\Facades\Auth;
-use Goutte\Client;
-use Browser\Casper;
 use Illuminate\Support\Facades\Log;
 use App\Models\Item;
 

@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-class WithdrawalItem extends AbstractModel
+class ChangeItem extends AbstractModel
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'dtb_withdrawal_items';
+    protected $table = 'dtb_change_items';
 
     protected $guarded = [];
 
@@ -50,7 +50,7 @@ class WithdrawalItem extends AbstractModel
      */
     public function getItemMonitoring()
     {
-        return $this->select('id', 'item_id', 'status')
+        return $this->select('id', 'item_id', 'new_price')
             ->where('status', $this->getStatusProcessWaiting())
             ->whereNull('deleted_at')
             ->get()

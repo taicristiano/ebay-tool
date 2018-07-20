@@ -3,11 +3,6 @@
 namespace App\Services;
 
 use App\Models\User;
-use App\Models\SoldItem;
-use SimpleXMLElement;
-use Illuminate\Support\Facades\Auth;
-use Goutte\Client;
-use Browser\Casper;
 use Illuminate\Support\Facades\Log;
 use App\Models\Item;
 use App\Models\WithdrawalItem;
@@ -15,18 +10,15 @@ use App\Models\WithdrawalItem;
 class RemoveItemEbayService extends CommonService
 {
     protected $user;
-    protected $soldItem;
     protected $product;
     protected $withdrawalItem;
 
     public function __construct(
         User $user,
         Item $product,
-        WithdrawalItem $withdrawalItem,
-        SoldItem $soldItem
+        WithdrawalItem $withdrawalItem
     ) {
         $this->user           = $user;
-        $this->soldItem       = $soldItem;
         $this->product        = $product;
         $this->withdrawalItem = $withdrawalItem;
     }

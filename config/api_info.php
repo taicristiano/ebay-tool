@@ -40,6 +40,12 @@ return [
         'X-EBAY-API-COMPATIBILITY-LEVEL' => '967',
         'X-EBAY-API-CALL-NAME'           => 'EndItems',
     ],
+    'header_api_change_item' => [
+        'Content-Type'                   => 'text/xml',
+        'X-EBAY-API-SITEID'              => '0',
+        'X-EBAY-API-COMPATIBILITY-LEVEL' => '967',
+        'X-EBAY-API-CALL-NAME'           => 'ReviseInventoryStatus',
+    ],
 
     // for addFixedPriceItem
     'header_api_add_fixed_price_item' => [
